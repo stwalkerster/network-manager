@@ -1,0 +1,21 @@
+@model LdapDnsWebApp.Models.LoginCommand
+@{
+    Layout = "_BaseLayout";
+    ViewData["Title"] = "Log in";
+}
+
+@section HeadContent {
+    <link href="~/css/login.css" rel="stylesheet">
+}
+
+<body class="text-center">
+    <form class="form-signin" asp-controller="Authentication" asp-action="Login">
+        <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
+        @Html.ValidationMessage("LoginStatus", null, new{ @class = "alert alert-danger", role = "alert"}, "div")
+        <label asp-for="Username" class="sr-only"></label>
+        <input asp-for="Username" id="inputUsername" class="form-control" placeholder="Username" autofocus />
+        <label asp-for="Password" class="sr-only"></label>
+        <input asp-for="Password" id="inputPassword" class="form-control" placeholder="Password" />
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+    </form>
+</body>
