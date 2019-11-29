@@ -9,17 +9,21 @@ namespace LdapDnsWebApp.Services
 
     public class LdapManager : ILdapManager, IDisposable
     {
+        private readonly SshTunnelManager tunnelManager;
         private LdapConnection connection;
         private LdapConnectionInfo config;
 
-        public LdapManager(IOptions<LdapConnectionInfo> config)
+        public LdapManager(IOptions<LdapConnectionInfo> config, SshTunnelManager tunnelManager)
         {
+            this.tunnelManager = tunnelManager;
             this.config = config.Value;
         }
         
         public string Connect(string username, string password)
         {
             this.Disconnect();
+            
+            this.tunnelManager.Start();
             
             this.connection = new LdapConnection();
             this.connection.Connect(this.config.Hostname, this.config.Port);

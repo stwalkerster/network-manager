@@ -13,7 +13,7 @@ namespace LdapDnsWebApp.Services
 
         public SshTunnelManager(IOptions<SshConnectionInfo> config, ILogger<SshTunnelManager> log)
         {
-            this.log.LogDebug("Initialising SSH tunnel manager");
+            // this.log.LogDebug("Initialising SSH tunnel manager");
             this.config = config.Value;
             this.log = log;
         }
@@ -32,11 +32,11 @@ namespace LdapDnsWebApp.Services
 
             if (!this.config.UseSsh)
             {
-                this.log.LogInformation("SSH connectivity is disabled.");
+                // this.log.LogInformation("SSH connectivity is disabled.");
                 return;
             }
 
-            this.log.LogInformation("Connecting to SSH...");
+            // this.log.LogInformation("Connecting to SSH...");
 
             var key = new PrivateKeyAuthenticationMethod(
                 this.config.Username,
@@ -52,7 +52,7 @@ namespace LdapDnsWebApp.Services
                     this.config.RemoteTunnelEndpointHost,
                     this.config.RemoteTunnelEndpointPort));
 
-            this.log.LogInformation("Connected to SSH.");
+            // this.log.LogInformation("Connected to SSH.");
         }
 
         public void Stop()
@@ -65,7 +65,7 @@ namespace LdapDnsWebApp.Services
             if (this.client.IsConnected)
             {
                 this.client.Disconnect();
-                this.log.LogInformation("Disconnected from SSH.");
+                // this.log.LogInformation("Disconnected from SSH.");
             }
 
             this.client = null;
