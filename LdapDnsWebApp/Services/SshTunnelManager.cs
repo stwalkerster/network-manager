@@ -46,12 +46,13 @@ namespace LdapDnsWebApp.Services
 
             this.client = new SshClient(connectionInfo);
             this.client.Connect();
-            this.client.AddForwardedPort(
-                new ForwardedPortLocal(
-                    this.config.LocalTunnelEndpoint,
-                    this.config.RemoteTunnelEndpointHost,
-                    this.config.RemoteTunnelEndpointPort));
-
+            var forwardedSshPort = new ForwardedPortLocal(
+                this.config.LocalTunnelEndpoint,
+                this.config.RemoteTunnelEndpointHost,
+                this.config.RemoteTunnelEndpointPort);
+            this.client.AddForwardedPort(forwardedSshPort);
+            forwardedSshPort.Start();
+            
             // this.log.LogInformation("Connected to SSH.");
         }
 
