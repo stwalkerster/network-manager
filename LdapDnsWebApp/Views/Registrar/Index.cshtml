@@ -1,0 +1,41 @@
+@model Dictionary<string, LdapDnsWebApp.Models.RegistrarZoneSummmary>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Registrars";
+    ViewBag.Active = "Registrars";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Registrars</h1>
+</div>
+
+<div class="card-deck">
+    @foreach (var reg in Model)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">@reg.Key</h3>
+                @if (reg.Value.EnabledZones > 0)
+                {
+                    <p class="card-text lead"><span class="badge badge-success">@reg.Value.EnabledZones</span>&nbsp;enabled zones</p>
+                    <p class="card-text text-right">... totalling @reg.Value.EnabledRecords records</p>
+                }
+                else
+                {
+                    <p class="card-text lead"><span class="badge badge-secondary">0</span>&nbsp;enabled zones</p>
+                }
+                
+                @if (reg.Value.DisabledZones > 0)
+                {
+                    <p class="card-text lead"><span class="badge badge-danger">@reg.Value.DisabledZones</span>&nbsp;disabled zones</p>
+                    <p class="card-text text-right">... totalling @reg.Value.DisabledRecords records</p>
+                }
+                else
+                {
+                    <p class="card-text lead"><span class="badge badge-secondary">0</span>&nbsp;disabled zones</p>
+                }
+            </div>
+            <div class="card-footer"><a class="btn btn-secondary btn-sm float-right" href="@Url.Action("Registrar", "Registrar", new{registrar = @reg.Key})"><i class="fas fa-cubes"></i>&nbsp;View zones</a></div>
+        </div>
+    }
+</div>

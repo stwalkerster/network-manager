@@ -1,0 +1,29 @@
+@model List<LdapDnsWebApp.Models.ZoneSummary>
+@{
+    Layout = "_Layout";
+    ViewBag.Active = "Registrars";
+}
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Zones for registrar @ViewData["Registrar"]</h1>
+</div>
+
+<table class="table table-striped table-hover table-bordered">
+    <thead><tr>
+        <th>Zone</th><th>Owner</th><th>Records</th><th>Nameservers</th><th>Expiry</th><th></th>
+    </tr></thead>
+    <tbody>
+    @foreach (var zone in Model)
+    {
+        <tr class="@(zone.Enabled ? "" : "table-danger")">
+            <th>@zone.ZoneName</th>
+            <td>@zone.Owner</td>
+            <td>@*zone.Records*@</td>
+            <td>@zone.NameServer</td>
+            <td>@*zone.Expiry*@</td>
+            <td><a href="#" class="btn btn-sm btn-secondary"><i class="fas fa-cube"></i>&nbsp;View zone</a></td>
+        </tr>
+    }
+    </tbody>
+</table>
