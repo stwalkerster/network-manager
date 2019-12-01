@@ -1,3 +1,4 @@
+@using System.Security.Policy
 @model LdapDnsWebApp.Models.SidebarZoneList
 @{
     Layout = null;
@@ -5,25 +6,27 @@
 <div class="sidebar-sticky">
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link @(ViewBag.Active == "Dashboard" ? "active" : "")" href="@Url.Action("Index", "Home")">
+            <a class="nav-link @(ViewBag.Active == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
                 <i class="fas fa-home"></i>&nbsp;Dashboard
                 @Html.Raw(ViewBag.Active == "Dashboard" ? "<span class=\"sr-only\">(current)</span>" : "")
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-muted" href="#">
-                <i class="fas fa-cubes"></i>&nbsp;Domains
+            <a class="nav-link @(ViewBag.Active == "Zone" ? "active" : "")" href="@Url.Action("Index", "Zone")">
+                <i class="fas fa-cubes"></i>&nbsp;All zones
+                @Html.Raw(ViewBag.Active == "Zone" ? "<span class=\"sr-only\">(current)</span>" : "")
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link @(ViewBag.Active == "Registrars" ? "active" : "")" href="@Url.Action("Index", "Registrar")">
+            <a class="nav-link @(ViewBag.Active == "Registrar" ? "active" : "")" href="@Url.Action("Index", "Registrar")">
                 <i class="fas fa-building"></i>&nbsp;Registrars
                 @Html.Raw(ViewBag.Active == "Registrars" ? "<span class=\"sr-only\">(current)</span>" : "")
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-muted" href="#">
+            <a class="nav-link @(ViewBag.Active == "Owner" ? "active" : "")" href="@Url.Action("Index", "Owner")">
                 <i class="fas fa-user-tag"></i>&nbsp;Owners
+                @Html.Raw(ViewBag.Active == "Owners" ? "<span class=\"sr-only\">(current)</span>" : "")
             </a>
         </li>
         <li class="nav-item">
@@ -40,7 +43,7 @@
         @foreach (var z in Model.Zones)
         {
             <li class="nav-item">
-                <a class="nav-link text-muted" href="#">
+                <a class="nav-link" href="@Url.Action("ShowZone", "Zone", new{zone=z.Value})">
                     <i class="fas fa-cube"></i>&nbsp;@z.Value
                 </a>
             </li>

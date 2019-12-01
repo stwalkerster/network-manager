@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LdapDnsWebApp.Controllers
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Security.Policy;
+    using LdapDnsWebApp.Extensions;
     using LdapDnsWebApp.Models;
     using LdapDnsWebApp.Services;
     using Microsoft.Extensions.Options;
@@ -13,30 +12,33 @@ namespace LdapDnsWebApp.Controllers
     public class RegistrarController : Controller
     {
         private readonly ILdapManager ldapManager;
+        private readonly WhoisService whoisService;
         private readonly LdapConnectionInfo config;
 
-        public RegistrarController(ILdapManager ldapManager, IOptions<LdapConnectionInfo> config)
+        public RegistrarController(ILdapManager ldapManager, IOptions<LdapConnectionInfo> config, WhoisService whoisService)
         {
             this.ldapManager = ldapManager;
+            this.whoisService = whoisService;
             this.config = config.Value;
         }
         
-        [Route("/registrar/{registrar}")]
-        public IActionResult Registrar(string registrar)
+        [Route("/registrar/{item}")]
+        public IActionResult Item(string item)
         {
             string registrarFilter;
-            if (registrar == "(none)")
+            if (item == "(none)")
             {
                 registrarFilter = "(!(o=*))";
             }
             else
             {
-                registrarFilter = "(o=" + registrar + ")";
+                registrarFilter = "(o=" + item + ")";
             }
 
-            var zoneSummaries = this.GetZoneList("(&(soaRecord=*)" + registrarFilter + ")");
+            this.ldapManager.EnsureConnected(this.User);
+            var zoneSummaries = this.ldapManager.GetZoneList("(&(soaRecord=*)" + registrarFilter + ")", this.whoisService);
 
-            this.ViewData.Add("Registrar", registrar);
+            this.ViewData.Add("Registrar", item);
             
             return this.View(zoneSummaries);
         }
@@ -54,9 +56,9 @@ namespace LdapDnsWebApp.Controllers
                 new[] {"associatedDomain", "o", "disabled"},
                 false);
 
-            var zones = new Dictionary<string, RegistrarZoneSummmary>();
+            var zones = new Dictionary<string, GroupedZoneSummary>();
             var enabledZones = new Dictionary<string,string>();
-            var disabledZones = new Dictionary<string,string>();
+//            var disabledZones = new Dictionary<string,string>();
             
             while (ldapSearchResults.hasMore())
             {
@@ -66,7 +68,10 @@ namespace LdapDnsWebApp.Controllers
 
                 if (!zones.ContainsKey(org))
                 {
-                    zones.Add(org, new RegistrarZoneSummmary {Registrar = org, DisabledRecords = -1, EnabledRecords = -1});
+                    zones.Add(org, new GroupedZoneSummary
+                    {
+                        GroupName = org, GroupKey=org,DisabledRecords = -1, EnabledRecords = -1
+                    });
                 }
 
                 var disabledAttr = entry.getAttribute("disabled")?.StringValue;
@@ -79,7 +84,7 @@ namespace LdapDnsWebApp.Controllers
                 else
                 {
                     zones[org].DisabledZones++;
-                    disabledZones.Add(entry.DN, org);
+//                    disabledZones.Add(entry.DN, org);
                 }
             }
 
@@ -96,84 +101,6 @@ namespace LdapDnsWebApp.Controllers
             }
 
             return this.View(zones);
-        }
-
-        public List<ZoneSummary> GetZoneList(string filter)
-        {
-            this.ldapManager.EnsureConnected(this.User);
-            var ldapConnection = this.ldapManager.GetConnection();
-
-            var ldapSearchResults = ldapConnection.Search(
-                this.config.DnsBaseDn,
-                LdapConnection.SCOPE_SUB,
-                filter,
-                new[] {"associatedDomain", "o", "owner", "disabled"},
-                false);
-
-            var bareZones = new List<ZoneSummary>();
-            
-            var userDNs = new HashSet<string>();
-            
-            while (ldapSearchResults.hasMore())
-            {
-                var entry = ldapSearchResults.next();
-
-                var org = entry.getAttribute("o")?.StringValue ?? "(none)";
-
-                var owner = entry.getAttribute("owner")?.StringValue;
-                if (owner != null)
-                {
-                    userDNs.Add(owner);
-                }
-
-                var disabledAttr = entry.getAttribute("disabled")?.StringValue;
-                
-                var zone = new ZoneSummary
-                {
-                    ZoneName = entry.getAttribute("associatedDomain").StringValue, 
-                    Org = org,
-                    Owner = owner,
-                    Enabled = disabledAttr == null || disabledAttr != "TRUE"
-                };
-                
-                bareZones.Add(zone);
-            }
-
-            var userData = this.LookupUsers(userDNs, "displayName");
-            foreach (var zoneSummary in bareZones.Where(x => x.Owner != null))
-            {
-                zoneSummary.Owner = userData[zoneSummary.Owner];
-            }
-
-            return bareZones;
-        }
-        
-        private Dictionary<string, string> LookupUsers(IEnumerable<string> userDNs, string attribute)
-        {
-            var result = new Dictionary<string, string>();
-            
-            var ldapConnection = this.ldapManager.GetConnection();
-            foreach (var udn in userDNs)
-            {
-                result.Add(udn, udn);
-                
-                var ldapSearchResults = ldapConnection.Search(
-                    udn,
-                    LdapConnection.SCOPE_BASE,
-                    "(objectClass=*)",
-                    new[] {attribute},
-                    false);
-
-                if (!ldapSearchResults.hasMore())
-                {
-                    continue;
-                }
-
-                var r = ldapSearchResults.next();
-                result[udn] = r.getAttribute(attribute)?.StringValue;
-            }
-
-            return result;
         }
     }
 }

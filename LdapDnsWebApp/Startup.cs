@@ -32,6 +32,7 @@ namespace LdapDnsWebApp
             services.Configure<SshConnectionInfo>(this.config.GetSection("SshConnectionInfo"));
             
             services.AddSingleton<SshTunnelManager>();
+            services.AddSingleton<WhoisService>();
             services.AddScoped<IAuthenticationService, LdapAuthenticationService>();
             services.AddScoped<ILdapManager, LdapManager>();
             

@@ -1,0 +1,27 @@
+@model LdapDnsWebApp.Models.GroupedZoneSummary
+
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">@Model.GroupName</h3>
+        @if (Model.EnabledZones > 0)
+        {
+            <p class="card-text lead"><span class="badge badge-success">@Model.EnabledZones</span>&nbsp;enabled zones</p>
+            <p class="card-text text-right">... totalling @Model.EnabledRecords records</p>
+        }
+        else
+        {
+            <p class="card-text lead"><span class="badge badge-secondary">0</span>&nbsp;enabled zones</p>
+        }
+                
+        @if (Model.DisabledZones > 0)
+        {
+            <p class="card-text lead"><span class="badge badge-danger">@Model.DisabledZones</span>&nbsp;disabled zones</p>
+            <p class="card-text text-right">... totalling @Model.DisabledRecords records</p>
+        }
+        else
+        {
+            <p class="card-text lead"><span class="badge badge-secondary">0</span>&nbsp;disabled zones</p>
+        }
+    </div>
+    <div class="card-footer"><a class="btn btn-secondary btn-sm float-right" href="@Url.Action("Item", (string)ViewBag.Active, new{item = @Model.GroupKey})"><i class="fas fa-cubes"></i>&nbsp;View zones</a></div>
+</div>

@@ -1,0 +1,25 @@
+@model List<LdapDnsWebApp.Models.ZoneSummary>
+
+<table class="table table-striped table-hover table-bordered">
+    <thead><tr>
+        <th>Zone</th><th>Registrar</th><th>Owner</th><th>Records</th><th>Nameservers</th><th>Expiry</th><th></th>
+    </tr></thead>
+    <tbody>
+    @foreach (var zone in Model)
+    {
+        <tr class="@(zone.Enabled ? "" : "table-danger")">
+            <th>@zone.ZoneName</th>
+            <td>@zone.Registrar</td>
+            <td>@zone.Owner</td>
+            <td>@zone.Records</td>
+            <td>@zone.NameServer</td>
+            <td>@zone.Expiry</td>
+            <td>
+                <a href="@Url.Action("ShowZone", "Zone", new {zone = zone.ZoneName})" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-cube"></i>&nbsp;View zone
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

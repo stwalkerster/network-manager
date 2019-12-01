@@ -11,12 +11,12 @@ namespace LdapDnsWebApp.Services
     {
         private readonly SshTunnelManager tunnelManager;
         private LdapConnection connection;
-        private LdapConnectionInfo config;
+        public LdapConnectionInfo Configuration { get; }
 
         public LdapManager(IOptions<LdapConnectionInfo> config, SshTunnelManager tunnelManager)
         {
             this.tunnelManager = tunnelManager;
-            this.config = config.Value;
+            this.Configuration = config.Value;
         }
         
         public string Connect(string username, string password)
@@ -26,9 +26,9 @@ namespace LdapDnsWebApp.Services
             this.tunnelManager.Start();
             
             this.connection = new LdapConnection();
-            this.connection.Connect(this.config.Hostname, this.config.Port);
+            this.connection.Connect(this.Configuration.Hostname, this.Configuration.Port);
 
-            var dn = string.Format(this.config.BindTemplate, username);
+            var dn = string.Format(this.Configuration.BindTemplate, username);
 
             try
             {

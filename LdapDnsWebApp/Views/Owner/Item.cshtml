@@ -1,0 +1,12 @@
+@model List<LdapDnsWebApp.Models.ZoneSummary>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Owners";
+    ViewBag.Active = "Owner";
+}
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Zones owned by @ViewData["Owner"]</h1>
+</div>
+<partial name="ZoneList"/>

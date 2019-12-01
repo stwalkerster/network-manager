@@ -1,6 +1,7 @@
 namespace LdapDnsWebApp.Services
 {
     using System.Security.Claims;
+    using LdapDnsWebApp.Models;
     using Novell.Directory.Ldap;
 
     public interface ILdapManager
@@ -10,5 +11,6 @@ namespace LdapDnsWebApp.Services
         LdapConnection GetConnection();
         void EnsureConnected(ClaimsPrincipal userClaimsPrincipal);
         string GetCurrentUserDn();
+        LdapConnectionInfo Configuration { get; }
     }
 }
