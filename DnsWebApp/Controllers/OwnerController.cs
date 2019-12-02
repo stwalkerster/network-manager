@@ -1,139 +1,74 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace DnsWebApp.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DnsWebApp.Extensions;
+    using System.Linq.Expressions;
     using DnsWebApp.Models;
-    using DnsWebApp.Services;
-    using Novell.Directory.Ldap;
+    using DnsWebApp.Models.Database;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
 
     public class OwnerController : Controller
     {
-        private readonly ILdapManager ldapManager;
-        private readonly WhoisService whoisService;
+        private readonly DataContext db;
         private const string NoneSpecifier = "(none)";
 
-        public OwnerController(ILdapManager ldapManager, WhoisService whoisService)
+        public OwnerController(DataContext db)
         {
-            this.ldapManager = ldapManager;
-            this.whoisService = whoisService;
+            this.db = db;
         }
         
         [Route("/owner/{item}")]
         public IActionResult Item(string item)
         {
-            this.ldapManager.EnsureConnected(this.User);
-            
-            string ownerFilter;
+            Expression<Func<Zone,bool>> whereClause = x => x.Owner.UserName == item;
             if (item == NoneSpecifier)
             {
-                this.ViewData.Add("Owner", NoneSpecifier);
-
-                ownerFilter = "(!(owner=*))";
-            }
-            else
-            {
-                var filter = "(uid=" + item + ")";
-            
-                
-                var uidResult = this.ldapManager.GetConnection()
-                    .Search(
-                        this.ldapManager.Configuration.BaseDn,
-                        LdapConnection.SCOPE_SUB,
-                        filter,
-                        new []{"displayName"},
-                        false);
-
-                if (!uidResult.hasMore())
-                {
-                    return this.View(new List<ZoneSummary>());
-                }
-
-                var ldapEntry = uidResult.next();
-                var udn = ldapEntry.DN;
-                
-                ownerFilter = "(owner=" + udn + ")";
-                this.ViewData.Add("Owner", ldapEntry.getAttribute("displayName").StringValue);
+                whereClause = x => x.Owner == null;
             }
             
-            var zoneSummaries = this.ldapManager.GetZoneList("(&(soaRecord=*)" + ownerFilter + ")", this.whoisService);
-            
-            return this.View(zoneSummaries);
+            var zones = this.db.Zones
+                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Owner)
+                .Include(x => x.Registrar)
+                .Where(whereClause)
+                .ToList();
+    
+            this.ViewData["Owner"] = item;
+            return this.View(zones);
         }
         
         [Route("/owner")]
         public IActionResult Index()
         {
-            this.ldapManager.EnsureConnected(this.User);
-            var ldapConnection = this.ldapManager.GetConnection();
+            var zones = this.db.Zones
+                .Include(x => x.Owner)
+                .Include(x => x.TopLevelDomain)
+                .Include(x => x.ZoneRecords)
+                .ToList();
 
-            var ldapSearchResults = ldapConnection.Search(
-                this.ldapManager.Configuration.DnsBaseDn,
-                LdapConnection.SCOPE_SUB,
-                "(soaRecord=*)",
-                new[] {"associatedDomain", "owner", "disabled"},
-                false);
-
-            var zones = new Dictionary<string, GroupedZoneSummary>();
-            var enabledZones = new Dictionary<string,string>();
-            // var disabledZones = new Dictionary<string,string>();
-            
-            while (ldapSearchResults.hasMore())
-            {
-                var entry = ldapSearchResults.next();
-
-                var owner = entry.getAttribute("owner")?.StringValue ?? NoneSpecifier;
-
-                if (!zones.ContainsKey(owner))
+            var groupedZones = zones.Aggregate(
+                new Dictionary<string, GroupedZoneSummary>(),
+                (cur, next) =>
                 {
-                    zones.Add(owner, new GroupedZoneSummary {GroupName = owner, DisabledRecords = -1, EnabledRecords = -1});
-                }
+                    var ownerUserName = next.Owner?.UserName ?? NoneSpecifier;
+                    if (!cur.ContainsKey(ownerUserName))
+                    {
+                        cur.Add(
+                            ownerUserName,
+                            new GroupedZoneSummary {GroupName = ownerUserName, GroupKey = ownerUserName});
+                    }
 
-                var disabledAttr = entry.getAttribute("disabled")?.StringValue;
+                    cur[ownerUserName].DisabledZones += !next.Enabled ? 1 : 0;
+                    cur[ownerUserName].EnabledZones += next.Enabled ? 1 : 0;
+                    cur[ownerUserName].DisabledRecords += !next.Enabled ? next.ZoneRecords.Count : 0;
+                    cur[ownerUserName].DisabledRecords += next.Enabled ? next.ZoneRecords.Count : 0;
 
-                if (disabledAttr == null || disabledAttr != "TRUE")
-                {
-                    zones[owner].EnabledZones++;
-                    enabledZones.Add(entry.DN, owner);
-                }
-                else
-                {
-                    zones[owner].DisabledZones++;
-//                    disabledZones.Add(entry.DN, owner);
-                }
-            }
+                    return cur;
+                });
 
-            foreach (var zoneDn in enabledZones)    
-            {
-                var zoneRecords = ldapConnection.Search(
-                    zoneDn.Key,
-                    LdapConnection.SCOPE_SUB,
-                    "(objectclass=domainrelatedobject)",
-                    new[] {"associatedDomain", "owner", "disabled"},
-                    false);
-                
-                // todo - count zone records
-            }
-
-            var userDns = zones.Where(x => x.Value.GroupName != NoneSpecifier).Select(x => x.Value.GroupName).Distinct().ToList();
-            var names = this.ldapManager.LookupUsers(userDns, "displayName");
-            var uids = this.ldapManager.LookupUsers(userDns, "uid");
-            
-            foreach (var summary in zones.Where(x => x.Value.GroupName != NoneSpecifier))
-            {
-                summary.Value.GroupKey = uids[summary.Value.GroupName];
-                summary.Value.GroupName = names[summary.Value.GroupName];
-            }
-            
-            foreach (var summary in zones.Where(x => x.Value.GroupName == NoneSpecifier))
-            {
-                summary.Value.GroupKey = NoneSpecifier;
-            }
-
-            return this.View(zones);
+            return this.View(groupedZones);
         }
-
     }
 }

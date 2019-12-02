@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace DnsWebApp.Controllers
 {
     using System.Linq;
-    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Services;
+    using Microsoft.EntityFrameworkCore;
 
     public class ZoneController : Controller
     {
@@ -21,21 +21,26 @@ namespace DnsWebApp.Controllers
         [Route("/zones")]
         public IActionResult Index()
         {
-            var z = this.db.Zones.Select(
-                    x => new ZoneSummary
-                    {
-                        ZoneName = x.Name + "." + x.TopLevelDomain.Domain, Enabled = x.Enabled,
-                        Records = x.ZoneRecords.Count, Registrar = x.Registrar.Name, NameServer = x.PrimaryNameServer
-                    })
+            var z = this.db.Zones
+                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Registrar)
+                .Include(x => x.Owner)
+                .Include(x => x.ZoneRecords)
                 .ToList();
 
             return this.View(z);
         }
 
-        [Route("/zone/{zone}")]
-        public IActionResult ShowZone(string zone)
+        [Route("/zone/{zone:int}")]
+        public IActionResult ShowZone(int zone)
         {
             return Content("zonefile for " + zone);
+        }
+
+        [Route("/zone/new")]
+        public IActionResult NewZone()
+        {
+            return Content("Creating new zone ");
         }
     }
 }

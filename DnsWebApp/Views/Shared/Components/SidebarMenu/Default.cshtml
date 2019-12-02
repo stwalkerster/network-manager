@@ -1,4 +1,4 @@
-@model DnsWebApp.Models.SidebarZoneList
+@model Dictionary<long, string>
 @{
     Layout = null;
 }
@@ -39,10 +39,10 @@
         <span>My Zones</span>
     </h6>
     <ul class="nav flex-column mb-2">
-        @foreach (var z in Model.Zones)
+        @foreach (var z in Model)
         {
             <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("ShowZone", "Zone", new{zone=z.Value})">
+                <a class="nav-link" href="@Url.Action("ShowZone", "Zone", new{zone=z.Key})">
                     <i class="fas fa-cube"></i>&nbsp;@z.Value
                 </a>
             </li>

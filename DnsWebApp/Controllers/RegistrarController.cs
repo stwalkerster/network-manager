@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace DnsWebApp.Controllers
 {
     using System.Linq;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
@@ -23,16 +22,11 @@ namespace DnsWebApp.Controllers
             var registrar = this.db.Registrar
                 .Include(x => x.Zones)
                 .ThenInclude(x => x.TopLevelDomain)
+                .Include(x => x.Zones)
+                .ThenInclude(x => x.Owner)
                 .FirstOrDefault(x => x.Id == item);
             
-            var zoneSummaries = registrar
-                .Zones.Select(
-                    x => new ZoneSummary
-                    {
-                        Enabled = x.Enabled, Expiry = x.RegistrationExpiry, NameServer = x.PrimaryNameServer,
-                        Registrar = x.Registrar.Name, ZoneName = x.Name + "." + x.TopLevelDomain.Domain
-                    })
-                .ToList();
+            var zoneSummaries = registrar.Zones.ToList();
 
             this.ViewData["Registrar"] = registrar.Name;
             

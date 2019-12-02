@@ -1,4 +1,4 @@
-@model List<DnsWebApp.Models.ZoneSummary>
+@model List<DnsWebApp.Models.Database.Zone>
 
 <table class="table table-striped table-hover table-bordered">
     <thead><tr>
@@ -8,14 +8,14 @@
     @foreach (var zone in Model)
     {
         <tr class="@(zone.Enabled ? "" : "table-danger")">
-            <th>@zone.ZoneName</th>
-            <td>@zone.Registrar</td>
+            <th>@(zone.Name + "." + zone.TopLevelDomain.Domain)</th>
+            <td>@zone.Registrar?.Name</td>
             <td>@zone.Owner</td>
-            <td>@zone.Records</td>
-            <td>@zone.NameServer</td>
-            <td>@zone.Expiry</td>
+            <td>@(zone.ZoneRecords?.Count ?? 0)</td>
+            <td>@zone.PrimaryNameServer</td>
+            <td>@zone.RegistrationExpiry</td>
             <td>
-                <a href="@Url.Action("ShowZone", "Zone", new {zone = zone.ZoneName})" class="btn btn-sm btn-secondary">
+                <a href="@Url.Action("ShowZone", "Zone", new {zone = zone.Id})" class="btn btn-sm btn-secondary">
                     <i class="fas fa-cube"></i>&nbsp;View zone
                 </a>
             </td>

@@ -3,6 +3,7 @@ namespace DnsWebApp.Models.Database
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Microsoft.AspNetCore.Identity;
 
     public class Zone
     {
@@ -27,9 +28,8 @@ namespace DnsWebApp.Models.Database
         public bool Enabled { get; set; }
         
         public DateTime? RegistrationExpiry { get; set; }
-        
         public Registrar Registrar { get; set; }
-        
         public List<ZoneRecord> ZoneRecords { get; set; }
+        public IdentityUser Owner { get; set; }
     }
 }

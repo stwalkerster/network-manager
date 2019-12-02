@@ -49,7 +49,6 @@ namespace DnsWebApp.Controllers
 
         [Route("/register")]
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult Register()
         {
             return this.View();
@@ -57,7 +56,6 @@ namespace DnsWebApp.Controllers
         
         [Route("/register")]
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterCommand command)
         {
             if (!this.ModelState.IsValid)
