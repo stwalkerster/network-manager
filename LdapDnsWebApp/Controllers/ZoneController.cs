@@ -2,33 +2,39 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LdapDnsWebApp.Controllers
 {
-    using LdapDnsWebApp.Extensions;
+    using System.Linq;
+    using LdapDnsWebApp.Models;
+    using LdapDnsWebApp.Models.Database;
     using LdapDnsWebApp.Services;
 
     public class ZoneController : Controller
     {
-        private readonly ILdapManager ldapManager;
         private readonly WhoisService whoisService;
+        private readonly DataContext db;
 
-        public ZoneController(ILdapManager ldapManager, WhoisService whoisService)
+        public ZoneController(WhoisService whoisService, DataContext db)
         {
-            this.ldapManager = ldapManager;
             this.whoisService = whoisService;
+            this.db = db;
         }
 
         [Route("/zones")]
         public IActionResult Index()
         {
-            this.ldapManager.EnsureConnected(this.User);
-            var zoneSummaries = this.ldapManager.GetZoneList("(soaRecord=*)", this.whoisService);
-            
-            return this.View(zoneSummaries);
+            var z = this.db.Zones.Select(
+                    x => new ZoneSummary
+                    {
+                        ZoneName = x.Name + "." + x.TopLevelDomain.Domain, Enabled = x.Enabled,
+                        Records = x.ZoneRecords.Count, Registrar = x.Registrar.Name, NameServer = x.PrimaryNameServer
+                    })
+                .ToList();
+
+            return this.View(z);
         }
 
         [Route("/zone/{zone}")]
         public IActionResult ShowZone(string zone)
         {
-            this.ldapManager.EnsureConnected(this.User);
             return Content("zonefile for " + zone);
         }
     }

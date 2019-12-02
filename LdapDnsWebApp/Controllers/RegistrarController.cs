@@ -2,105 +2,64 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LdapDnsWebApp.Controllers
 {
-    using System.Collections.Generic;
-    using LdapDnsWebApp.Extensions;
+    using System.Linq;
     using LdapDnsWebApp.Models;
+    using LdapDnsWebApp.Models.Database;
     using LdapDnsWebApp.Services;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
-    using Novell.Directory.Ldap;
 
     public class RegistrarController : Controller
     {
-        private readonly ILdapManager ldapManager;
-        private readonly WhoisService whoisService;
-        private readonly LdapConnectionInfo config;
+        private readonly DataContext db;
 
-        public RegistrarController(ILdapManager ldapManager, IOptions<LdapConnectionInfo> config, WhoisService whoisService)
+        public RegistrarController(DataContext db)
         {
-            this.ldapManager = ldapManager;
-            this.whoisService = whoisService;
-            this.config = config.Value;
+            this.db = db;
         }
-        
+
         [Route("/registrar/{item}")]
-        public IActionResult Item(string item)
+        public IActionResult Item(long item)
         {
-            string registrarFilter;
-            if (item == "(none)")
-            {
-                registrarFilter = "(!(o=*))";
-            }
-            else
-            {
-                registrarFilter = "(o=" + item + ")";
-            }
+            var registrar = this.db.Registrar
+                .Include(x => x.Zones)
+                .ThenInclude(x => x.TopLevelDomain)
+                .FirstOrDefault(x => x.Id == item);
+            
+            var zoneSummaries = registrar
+                .Zones.Select(
+                    x => new ZoneSummary
+                    {
+                        Enabled = x.Enabled, Expiry = x.RegistrationExpiry, NameServer = x.PrimaryNameServer,
+                        Registrar = x.Registrar.Name, ZoneName = x.Name + "." + x.TopLevelDomain.Domain
+                    })
+                .ToList();
 
-            this.ldapManager.EnsureConnected(this.User);
-            var zoneSummaries = this.ldapManager.GetZoneList("(&(soaRecord=*)" + registrarFilter + ")", this.whoisService);
-
-            this.ViewData.Add("Registrar", item);
+            this.ViewData["Registrar"] = registrar.Name;
             
             return this.View(zoneSummaries);
         }
-        
+
         [Route("/registrar")]
         public IActionResult Index()
         {
-            this.ldapManager.EnsureConnected(this.User);
-            var ldapConnection = this.ldapManager.GetConnection();
+            var includableQueryable = this.db.Registrar
+                .Include(x => x.Zones)
+                .ThenInclude(x => x.ZoneRecords)
+                .ToList();
 
-            var ldapSearchResults = ldapConnection.Search(
-                this.config.DnsBaseDn,
-                LdapConnection.SCOPE_SUB,
-                "(soaRecord=*)",
-                new[] {"associatedDomain", "o", "disabled"},
-                false);
-
-            var zones = new Dictionary<string, GroupedZoneSummary>();
-            var enabledZones = new Dictionary<string,string>();
-//            var disabledZones = new Dictionary<string,string>();
-            
-            while (ldapSearchResults.hasMore())
-            {
-                var entry = ldapSearchResults.next();
-
-                var org = entry.getAttribute("o")?.StringValue ?? "(none)";
-
-                if (!zones.ContainsKey(org))
+            var groupedZoneSummaries = includableQueryable.Select(
+                x => new GroupedZoneSummary
                 {
-                    zones.Add(org, new GroupedZoneSummary
-                    {
-                        GroupName = org, GroupKey=org,DisabledRecords = -1, EnabledRecords = -1
-                    });
-                }
+                    DisabledZones = x.Zones.Count(y => !y.Enabled),
+                    EnabledZones = x.Zones.Count(y => y.Enabled),
+                    EnabledRecords = x.Zones.Where(y => y.Enabled).Aggregate(0, (agg, cur) => agg + cur.ZoneRecords.Count),
+                    DisabledRecords = x.Zones.Where(y => !y.Enabled).Aggregate(0, (agg, cur) => agg + cur.ZoneRecords.Count),
+                    GroupKey = x.Id.ToString(),
+                    GroupName = x.Name
+                });
 
-                var disabledAttr = entry.getAttribute("disabled")?.StringValue;
-
-                if (disabledAttr == null || disabledAttr != "TRUE")
-                {
-                    zones[org].EnabledZones++;
-                    enabledZones.Add(entry.DN, org);
-                }
-                else
-                {
-                    zones[org].DisabledZones++;
-//                    disabledZones.Add(entry.DN, org);
-                }
-            }
-
-            foreach (var zoneDn in enabledZones)    
-            {
-                var zoneRecords = ldapConnection.Search(
-                    zoneDn.Key,
-                    LdapConnection.SCOPE_SUB,
-                    "(objectclass=domainrelatedobject)",
-                    new[] {"associatedDomain", "o", "disabled"},
-                    false);
-                
-                // todo - count zone records
-            }
-
-            return this.View(zones);
+            return this.View(groupedZoneSummaries.ToDictionary(x => x.GroupKey));
         }
     }
 }

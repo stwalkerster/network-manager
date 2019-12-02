@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
 namespace LdapDnsWebApp
 {
     using LdapDnsWebApp.Models;
+    using LdapDnsWebApp.Models.Database;
     using LdapDnsWebApp.Services;
     using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Configuration;
 
     public class Startup
@@ -32,9 +29,15 @@ namespace LdapDnsWebApp
             services.Configure<SshConnectionInfo>(this.config.GetSection("SshConnectionInfo"));
             
             services.AddSingleton<SshTunnelManager>();
-            services.AddSingleton<WhoisService>();
+            services.AddScoped<WhoisService>();
             services.AddScoped<IAuthenticationService, LdapAuthenticationService>();
             services.AddScoped<ILdapManager, LdapManager>();
+
+            services.AddDbContext<DataContext>(
+                options =>
+                {
+                    options.UseNpgsql(this.config.GetConnectionString("Postgres"));
+                });
             
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
                 options =>

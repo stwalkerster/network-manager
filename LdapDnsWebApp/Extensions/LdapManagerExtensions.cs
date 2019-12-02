@@ -38,7 +38,6 @@ namespace LdapDnsWebApp.Extensions
                 var disabledAttr = entry.getAttribute("disabled")?.StringValue;
                 var domain = entry.getAttribute("associatedDomain").StringValue;
 
-                var whoisResult = whoisService.GetWhoisData(domain);
                 
                 var zone = new ZoneSummary
                 {
@@ -46,7 +45,6 @@ namespace LdapDnsWebApp.Extensions
                     Registrar = org,
                     Owner = owner,
                     Enabled = disabledAttr == null || disabledAttr != "TRUE",
-                    Expiry = whoisResult.Expiry,
                     Records = -1
                 };
                 

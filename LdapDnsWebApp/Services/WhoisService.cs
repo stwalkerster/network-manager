@@ -7,24 +7,25 @@ namespace LdapDnsWebApp.Services
     using System.Linq;
     using System.Net.Sockets;
     using LdapDnsWebApp.Models;
-    using Microsoft.Extensions.Configuration;
+    using LdapDnsWebApp.Models.Database;
+    using Microsoft.EntityFrameworkCore;
 
     public class WhoisService
     {
-        private Dictionary<string, string> whoisServers;
+        private readonly DataContext db;
 
-        public WhoisService(IConfiguration config)
+        public WhoisService(DataContext db)
         {
-            this.whoisServers = config.GetSection("whoisServers").GetChildren().ToDictionary(x => x.Key, x => x.Value);
+            this.db = db;
         }
 
-        public WhoisResult GetWhoisData(string domain)
+        public WhoisResult GetWhoisData(long zoneId)
         {
-            var server = this.whoisServers.Where(x => domain.EndsWith("." + x.Key))
-                .OrderByDescending(x => x.Key.Length)
-                .FirstOrDefault()
-                .Value;
-
+            var zone = this.db.Zones.Include(x => x.TopLevelDomain).FirstOrDefault(x => x.Id == zoneId);
+            
+            var server = zone.TopLevelDomain.WhoisServer;
+            var domain = zone.Name + "." + zone.TopLevelDomain.Domain;
+            
             if (server == null)
             {
                 return new WhoisResult();
