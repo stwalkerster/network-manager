@@ -72,6 +72,21 @@ i.fab {
     text-align: center;
 }
 
+i.far {
+    min-width: 20px;
+    text-align: center;
+}
+
+td.table-button-cell {
+    width: 1%;
+    white-space: nowrap;
+    padding: 7px;
+}
+td.table-min-width {
+    width: 1%;
+    white-space: nowrap;
+}
+
 /*
  * Content
  */

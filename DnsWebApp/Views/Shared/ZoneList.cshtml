@@ -1,22 +1,32 @@
 @model List<DnsWebApp.Models.Database.Zone>
 
-<table class="table table-striped table-hover table-bordered">
+<table class="table table-striped table-hover">
     <thead><tr>
-        <th>Zone</th><th>Registrar</th><th>Owner</th><th>Records</th><th>Nameservers</th><th>Expiry</th><th></th>
+        <th></th><th>Zone</th><th>Registrar</th><th>Owner</th><th>Records</th><th>Nameservers</th><th>Expiry</th><th></th>
     </tr></thead>
     <tbody>
     @foreach (var zone in Model)
     {
         <tr class="@(zone.Enabled ? "" : "table-danger")">
+            <td class="table-button-cell">
+                <form class="form-inline" asp-controller="Zone" asp-action="ToggleFave">
+                    <input type="hidden" name="zone" value="@zone.Id" />
+                    <input type="hidden" name="returnto" value="@Url.Action()" />
+                    <button type="submit" class="btn btn-sm btn-outline-info"><i class="far fa-star"></i></button>
+                </form>
+            </td>
             <th>@(zone.Name + "." + zone.TopLevelDomain.Domain)</th>
             <td>@zone.Registrar?.Name</td>
             <td>@zone.Owner</td>
             <td>@(zone.ZoneRecords?.Count ?? 0)</td>
             <td>@zone.PrimaryNameServer</td>
             <td>@zone.RegistrationExpiry</td>
-            <td>
+            <td class="table-button-cell">
                 <a href="@Url.Action("ShowZone", "Zone", new {zone = zone.Id})" class="btn btn-sm btn-secondary">
-                    <i class="fas fa-cube"></i>&nbsp;View zone
+                    <i class="fas fa-cube"></i>&nbsp;Zone Records
+                </a>
+                <a href="@Url.Action("EditZone", "Zone", new {zone = zone.Id})" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-pencil-alt"></i>&nbsp;Edit SOA
                 </a>
             </td>
         </tr>
