@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LdapDnsWebApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191202002842_Registrar")]
-    partial class Registrar
+    [Migration("20191202003541_RegistrarUpdate")]
+    partial class RegistrarUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace LdapDnsWebApp.Migrations
                 .HasAnnotation("ProductVersion", "3.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.Registrar", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.Registrar", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace LdapDnsWebApp.Migrations
                     b.ToTable("Registrar");
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.Zone", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.Zone", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,6 +48,7 @@ namespace LdapDnsWebApp.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Administrator")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("Enabled")
@@ -61,6 +62,7 @@ namespace LdapDnsWebApp.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryNameServer")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Refresh")
@@ -73,8 +75,7 @@ namespace LdapDnsWebApp.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("SerialNumber")
-                        .HasColumnType("integer")
-                        .HasMaxLength(10);
+                        .HasColumnType("integer");
 
                     b.Property<int>("TimeToLive")
                         .HasColumnType("integer");
@@ -89,9 +90,9 @@ namespace LdapDnsWebApp.Migrations
                     b.ToTable("Zones");
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.Zone", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.Zone", b =>
                 {
-                    b.HasOne("LdapDnsWebApp.Models.Database.Registrar", "Registrar")
+                    b.HasOne("DnsWebApp.Models.Database.Registrar", "Registrar")
                         .WithMany("Zones")
                         .HasForeignKey("RegistrarId");
                 });

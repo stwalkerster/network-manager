@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LdapDnsWebApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191202010135_TldSupport")]
-    partial class TldSupport
+    [Migration("20191202012837_TldNormalisation2")]
+    partial class TldNormalisation2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace LdapDnsWebApp.Migrations
                 .HasAnnotation("ProductVersion", "3.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.Registrar", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.Registrar", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace LdapDnsWebApp.Migrations
                     b.ToTable("Registrar");
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.RegistrarTldSupport", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.RegistrarTldSupport", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +65,7 @@ namespace LdapDnsWebApp.Migrations
                     b.ToTable("RegistrarTldSupport");
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.TopLevelDomain", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.TopLevelDomain", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,10 +81,13 @@ namespace LdapDnsWebApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Domain")
+                        .IsUnique();
+
                     b.ToTable("TopLevelDomains");
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.Zone", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.Zone", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,17 +130,19 @@ namespace LdapDnsWebApp.Migrations
                     b.Property<int>("TimeToLive")
                         .HasColumnType("integer");
 
+                    b.Property<long>("TopLevelDomainId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("RegistrarId");
+
+                    b.HasIndex("TopLevelDomainId");
 
                     b.ToTable("Zones");
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.ZoneRecord", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.ZoneRecord", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,27 +178,33 @@ namespace LdapDnsWebApp.Migrations
                     b.ToTable("ZoneRecord");
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.RegistrarTldSupport", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.RegistrarTldSupport", b =>
                 {
-                    b.HasOne("LdapDnsWebApp.Models.Database.Registrar", "Registrar")
-                        .WithMany()
+                    b.HasOne("DnsWebApp.Models.Database.Registrar", "Registrar")
+                        .WithMany("RegistrarTldSupports")
                         .HasForeignKey("RegistrarId");
 
-                    b.HasOne("LdapDnsWebApp.Models.Database.TopLevelDomain", "TopLevelDomain")
-                        .WithMany()
+                    b.HasOne("DnsWebApp.Models.Database.TopLevelDomain", "TopLevelDomain")
+                        .WithMany("RegistrarTldSupports")
                         .HasForeignKey("TopLevelDomainId");
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.Zone", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.Zone", b =>
                 {
-                    b.HasOne("LdapDnsWebApp.Models.Database.Registrar", "Registrar")
+                    b.HasOne("DnsWebApp.Models.Database.Registrar", "Registrar")
                         .WithMany("Zones")
                         .HasForeignKey("RegistrarId");
+
+                    b.HasOne("DnsWebApp.Models.Database.TopLevelDomain", "TopLevelDomain")
+                        .WithMany("Zones")
+                        .HasForeignKey("TopLevelDomainId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("LdapDnsWebApp.Models.Database.ZoneRecord", b =>
+            modelBuilder.Entity("DnsWebApp.Models.Database.ZoneRecord", b =>
                 {
-                    b.HasOne("LdapDnsWebApp.Models.Database.Zone", "Zone")
+                    b.HasOne("DnsWebApp.Models.Database.Zone", "Zone")
                         .WithMany("ZoneRecords")
                         .HasForeignKey("ZoneId")
                         .OnDelete(DeleteBehavior.Cascade)
