@@ -1,24 +1,25 @@
 namespace DnsWebApp.Controllers
 {
-    using System.Collections.Generic;
-    using System.Security.Claims;
+    using System.Linq;
     using System.Threading.Tasks;
     using DnsWebApp.Models;
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using IAuthenticationService = DnsWebApp.Services.IAuthenticationService;
 
     public class AuthenticationController : Controller
     {
-        private readonly IAuthenticationService authService;
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public AuthenticationController(IAuthenticationService authService)
+        public AuthenticationController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
-            this.authService = authService;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("/login")]
         public IActionResult Login()
         {
@@ -27,7 +28,7 @@ namespace DnsWebApp.Controllers
 
         [HttpPost]
         [Route("/login")]
-        //[AllowAnonymous]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginCommand model)
         {
             if (!this.ModelState.IsValid)
@@ -35,42 +36,60 @@ namespace DnsWebApp.Controllers
                 return this.View(model);
             }
 
-            var user = this.authService.Login(model.Username, model.Password);
-            if (user != null)
+            var result = await this.signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+
+            if (!result.Succeeded)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Username),
-                    new Claim(ClaimTypes.Name, user.DisplayName),
-                    new Claim(ClaimTypes.X500DistinguishedName, user.DistinguishedName),
-                    new Claim("Password", user.Password)
-                };
+                this.ModelState.AddModelError("LoginStatus", "Login failed.");
+                return this.View(model);
+            }
+            
+            return this.Redirect("/");
+        }
 
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var props = new AuthenticationProperties
-                {
-                    AllowRefresh = true,
-                    IsPersistent = false
-                };
-
-                await this.HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(identity),
-                    props);
-
-                return this.Redirect("/");
+        [Route("/register")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            return this.View();
+        }
+        
+        [Route("/register")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterCommand command)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(command);
             }
 
-            this.ModelState.AddModelError("LoginStatus", "Login failed.");
-            return this.View(model);
+            var newUser = new IdentityUser
+            {
+                UserName = command.Username
+            };
+
+            var result = await this.userManager.CreateAsync(newUser, command.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var errorMessage in result.Errors.Select(x => x.Description))
+                {
+                    this.ModelState.AddModelError("LoginStatus", errorMessage);
+                }
+
+                return this.View(command);
+            }
+
+            return this.RedirectToAction("Login");
         }
 
         [Route("/logout")]
         public async Task<IActionResult> Logout()
         {
-            await this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await this.signInManager.SignOutAsync();
             return this.Redirect("/");
         }
-        
     }
 }

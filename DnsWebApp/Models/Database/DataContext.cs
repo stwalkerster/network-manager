@@ -1,8 +1,9 @@
 namespace DnsWebApp.Models.Database
 {
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -11,6 +12,8 @@ namespace DnsWebApp.Models.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            
             //modelBuilder.Entity<Zone>().HasIndex(x => new {x.TopLevelDomain, x.Name}).IsUnique();
             modelBuilder.Entity<Registrar>().HasIndex(x => x.Name).IsUnique();
             modelBuilder.Entity<TopLevelDomain>().HasIndex(x => x.Domain).IsUnique();

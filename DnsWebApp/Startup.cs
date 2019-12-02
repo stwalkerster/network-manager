@@ -1,12 +1,12 @@
 namespace DnsWebApp
 {
-    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Services;
-    using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -21,34 +21,32 @@ namespace DnsWebApp
             this.config = config;
         }
         
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<LdapConnectionInfo>(this.config.GetSection("LdapConnectionInfo"));
-            services.Configure<SshConnectionInfo>(this.config.GetSection("SshConnectionInfo"));
-            
-            services.AddSingleton<SshTunnelManager>();
             services.AddScoped<WhoisService>();
-            services.AddScoped<IAuthenticationService, LdapAuthenticationService>();
-            services.AddScoped<ILdapManager, LdapManager>();
-
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
+            
             services.AddDbContext<DataContext>(
                 options =>
                 {
                     options.UseNpgsql(this.config.GetConnectionString("Postgres"));
                 });
             
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
+            services.ConfigureApplicationCookie(
                 options =>
                 {
-                    options.LoginPath = new PathString("/login");
-                    options.LogoutPath = new PathString("/logout");
+                    options.LogoutPath = "/logout";
+                    options.LoginPath = "/login";
                 });
-            services.AddControllersWithViews();
+
+            services.AddControllersWithViews(
+                o =>
+                {
+                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                    o.Filters.Add(new AuthorizeFilter(policy));
+                });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment()) 

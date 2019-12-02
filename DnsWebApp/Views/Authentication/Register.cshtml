@@ -1,0 +1,25 @@
+@model DnsWebApp.Models.RegisterCommand
+
+@{
+    ViewBag.Title = "Register";
+    Layout = "_BaseLayout";
+}
+
+@section HeadContent {
+    <link href="~/css/login.css" rel="stylesheet">
+}
+
+<body class="text-center">
+    <form class="form-register" asp-controller="Authentication" asp-action="Register">
+        <h1 class="h3 mb-3 font-weight-normal">Create an account</h1>
+        @Html.ValidationMessage("LoginStatus", null, new{ @class = "alert alert-danger", role = "alert"}, "div")
+        <label asp-for="Username" class="sr-only"></label>
+        <input asp-for="Username" id="inputUsername" class="form-control" placeholder="Username" autofocus />
+        <label asp-for="Password" class="sr-only"></label>
+        <input asp-for="Password" id="inputPassword" class="form-control" placeholder="Password" />
+        <label asp-for="ConfirmPassword" class="sr-only"></label>
+        <input asp-for="ConfirmPassword" id="inputConfirmPassword" class="form-control" placeholder="Confirm password" />
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <p>Got an account? <a href="@Url.Action("Login", "Authentication")">Log in instead</a>.</p>
+    </form>
+</body>
