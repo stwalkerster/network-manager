@@ -1,9 +1,9 @@
-namespace LdapDnsWebApp.Services
+namespace DnsWebApp.Services
 {
     using System;
     using System.Linq;
     using System.Security.Claims;
-    using LdapDnsWebApp.Models;
+    using DnsWebApp.Models;
     using Microsoft.Extensions.Options;
     using Novell.Directory.Ldap;
 

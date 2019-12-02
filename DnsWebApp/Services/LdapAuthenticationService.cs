@@ -1,6 +1,6 @@
-namespace LdapDnsWebApp.Services
+namespace DnsWebApp.Services
 {
-    using LdapDnsWebApp.Models;
+    using DnsWebApp.Models;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
     using Novell.Directory.Ldap;

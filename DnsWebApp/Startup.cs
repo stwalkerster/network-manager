@@ -1,8 +1,8 @@
-namespace LdapDnsWebApp
+namespace DnsWebApp
 {
-    using LdapDnsWebApp.Models;
-    using LdapDnsWebApp.Models.Database;
-    using LdapDnsWebApp.Services;
+    using DnsWebApp.Models;
+    using DnsWebApp.Models.Database;
+    using DnsWebApp.Services;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

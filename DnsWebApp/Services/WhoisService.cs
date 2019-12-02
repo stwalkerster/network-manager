@@ -1,4 +1,4 @@
-namespace LdapDnsWebApp.Services
+namespace DnsWebApp.Services
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,8 @@ namespace LdapDnsWebApp.Services
     using System.IO;
     using System.Linq;
     using System.Net.Sockets;
-    using LdapDnsWebApp.Models;
-    using LdapDnsWebApp.Models.Database;
+    using DnsWebApp.Models;
+    using DnsWebApp.Models.Database;
     using Microsoft.EntityFrameworkCore;
 
     public class WhoisService

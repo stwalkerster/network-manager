@@ -1,4 +1,4 @@
-namespace LdapDnsWebApp.Models.Database
+namespace DnsWebApp.Models.Database
 {
     using Microsoft.EntityFrameworkCore;
 

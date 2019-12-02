@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <Company>Simon Walker</Company>
-        <RootNamespace>LdapDnsWebApp</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

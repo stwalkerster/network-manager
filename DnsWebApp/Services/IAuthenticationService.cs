@@ -1,6 +1,6 @@
-namespace LdapDnsWebApp.Services
+namespace DnsWebApp.Services
 {
-    using LdapDnsWebApp.Models;
+    using DnsWebApp.Models;
 
     public interface IAuthenticationService
     {

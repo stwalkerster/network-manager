@@ -1,9 +1,9 @@
-namespace LdapDnsWebApp.Extensions
+namespace DnsWebApp.Extensions
 {
     using System.Collections.Generic;
     using System.Linq;
-    using LdapDnsWebApp.Models;
-    using LdapDnsWebApp.Services;
+    using DnsWebApp.Models;
+    using DnsWebApp.Services;
     using Novell.Directory.Ldap;
 
     public static class LdapManagerExtensions

@@ -1,4 +1,4 @@
-namespace LdapDnsWebApp.Models
+namespace DnsWebApp.Models
 {
     using System;
 

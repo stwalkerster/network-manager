@@ -1,7 +1,7 @@
-namespace LdapDnsWebApp.Services
+namespace DnsWebApp.Services
 {
     using System.Security.Claims;
-    using LdapDnsWebApp.Models;
+    using DnsWebApp.Models;
     using Novell.Directory.Ldap;
 
     public interface ILdapManager

@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace LdapDnsWebApp.Controllers
+namespace DnsWebApp.Controllers
 {
     using System.Collections.Generic;
     using System.Linq;
-    using LdapDnsWebApp.Extensions;
-    using LdapDnsWebApp.Models;
-    using LdapDnsWebApp.Services;
+    using DnsWebApp.Extensions;
+    using DnsWebApp.Models;
+    using DnsWebApp.Services;
     using Novell.Directory.Ldap;
 
     public class OwnerController : Controller

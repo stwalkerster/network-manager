@@ -1,8 +1,8 @@
-namespace LdapDnsWebApp.ViewComponents
+namespace DnsWebApp.ViewComponents
 {
     using System.Collections.Generic;
-    using LdapDnsWebApp.Models;
-    using LdapDnsWebApp.Services;
+    using DnsWebApp.Models;
+    using DnsWebApp.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Novell.Directory.Ldap;

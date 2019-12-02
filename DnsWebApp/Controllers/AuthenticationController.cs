@@ -1,13 +1,13 @@
-namespace LdapDnsWebApp.Controllers
+namespace DnsWebApp.Controllers
 {
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using LdapDnsWebApp.Models;
+    using DnsWebApp.Models;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;
-    using IAuthenticationService = LdapDnsWebApp.Services.IAuthenticationService;
+    using IAuthenticationService = DnsWebApp.Services.IAuthenticationService;
 
     public class AuthenticationController : Controller
     {

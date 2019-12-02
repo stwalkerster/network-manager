@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace LdapDnsWebApp.Controllers
+namespace DnsWebApp.Controllers
 {
     using System.Linq;
-    using LdapDnsWebApp.Models;
-    using LdapDnsWebApp.Models.Database;
-    using LdapDnsWebApp.Services;
+    using DnsWebApp.Models;
+    using DnsWebApp.Models.Database;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 

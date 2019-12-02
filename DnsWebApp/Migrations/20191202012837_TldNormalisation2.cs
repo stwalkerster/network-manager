@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LdapDnsWebApp.Migrations
+namespace DnsWebApp.Migrations
 {
     public partial class TldNormalisation2 : Migration
     {

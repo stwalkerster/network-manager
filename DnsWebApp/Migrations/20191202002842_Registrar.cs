@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace LdapDnsWebApp.Migrations
+namespace DnsWebApp.Migrations
 {
     public partial class Registrar : Migration
     {
