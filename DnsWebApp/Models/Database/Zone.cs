@@ -44,11 +44,15 @@ namespace DnsWebApp.Models.Database
         
         [Display(Name = "Registration Expiry")]
         public DateTime? RegistrationExpiry { get; set; }
+        
         public Registrar Registrar { get; set; }
-        [Display(Name = "Registrar")]
         public long? RegistrarId { get; set; }
-        public List<ZoneRecord> ZoneRecords { get; set; }
+        
         public IdentityUser Owner { get; set; }
         public string OwnerId { get; set; }
+        
+        public DateTime? WhoisLastUpdated { get; set; }
+        
+        public List<ZoneRecord> ZoneRecords { get; set; }
     }
 }

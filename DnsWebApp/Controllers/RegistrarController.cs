@@ -3,6 +3,7 @@ namespace DnsWebApp.Controllers
     using System.Linq;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using DnsWebApp.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
@@ -10,10 +11,12 @@ namespace DnsWebApp.Controllers
     public class RegistrarController : Controller
     {
         private readonly DataContext db;
+        private readonly WhoisService whoisService;
 
-        public RegistrarController(DataContext db)
+        public RegistrarController(DataContext db, WhoisService whoisService)
         {
             this.db = db;
+            this.whoisService = whoisService;
         }
 
         [Route("/registrar/{item}")]
@@ -28,6 +31,8 @@ namespace DnsWebApp.Controllers
             
             var zoneSummaries = registrar.Zones.ToList();
 
+            this.whoisService.UpdateExpiryAttributes(zoneSummaries);
+            
             this.ViewData["Registrar"] = registrar.Name;
             
             return this.View(zoneSummaries);

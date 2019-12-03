@@ -23,9 +23,10 @@ namespace DnsWebApp
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<FormattingService>();
             services.AddScoped<WhoisService>();
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
-            
+
             services.AddDbContext<DataContext>(
                 options =>
                 {

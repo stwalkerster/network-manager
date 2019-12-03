@@ -6,17 +6,20 @@ namespace DnsWebApp.Controllers
     using System.Linq.Expressions;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using DnsWebApp.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
     public class OwnerController : Controller
     {
         private readonly DataContext db;
+        private readonly WhoisService whoisService;
         private const string NoneSpecifier = "(none)";
 
-        public OwnerController(DataContext db)
+        public OwnerController(DataContext db, WhoisService whoisService)
         {
             this.db = db;
+            this.whoisService = whoisService;
         }
         
         [Route("/owner/{item}")]
@@ -34,6 +37,8 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Registrar)
                 .Where(whereClause)
                 .ToList();
+
+            this.whoisService.UpdateExpiryAttributes(zones);
     
             this.ViewData["Owner"] = item;
             return this.View(zones);

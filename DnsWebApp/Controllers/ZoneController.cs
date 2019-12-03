@@ -31,6 +31,8 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.ZoneRecords)
                 .ToList();
 
+            this.whoisService.UpdateExpiryAttributes(z);
+            
             return this.View(z);
         }
 
