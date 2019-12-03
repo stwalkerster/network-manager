@@ -1,20 +1,15 @@
-namespace DnsWebApp.Models.Database
+namespace DnsWebApp.Models.ViewModels
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.VisualBasic.CompilerServices;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class Zone
+    public class ZoneCommand
     {
         public long Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
-        
-        [Required]
-        public TopLevelDomain TopLevelDomain { get; set; }
         
         [Required]
         [Display(Name = "Primary Name Server")]
@@ -23,8 +18,6 @@ namespace DnsWebApp.Models.Database
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Administrator { get; set; }
-        
-        public int SerialNumber { get; set; }
         
         [Range(60,31536000)]
         public int Refresh { get; set; }
@@ -44,11 +37,13 @@ namespace DnsWebApp.Models.Database
         
         [Display(Name = "Registration Expiry")]
         public DateTime? RegistrationExpiry { get; set; }
-        public Registrar Registrar { get; set; }
-        [Display(Name = "Registrar")]
-        public long? RegistrarId { get; set; }
-        public List<ZoneRecord> ZoneRecords { get; set; }
-        public IdentityUser Owner { get; set; }
-        public string OwnerId { get; set; }
+
+        public long? Registrar { get; set; }
+
+        public string Owner { get; set; }
+
+        public List<SelectListItem> Registrars { get; set; }
+        public List<SelectListItem> Owners { get; set; }
+        
     }
 }

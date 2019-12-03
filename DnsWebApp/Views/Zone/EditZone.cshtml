@@ -1,15 +1,79 @@
-@model DnsWebApp.Models.Database.Zone
+@model DnsWebApp.Models.ViewModels.ZoneCommand
 @{
     ViewBag.Title = "Edit Zone";
     Layout = "_Layout";
 }
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Editing zone @(Model.Name + "." + Model.TopLevelDomain.Domain)</h1>
+    <h1 class="h2">Editing zone @(Model.Name)</h1>
     
     <div class="btn-toolbar mb-2 mb-md-0">
         <a href="@Url.Action("ShowZone", "Zone", new {zone = Model.Id})" class="btn btn-sm btn-outline-secondary">
             <i class="fas fa-cube"></i>&nbsp;Zone Records
         </a>
     </div>
+    
 </div>
+<form asp-controller="Zone" asp-action="EditZone">
+    <div class="row">
+        <fieldset class="col-md-6">
+            <legend>Zone settings</legend>
+
+            <div class="form-check">
+                <input class="form-check-input" asp-for="Enabled"/>
+                <label class="form-check-label" asp-for="Enabled"></label>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Registrar"></label>
+                <select asp-for="Registrar" asp-items="Model.Registrars" class="form-control">
+                    <option value="">(none)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RegistrationExpiry"></label>
+                <input asp-for="RegistrationExpiry" class="form-control"/>
+                <small class="form-text text-muted">The date the domain registration expires with the registrar.</small>
+            </div>
+        </fieldset>
+
+        <fieldset class="col-md-6">
+            <legend>Start of Authority (SOA) record</legend>
+
+            <div class="form-group">
+                <label asp-for="PrimaryNameServer"></label>
+                <input asp-for="PrimaryNameServer" class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Administrator"></label>
+                <input asp-for="Administrator" class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Refresh"></label>
+                <input asp-for="Refresh" class="form-control"/>
+                <small class="form-text text-muted">Number of seconds after which secondary nameservers will request an update.</small>
+            </div>
+            <div class="form-group">
+                <label asp-for="Retry"></label>
+                <input asp-for="Retry" class="form-control"/>
+                <small class="form-text text-muted">Number of seconds after which secondary nameservers will retry a refresh.</small>
+            </div>
+            <div class="form-group">
+                <label asp-for="Expire"></label>
+                <input asp-for="Expire" class="form-control"/>
+                <small class="form-text text-muted">How long secondary nameservers will answer requests for.</small>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeToLive"></label>
+                <input asp-for="TimeToLive" class="form-control"/>
+                <small class="form-text text-muted">How long to cache negative responses</small>
+            </div>
+        </fieldset>
+    </div>
+    <div class="row">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save changes</button>
+    </div>
+</form>
