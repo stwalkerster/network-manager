@@ -23,7 +23,7 @@ namespace DnsWebApp.ViewComponents
                 .Include(x => x.Zone)
                 .ThenInclude(x => x.TopLevelDomain)
                 .Where(x => x.UserId == this.userManager.GetUserId(this.HttpContext.User))
-                .ToDictionary(z => z.Id, x => x.Zone.Name + "." + x.Zone.TopLevelDomain.Domain);
+                .ToDictionary(z => z.Zone.Id, x => x.Zone.Name + "." + x.Zone.TopLevelDomain.Domain);
 
             return this.View(favouriteDomains);
         }
