@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DnsWebApp.Controllers
 {
+    using System;
     using System.Globalization;
     using System.Linq;
     using DnsWebApp.Models.Database;
@@ -46,15 +47,39 @@ namespace DnsWebApp.Controllers
                 .FirstOrDefault(x => x.Id == zone));
         }
 
+        [HttpGet]
         [Route("/zone/new")]
         public IActionResult NewZone()
         {
-            this.ViewBag.Registrars = this.db.Registrar.Select(
-                    x => new SelectListItem {Value = x.Id.ToString(CultureInfo.InvariantCulture), Text = x.Name})
-                .ToList();
+            var zoneCommand = new ZoneCommand();
+            zoneCommand.Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
+            zoneCommand.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem("." + x.Domain, x.Id.ToString())).ToList();
+
+            zoneCommand.Refresh = zoneCommand.Retry = zoneCommand.TimeToLive = 300;
+            zoneCommand.Expire = 86400;
+            zoneCommand.PrimaryNameServer = "ns1.stwalkerster.net";
+            zoneCommand.TopLevelDomain = this.db.TopLevelDomains.First(x => x.Domain == "com").Id;
             
-            return this.View(new Zone());
+            return this.View(zoneCommand);
         }
+        
+        [HttpPost]
+        [Route("/zone/new")]
+        public IActionResult NewZone(ZoneCommand editedZone)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                editedZone.Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
+                editedZone.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList();
+                
+                return this.View(editedZone);
+            }
+
+            throw new NotImplementedException();
+            
+            return this.RedirectToAction("Index");
+        }
+
         
         [HttpPost]
         [Route("/zone/edit/{zone:int}")]
@@ -77,6 +102,8 @@ namespace DnsWebApp.Controllers
                 editedZone.Name = zoneObject.Name + "." + zoneObject.TopLevelDomain.Domain;
                 editedZone.Registrars =
                     this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
+                editedZone.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList();
+
                 
                 return this.View(editedZone);
             }
@@ -115,6 +142,7 @@ namespace DnsWebApp.Controllers
             var cmd = new ZoneCommand
             {
                 Administrator = zoneObject.Administrator,
+                BaseName = zoneObject.Name,
                 Enabled = zoneObject.Enabled,
                 Expire = zoneObject.Expire,
                 Owner = zoneObject.OwnerId,
@@ -124,10 +152,13 @@ namespace DnsWebApp.Controllers
                 RegistrationExpiry = zoneObject.RegistrationExpiry,
                 Retry = zoneObject.Retry,
                 TimeToLive = zoneObject.TimeToLive,
+                TopLevelDomain = zoneObject.TopLevelDomainId,
                 
                 Id = zoneObject.Id,
                 Name = zoneObject.Name + "." + zoneObject.TopLevelDomain.Domain,
-                Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList()
+                Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList(),
+                TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList()
+
             };
             
             return this.View(cmd);

@@ -15,6 +15,7 @@ namespace DnsWebApp.Models.Database
         
         [Required]
         public TopLevelDomain TopLevelDomain { get; set; }
+        public long TopLevelDomainId { get; set; }
         
         [Required]
         [Display(Name = "Primary Name Server")]

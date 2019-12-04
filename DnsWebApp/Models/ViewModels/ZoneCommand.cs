@@ -12,6 +12,10 @@ namespace DnsWebApp.Models.ViewModels
         public string Name { get; set; }
         
         [Required]
+        [Display(Name = "Domain base name")]
+        public string BaseName { get; set; }
+        
+        [Required]
         [Display(Name = "Primary Name Server")]
         public string PrimaryNameServer { get; set; }
         
@@ -39,10 +43,15 @@ namespace DnsWebApp.Models.ViewModels
         public DateTime? RegistrationExpiry { get; set; }
 
         public long? Registrar { get; set; }
+        
+        [Required]
+        [Display(Name = "Top level domain")]
+        public long? TopLevelDomain { get; set; }
 
         public string Owner { get; set; }
 
         public List<SelectListItem> Registrars { get; set; }
+        public List<SelectListItem> TopLevelDomains { get; set; }
         public List<SelectListItem> Owners { get; set; }
         
     }
