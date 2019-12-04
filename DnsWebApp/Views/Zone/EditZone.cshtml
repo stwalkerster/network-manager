@@ -12,16 +12,19 @@
             <i class="fas fa-cube"></i>&nbsp;Zone Records
         </a>
     </div>
-    
 </div>
+
 <form asp-controller="Zone" asp-action="EditZone">
     <div class="row">
         <fieldset class="col-md-6">
             <legend>Zone settings</legend>
 
-            <div class="form-check">
-                <input class="form-check-input" asp-for="Enabled"/>
-                <label class="form-check-label" asp-for="Enabled"></label>
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="Enabled"/>
+                    <label class="custom-control-label" asp-for="Enabled"></label>
+                    <small class="form-text text-muted">Enables or disables this zone in the DNS server. Disabling the zone will mean this zone is not served!</small>
+                </div>
             </div>
 
             <div class="form-group">
@@ -51,29 +54,31 @@
                 <input asp-for="Administrator" class="form-control"/>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Refresh"></label>
-                <input asp-for="Refresh" class="form-control"/>
-                <small class="form-text text-muted">Number of seconds after which secondary nameservers will request an update.</small>
-            </div>
-            <div class="form-group">
-                <label asp-for="Retry"></label>
-                <input asp-for="Retry" class="form-control"/>
-                <small class="form-text text-muted">Number of seconds after which secondary nameservers will retry a refresh.</small>
-            </div>
-            <div class="form-group">
-                <label asp-for="Expire"></label>
-                <input asp-for="Expire" class="form-control"/>
-                <small class="form-text text-muted">How long secondary nameservers will answer requests for.</small>
-            </div>
-            <div class="form-group">
-                <label asp-for="TimeToLive"></label>
-                <input asp-for="TimeToLive" class="form-control"/>
-                <small class="form-text text-muted">How long to cache negative responses</small>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label asp-for="Refresh"></label>
+                    <input asp-for="Refresh" class="form-control"/>
+                    <small class="form-text text-muted">Number of seconds after which secondary nameservers will request an update.</small>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label asp-for="Retry"></label>
+                    <input asp-for="Retry" class="form-control"/>
+                    <small class="form-text text-muted">Number of seconds after which secondary nameservers will retry a refresh.</small>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label asp-for="Expire"></label>
+                    <input asp-for="Expire" class="form-control"/>
+                    <small class="form-text text-muted">How long secondary nameservers will answer requests for.</small>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label asp-for="TimeToLive"></label>
+                    <input asp-for="TimeToLive" class="form-control"/>
+                    <small class="form-text text-muted">How long to cache negative responses</small>
+                </div>
             </div>
         </fieldset>
     </div>
     <div class="row">
-        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save changes</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save settings</button>
     </div>
 </form>
