@@ -20,7 +20,7 @@ namespace DnsWebApp.Controllers
         
         public IActionResult Index()
         {
-            return Content("index");
+            return this.View();
         }
 
         public IActionResult RenewalCosts()

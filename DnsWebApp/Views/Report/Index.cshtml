@@ -1,0 +1,15 @@
+@{
+    ViewBag.Title = "Reports";
+    ViewData["Active"] = "Report";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@ViewBag.Title</h1>
+</div>
+
+<p>
+    <ul>
+        <li><a href="@Url.Action("RenewalCosts")">Renewal costs report</a></li>
+    </ul>
+</p>
