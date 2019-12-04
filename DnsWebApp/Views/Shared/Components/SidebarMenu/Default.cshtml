@@ -29,8 +29,9 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-muted" href="#">
+            <a class="nav-link @(ViewBag.Active == "Report" ? "active" : "")" href="@Url.Action("Index", "Report")">
                 <i class="fas fa-layer-group"></i>&nbsp;Reports
+                @Html.Raw(ViewBag.Active == "Report" ? "<span class=\"sr-only\">(current)</span>" : "")
             </a>
         </li>
     </ul>

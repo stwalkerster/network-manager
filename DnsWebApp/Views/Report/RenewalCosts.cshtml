@@ -1,0 +1,36 @@
+@model List<Tuple<List<string>, List<string[]>>>
+@{
+    ViewBag.Title = "Renewal Costs";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">@ViewBag.Title</h1>
+</div>
+
+@foreach (var query in Model)
+{
+    <table class="table table-striped table-hover table-bordered sortable">
+        <thead>
+        <tr>
+            @foreach (var column in query.Item1)
+            {
+                <th>@column</th>
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var row in query.Item2)
+        {
+            <tr>
+                @foreach (var cell in row)
+                {
+                    <td>
+                        @cell
+                    </td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+}
