@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace DnsWebApp.Controllers
 {
     using System;
-    using System.Globalization;
     using System.Linq;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
@@ -54,6 +53,7 @@ namespace DnsWebApp.Controllers
             var zoneCommand = new ZoneCommand();
             zoneCommand.Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
             zoneCommand.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem("." + x.Domain, x.Id.ToString())).ToList();
+            zoneCommand.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
 
             zoneCommand.Refresh = zoneCommand.Retry = zoneCommand.TimeToLive = 300;
             zoneCommand.Expire = 86400;
@@ -71,6 +71,8 @@ namespace DnsWebApp.Controllers
             {
                 editedZone.Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
                 editedZone.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList();
+                editedZone.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
+
                 
                 return this.View(editedZone);
             }
@@ -103,7 +105,7 @@ namespace DnsWebApp.Controllers
                 editedZone.Registrars =
                     this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
                 editedZone.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList();
-
+                editedZone.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
                 
                 return this.View(editedZone);
             }
@@ -117,6 +119,7 @@ namespace DnsWebApp.Controllers
             
             zoneObject.Enabled = editedZone.Enabled;
             zoneObject.RegistrarId = editedZone.Registrar;
+            zoneObject.OwnerId = editedZone.Owner;
             zoneObject.RegistrationExpiry = editedZone.RegistrationExpiry;
             
             this.db.SaveChanges();
@@ -153,12 +156,12 @@ namespace DnsWebApp.Controllers
                 Retry = zoneObject.Retry,
                 TimeToLive = zoneObject.TimeToLive,
                 TopLevelDomain = zoneObject.TopLevelDomainId,
-                
+
                 Id = zoneObject.Id,
                 Name = zoneObject.Name + "." + zoneObject.TopLevelDomain.Domain,
                 Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList(),
-                TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList()
-
+                TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList(),
+                Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList()
             };
             
             return this.View(cmd);
