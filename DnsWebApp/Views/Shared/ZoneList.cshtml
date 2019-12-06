@@ -20,7 +20,7 @@
             <td>@zone.Owner</td>
             <td>@(zone.ZoneRecords?.Count ?? 0)</td>
             <td>@zone.PrimaryNameServer</td>
-            <td>@Format.AsReadableDate(zone.RegistrationExpiry)</td>
+            <td data-dateformat="YYYY-MM-DD">@Format.AsReadableDate(zone.RegistrationExpiry)</td>
             <td class="table-button-cell">
                 <a href="@Url.Action("ShowZone", "Zone", new {zone = zone.Id})" class="btn btn-sm btn-secondary">
                     <i class="fas fa-cube"></i>&nbsp;Zone Records
