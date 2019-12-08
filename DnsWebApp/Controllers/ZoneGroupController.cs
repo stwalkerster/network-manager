@@ -23,9 +23,13 @@ namespace DnsWebApp.Controllers
         }
 
         [Route("/zones/group/{item:int}")]
-        public IActionResult Item(int item)
+        public IActionResult ShowZoneGroup(int item)
         {
-            return Content("");
+            var zoneGroupObject = this.db.ZoneGroups
+                .Include(x => x.ZoneGroupMembers)
+                .FirstOrDefault(x => x.Id == item);
+            
+            return this.View(zoneGroupObject);
         }
         
         [Route("/zones/group/{item:int}/zones")]
