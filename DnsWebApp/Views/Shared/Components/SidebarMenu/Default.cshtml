@@ -11,6 +11,19 @@
             </a>
         </li>
         <li class="nav-item">
+            <a class="nav-link @(ViewBag.Active == "Report" ? "active" : "")" href="@Url.Action("Index", "Report")">
+                <i class="fas fa-chart-pie"></i>&nbsp;Reports
+                @Html.Raw(ViewBag.Active == "Report" ? "<span class=\"sr-only\">(current)</span>" : "")
+            </a>
+        </li>
+    </ul>
+    
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-text-light">
+        <span>Domain Name System</span>
+    </h6>
+    
+    <ul class="nav flex-column">
+        <li class="nav-item">
             <a class="nav-link @(ViewBag.Active == "Zone" ? "active" : "")" href="@Url.Action("Index", "Zone")">
                 <i class="fas fa-cubes"></i>&nbsp;All zones
                 @Html.Raw(ViewBag.Active == "Zone" ? "<span class=\"sr-only\">(current)</span>" : "")
@@ -34,18 +47,12 @@
                 @Html.Raw(ViewBag.Active == "ZoneGroup" ? "<span class=\"sr-only\">(current)</span>" : "")
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link @(ViewBag.Active == "Report" ? "active" : "")" href="@Url.Action("Index", "Report")">
-                <i class="fas fa-chart-pie"></i>&nbsp;Reports
-                @Html.Raw(ViewBag.Active == "Report" ? "<span class=\"sr-only\">(current)</span>" : "")
-            </a>
-        </li>
     </ul>
     
     @if (Model.Any())
     {
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-text-light">
-            <span>Favourite Zones</span>
+            <span>Favourite DNS Zones</span>
         </h6>
         <ul class="nav flex-column mb-2">
             @foreach (var z in Model)
@@ -58,4 +65,17 @@
             }
         </ul>
     }
+    
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-text-light">
+        <span>Application Management</span>
+    </h6>
+        
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link disabled @(ViewBag.Active == "UserManagement" ? "active" : "")" href="@Url.Action("Index", "Home")">
+                <i class="fas fa-users"></i>&nbsp;Users
+                @Html.Raw(ViewBag.Active == "UserManagement" ? "<span class=\"sr-only\">(current)</span>" : "")
+            </a>
+        </li>
+    </ul>
 </div>
