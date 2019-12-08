@@ -1,3 +1,4 @@
+@using System.Text.Json
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Dashboard";
@@ -25,60 +26,53 @@
 
 
 <script>
-var ctx = document.getElementById('tldChart').getContext('2d');
-var tldChart = new Chart(ctx, {
+var colours = ['rgba(0, 184, 148,1.0)',
+               'rgba(0, 206, 201,1.0)',
+               'rgba(9, 132, 227,1.0)',
+               'rgba(108, 92, 231,1.0)',
+               'rgba(178, 190, 195,1.0)',
+               'rgba(253, 203, 110,1.0)',
+               'rgba(225, 112, 85,1.0)',
+               'rgba(214, 48, 49,1.0)',
+               'rgba(232, 67, 147,1.0)',
+               'rgba(45, 52, 54,1.0)',
+               'rgba(85, 239, 196,1.0)',
+               'rgba(129, 236, 236,1.0)',
+               'rgba(116, 185, 255,1.0)',
+               'rgba(162, 155, 254,1.0)',
+               'rgba(223, 230, 233,1.0)',
+               'rgba(255, 234, 167,1.0)',
+               'rgba(250, 177, 160,1.0)',
+               'rgba(255, 118, 117,1.0)',
+               'rgba(253, 121, 168,1.0)',
+               'rgba(99, 110, 114,1.0)'];
+var chartOptions = {
+    circumference: Math.PI,
+    rotation: -Math.PI        
+};
+
+var tldChart = new Chart(document.getElementById('tldChart').getContext('2d'), {
     type: 'doughnut',
     data: {
         datasets: [{
-            data: [10,20,30,40],
-            backgroundColor: [
-                'rgba(0, 168, 255,1.0)',
-                'rgba(156, 136, 255,1.0)',
-                'rgba(251, 197, 49,1.0)',
-                'rgba(76, 209, 55,1.0)',
-                'rgba(72, 126, 176,1.0)',
-                'rgba(232, 65, 24,1.0)',
-                'rgba(127, 143, 166,1.0)',
-                'rgba(39, 60, 117,1.0)',
-                'rgba(53, 59, 72,1.0)'
-            ]
+            data: @Html.Raw(JsonSerializer.Serialize(ViewBag.TldStats.Item2)),
+            backgroundColor: colours
         }],
-        labels: [
-            "foo", "bar", "baz", "quux"
-        ]
+        labels: @Html.Raw(JsonSerializer.Serialize(ViewBag.TldStats.Item1))
     },
-    options: {
-        circumference: Math.PI,
-        rotation: -Math.PI        
-    }
+    options: chartOptions
 });
 
-ctx2 = document.getElementById('typeChart').getContext('2d');
-var typeChart = new Chart(ctx2, {
+var typeChart = new Chart(document.getElementById('typeChart').getContext('2d'), {
     type: 'doughnut',
     data: {
         datasets: [{
-            data: [10,30,5,2,20,30,40],
-            backgroundColor: [
-                'rgba(0, 168, 255,1.0)',
-                'rgba(156, 136, 255,1.0)',
-                'rgba(251, 197, 49,1.0)',
-                'rgba(76, 209, 55,1.0)',
-                'rgba(72, 126, 176,1.0)',
-                'rgba(232, 65, 24,1.0)',
-                'rgba(127, 143, 166,1.0)',
-                'rgba(39, 60, 117,1.0)',
-                'rgba(53, 59, 72,1.0)'
-            ]
+            data: @Html.Raw(JsonSerializer.Serialize(ViewBag.RecordStats.Item2)),
+            backgroundColor: colours
         }],
-        labels: [
-            "foo", "bar", "baz", "quux","snorp", "bluup", "garble"
-        ]
+        labels: @Html.Raw(JsonSerializer.Serialize(ViewBag.RecordStats.Item1))
     },
-    options: {
-        circumference: Math.PI,
-        rotation: -Math.PI        
-    }
+    options: chartOptions
 });
 
 
