@@ -30,6 +30,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a class="nav-link @(ViewBag.Active == "TopLevelDomain" ? "active" : "")" href="@Url.Action("Index", "TopLevelDomain")">
+                <i class="fas fa-server"></i>&nbsp;Top Level Domains
+                @Html.Raw(ViewBag.Active == "TopLevelDomain" ? "<span class=\"sr-only\">(current)</span>" : "")
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link @(ViewBag.Active == "Registrar" ? "active" : "")" href="@Url.Action("Index", "Registrar")">
                 <i class="fas fa-building"></i>&nbsp;Registrars
                 @Html.Raw(ViewBag.Active == "Registrars" ? "<span class=\"sr-only\">(current)</span>" : "")

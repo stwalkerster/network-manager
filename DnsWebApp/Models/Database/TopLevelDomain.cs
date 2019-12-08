@@ -11,6 +11,9 @@ namespace DnsWebApp.Models.Database
         
         public string WhoisServer { get; set; }
         
+        public string Registry { get; set; }
+        public string RegistryUrl { get; set; }
+        
         public List<Zone> Zones { get; set; }
         public List<RegistrarTldSupport> RegistrarTldSupports { get; set; }
     }

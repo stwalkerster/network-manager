@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace DnsWebApp.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
@@ -78,12 +76,28 @@ namespace DnsWebApp.Controllers
                 editedZone.Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
                 editedZone.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList();
                 editedZone.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
-
                 
                 return this.View(editedZone);
             }
 
-            throw new NotImplementedException();
+            var zoneObject = new Zone();
+            zoneObject.Name = editedZone.BaseName;
+            zoneObject.TopLevelDomainId = editedZone.TopLevelDomain;
+            
+            zoneObject.PrimaryNameServer = editedZone.PrimaryNameServer;
+            zoneObject.Administrator = editedZone.Administrator;
+            zoneObject.Refresh = editedZone.Refresh;
+            zoneObject.Retry = editedZone.Retry;
+            zoneObject.Expire = editedZone.Expire;
+            zoneObject.TimeToLive = editedZone.TimeToLive;
+            
+            zoneObject.Enabled = editedZone.Enabled;
+            zoneObject.RegistrarId = editedZone.Registrar;
+            zoneObject.OwnerId = editedZone.Owner;
+            zoneObject.RegistrationExpiry = editedZone.RegistrationExpiry;
+
+            this.db.Zones.Add(zoneObject);
+            this.db.SaveChanges();
             
             return this.RedirectToAction("Index");
         }

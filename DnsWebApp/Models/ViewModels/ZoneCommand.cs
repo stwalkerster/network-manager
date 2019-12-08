@@ -46,7 +46,7 @@ namespace DnsWebApp.Models.ViewModels
         
         [Required]
         [Display(Name = "Top level domain")]
-        public long? TopLevelDomain { get; set; }
+        public long TopLevelDomain { get; set; }
 
         public string Owner { get; set; }
 

@@ -1,0 +1,41 @@
+@model List<DnsWebApp.Models.Database.TopLevelDomain>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Top Level Domains";
+    ViewBag.Active = "TopLevelDomain";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">All top level domains</h1>
+    
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="@Url.Action("New", "TopLevelDomain")" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-plus"></i>&nbsp;New top level domain
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped table-hover sortable">
+    <thead><tr>
+        <th>Top Level Domain</th><th>Registrar</th><th>Whois Server</th><th>Zones</th><th data-defaultsort="disabled"></th>
+    </tr></thead>
+    <tbody>
+    @foreach (var tld in Model)
+    {
+        <tr>
+            <td class="font-weight-bold">@(tld.Domain)</td>
+            <td><a href="@tld.RegistryUrl">@tld.Registry</a></td>
+            <td>@tld.WhoisServer</td>
+            <td>@(tld.Zones?.Count ?? 0)</td>
+            <td class="table-button-cell">
+                <a href="@Url.Action("ShowZones", "TopLevelDomain", new {item = tld.Id})" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-cubes"></i>&nbsp;View Zones
+                </a>
+                <a href="@Url.Action("Edit", "TopLevelDomain", new {item = tld.Id})" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-pencil-alt"></i>&nbsp;Edit
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
