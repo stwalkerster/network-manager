@@ -1,0 +1,13 @@
+@model List<DnsWebApp.Models.Database.Zone>
+@{
+    Layout = "_Layout"; 
+    ViewData["Title"] = "Zone Groups";
+    ViewBag.Active = "ZoneGroup";
+}
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Zones in group @ViewData["ZoneGroup"]</h1>
+</div>
+
+<partial name="ZoneList"/>

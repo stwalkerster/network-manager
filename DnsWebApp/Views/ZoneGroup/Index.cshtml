@@ -1,0 +1,25 @@
+@model Dictionary<string, DnsWebApp.Models.ZoneGroupSummary>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Zone Groups";
+    ViewBag.Active = "ZoneGroup";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Zone Groups</h1>
+    
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="@Url.Action("NewZoneGroup", "ZoneGroup")" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-plus"></i>&nbsp;New zone group
+        </a>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-xl-3 row-cols-lg-2">
+    @foreach (var reg in Model)
+    {
+        <div class="col mb-4">
+            <partial name="ZoneGroupSummary" model="@reg.Value"/>
+        </div>
+    }
+</div>

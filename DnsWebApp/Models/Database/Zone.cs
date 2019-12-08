@@ -56,5 +56,6 @@ namespace DnsWebApp.Models.Database
         
         public List<ZoneRecord> ZoneRecords { get; set; }
         public List<FavouriteDomains> FavouriteDomains { get; set; }
+        public List<ZoneGroupMember> ZoneGroupMembers { get; set; }
     }
 }
