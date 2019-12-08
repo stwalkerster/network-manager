@@ -55,5 +55,6 @@ namespace DnsWebApp.Models.Database
         public DateTime? WhoisLastUpdated { get; set; }
         
         public List<ZoneRecord> ZoneRecords { get; set; }
+        public List<FavouriteDomains> FavouriteDomains { get; set; }
     }
 }

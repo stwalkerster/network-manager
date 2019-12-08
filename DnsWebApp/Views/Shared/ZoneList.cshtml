@@ -12,7 +12,14 @@
                 <form class="form-inline" asp-controller="Zone" asp-action="ToggleFave">
                     <input type="hidden" name="zone" value="@zone.Id" />
                     <input type="hidden" name="returnto" value="@Url.Action()" />
-                    <button type="submit" class="btn btn-sm btn-outline-info"><i class="far fa-star"></i></button>
+                    @if (zone.FavouriteDomains != null && zone.FavouriteDomains.Any(x =>  x.User?.UserName == User.Identity.Name))
+                    {
+                        <button type="submit" class="btn btn-sm btn-info"><i class="fas fa-star"></i></button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-sm btn-outline-info"><i class="far fa-star"></i></button>
+                    }
                 </form>
             </td>
             <td class="font-weight-bold">@(zone.Name + "." + zone.TopLevelDomain.Domain)</td>

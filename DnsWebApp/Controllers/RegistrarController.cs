@@ -6,7 +6,6 @@ namespace DnsWebApp.Controllers
     using DnsWebApp.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Options;
 
     public class RegistrarController : Controller
     {
@@ -27,7 +26,15 @@ namespace DnsWebApp.Controllers
                 .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.Zones)
                 .ThenInclude(x => x.Owner)
+                .Include(x => x.Zones)
+                .ThenInclude(x => x.FavouriteDomains)
+                .ThenInclude(x => x.User)
                 .FirstOrDefault(x => x.Id == item);
+
+            if (registrar == null)
+            {
+                return this.RedirectToAction("Index");
+            }
             
             var zoneSummaries = registrar.Zones.ToList();
 

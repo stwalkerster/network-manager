@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace DnsWebApp.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
@@ -14,11 +16,13 @@ namespace DnsWebApp.Controllers
     {
         private readonly WhoisService whoisService;
         private readonly DataContext db;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public ZoneController(WhoisService whoisService, DataContext db)
+        public ZoneController(WhoisService whoisService, DataContext db, UserManager<IdentityUser> userManager)
         {
             this.whoisService = whoisService;
             this.db = db;
+            this.userManager = userManager;
         }
 
         [Route("/zones")]
@@ -29,6 +33,8 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Registrar)
                 .Include(x => x.Owner)
                 .Include(x => x.ZoneRecords)
+                .Include(x => x.FavouriteDomains)
+                .ThenInclude(x => x.User)
                 .ToList();
 
             this.whoisService.UpdateExpiryAttributes(z);
@@ -171,6 +177,36 @@ namespace DnsWebApp.Controllers
         [Route("/zone/togglefave")]
         public IActionResult ToggleFave(int zone, string returnto)
         {
+            var zoneObject = this.db.Zones
+                .Include(x => x.FavouriteDomains)
+                .FirstOrDefault(x => x.Id == zone);
+
+            if (zoneObject == null)
+            {
+                return this.Redirect(returnto);
+            }
+
+            var userId = this.userManager.GetUserId(this.HttpContext.User);
+            
+            if (zoneObject.FavouriteDomains != null && zoneObject.FavouriteDomains.Any(x => x.UserId == userId))
+            {
+                zoneObject.FavouriteDomains.RemoveAll(x => x.UserId == userId && x.ZoneId == zoneObject.Id);
+            }
+            else
+            {
+                if (zoneObject.FavouriteDomains == null)
+                {
+                    zoneObject.FavouriteDomains = new List<FavouriteDomains>();
+                }
+
+                zoneObject.FavouriteDomains.Add(new FavouriteDomains
+                {
+                    UserId = userId,
+                    Zone = zoneObject
+                });
+            }
+
+            this.db.SaveChanges();
             return this.Redirect(returnto);
         }
     }
