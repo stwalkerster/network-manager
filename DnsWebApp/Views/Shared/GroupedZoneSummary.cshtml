@@ -5,8 +5,8 @@
         <h3 class="card-title">@Model.GroupName</h3>
         @if (Model.EnabledZones > 0)
         {
+            <p class="card-text float-right mt-1 mb-0 text-right">(@Model.EnabledRecords records)</p>
             <p class="card-text lead"><span class="badge badge-success">@Model.EnabledZones</span>&nbsp;enabled zones</p>
-            <p class="card-text text-right">... totalling @Model.EnabledRecords records</p>
         }
         else
         {
@@ -15,8 +15,8 @@
                 
         @if (Model.DisabledZones > 0)
         {
+            <p class="card-text float-right mt-1 mb-0 text-right">(@Model.DisabledRecords records)</p>
             <p class="card-text lead"><span class="badge badge-danger">@Model.DisabledZones</span>&nbsp;disabled zones</p>
-            <p class="card-text text-right">... totalling @Model.DisabledRecords records</p>
         }
         else
         {

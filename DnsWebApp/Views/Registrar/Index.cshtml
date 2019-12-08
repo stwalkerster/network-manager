@@ -9,9 +9,11 @@
     <h1 class="h2">Registrars</h1>
 </div>
 
-<div class="card-deck">
+<div class="row row-cols-1 row-cols-xl-4 row-cols-lg-3 row-cols-md-2">
     @foreach (var reg in Model)
     {
-        <partial name="GroupedZoneSummary" model="@reg.Value"/>
+        <div class="col mb-4">
+            <partial name="GroupedZoneSummary" model="@reg.Value"/>
+        </div>
     }
 </div>
