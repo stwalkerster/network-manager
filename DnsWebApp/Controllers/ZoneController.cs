@@ -11,6 +11,7 @@ namespace DnsWebApp.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
     public class ZoneController : Controller
     {
@@ -55,14 +56,84 @@ namespace DnsWebApp.Controllers
                 .ThenInclude(x => x.Records)
                 .FirstOrDefault(x => x.Id == zone);
 
+            if (zoneObject == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            var display = new ZoneDisplay
+            {
+                Zone = zoneObject,
+                Fqdn = zoneObject.Name + "." + zoneObject.TopLevelDomain.Domain
+            };
+
             var records = new Dictionary<RecordType, Tuple<List<Record>, List<Record>>>();
 
             foreach (var zoneRecord in zoneObject.Records)
             {
-                
+                switch (zoneRecord.Type)
+                {
+                    case RecordType.A:
+                    case RecordType.AAAA:
+                    case RecordType.CNAME:
+                        display.HostRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.CAA:
+                        display.CaaRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.MX:
+                        display.MxRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.NS:
+                        display.NsRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.SRV:
+                        display.SrvRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.SSHFP:
+                        display.SshfpRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.TXT:
+                        display.TxtRecords.FromZone.Add(zoneRecord);
+                        break;
+                }
+            }
+
+            foreach (var zoneGroup in zoneObject.ZoneGroupMembers.Select(x => x.ZoneGroup))
+            {
+                foreach (var zoneRecord in zoneGroup.Records)
+                {
+                    switch (zoneRecord.Type)
+                    {
+                        case RecordType.A:
+                        case RecordType.AAAA:
+                        case RecordType.CNAME:
+                            display.HostRecords.FromZoneGroup.Add(zoneRecord);
+                            break;
+                        case RecordType.CAA:
+                            display.CaaRecords.FromZoneGroup.Add(zoneRecord);
+                            break;
+                        case RecordType.MX:
+                            display.MxRecords.FromZoneGroup.Add(zoneRecord);
+                            break;
+                        case RecordType.NS:
+                            display.NsRecords.FromZoneGroup.Add(zoneRecord);
+                            break;
+                        case RecordType.SRV:
+                            display.SrvRecords.FromZoneGroup.Add(zoneRecord);
+                            break;
+                        case RecordType.SSHFP:
+                            display.SshfpRecords.FromZoneGroup.Add(zoneRecord);
+                            break;
+                        case RecordType.TXT:
+                            display.TxtRecords.FromZoneGroup.Add(zoneRecord);
+                            break;
+                    }
+                }
             }
             
-            return this.View();
+            
+            return this.View(display);
         }
 
         [HttpGet]

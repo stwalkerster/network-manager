@@ -1,14 +1,325 @@
-@model DnsWebApp.Models.Database.Zone
+@model DnsWebApp.Models.ViewModels.ZoneDisplay
 @{
     ViewBag.Title = "Zone";
     Layout = "_Layout";
 }
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Zone @(Model.Name + "." + Model.TopLevelDomain.Domain)</h1>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h2">Zone @Model.Fqdn</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="@Url.Action("EditZone", "Zone", new {zone = Model.Id})" class="btn btn-sm btn-outline-secondary">
+        <a href="@Url.Action("EditZone", "Zone", new {zone = Model.Zone.Id})" class="btn btn-sm btn-outline-secondary">
             <i class="fas fa-pencil-alt"></i>&nbsp;Edit SOA
         </a>
     </div>
 </div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Default TTL</th><th>Primary Nameserver</th><th>Administrator</th>
+        <th>Refresh</th><th>Retry</th><th>Expire</th><th>Negative TTL</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>@Model.Zone.DefaultTimeToLive</td><td>@Model.Zone.PrimaryNameServer</td><td>@Model.Zone.Administrator</td>
+        <td>@Model.Zone.Refresh</td><td>@Model.Zone.Retry</td><td>@Model.Zone.Expire</td><td>@Model.Zone.TimeToLive</td>
+    </tr>
+    </tbody>
+</table>
+
+<h3 class="mt-4">NS records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Nameserver</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.NsRecords.FromZoneGroup)
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Value</td>
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.NsRecords.FromZone)
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Value</td>
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">CAA records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Tag</th><th>Value</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.CaaRecords.FromZoneGroup)
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td />
+                <td />
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.CaaRecords.FromZone)
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td />
+                <td />
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">MX records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Preference</th><th>Mail Server</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.MxRecords.FromZoneGroup)
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td />
+                <td />
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.MxRecords.FromZone)
+        {
+            <tr>
+                <td class="table-button-cell"></td>
+                <td>@r.Name</td>
+                <td />
+                <td />
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }    
+    </tbody>
+</table>
+
+<h3 class="mt-4">A/AAAA/CNAME records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Type</th><th>Target</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.HostRecords.FromZoneGroup)
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Type</td>
+                <td>@r.Value</td>
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.HostRecords.FromZone)
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Type</td>
+                <td>@r.Value</td>
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">TXT records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Value</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.TxtRecords.FromZoneGroup)
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Value</td>
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.TxtRecords.FromZone)
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Value</td>
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">SRV records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Protocol</th><th>Service</th><th>Priority</th><th>Weight</th><th>Port</th><th>Target</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.SrvRecords.FromZoneGroup)
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td />
+                <td />
+                <td />
+                <td />
+                <td />
+                <td />
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.SrvRecords.FromZone)
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td />
+                <td />
+                <td />
+                <td />
+                <td />
+                <td />
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">SSHFP records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Algorithm</th><th>Type</th><th>Fingerprint</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.SshfpRecords.FromZoneGroup)
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td />
+                <td />
+                <td />
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.SshfpRecords.FromZone)
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td />
+                <td />
+                <td />
+                <td>@r.TimeToLive</td>
+                <td class="table-button-cell">
+                    <a href="#" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
