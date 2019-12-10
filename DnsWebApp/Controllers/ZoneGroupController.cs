@@ -9,7 +9,6 @@ namespace DnsWebApp.Controllers
     using DnsWebApp.Models.Database;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Internal;
 
     public class ZoneGroupController : Controller
     {
@@ -40,8 +39,8 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Owner)
                 .Include(x => x.Registrar)
                 .Include(x => x.FavouriteDomains).ThenInclude(x => x.User)
-                .Include(x => x.ZoneGroupMembers)
-                .ThenInclude(x => x.ZoneGroup)
+                .Include(x => x.ZoneGroupMembers).ThenInclude(x => x.ZoneGroup)
+                .Include(x => x.Records)
                 .Where(x => x.ZoneGroupMembers.Select(y=>y.ZoneGroupId).Contains(item))
                 .ToList();
 
@@ -58,8 +57,8 @@ namespace DnsWebApp.Controllers
             var zoneGroups = this.db.ZoneGroups
                 .Include(x => x.ZoneGroupMembers)
                 .ThenInclude(x => x.Zone)
-                .ThenInclude(x => x.ZoneRecords)
-                .Include(x => x.ZoneGroupRecords)
+                .ThenInclude(x => x.Records)
+                .Include(x => x.Records)
                 .ToList();
 
 
@@ -68,9 +67,9 @@ namespace DnsWebApp.Controllers
                 {
                     DisabledZones = x.ZoneGroupMembers.Count(y => !y.Zone.Enabled),
                     EnabledZones = x.ZoneGroupMembers.Count(y => y.Zone.Enabled),
-                    EnabledRecords = x.ZoneGroupMembers.Where(y => y.Zone.Enabled).Aggregate(0, (agg, cur) => agg + cur.Zone.ZoneRecords.Count),
-                    DisabledRecords = x.ZoneGroupMembers.Where(y => !y.Zone.Enabled).Aggregate(0, (agg, cur) => agg + cur.Zone.ZoneRecords.Count),
-                    GroupRecords = x.ZoneGroupRecords.Count,
+                    EnabledRecords = x.ZoneGroupMembers.Where(y => y.Zone.Enabled).Aggregate(0, (agg, cur) => agg + cur.Zone.Records.Count),
+                    DisabledRecords = x.ZoneGroupMembers.Where(y => !y.Zone.Enabled).Aggregate(0, (agg, cur) => agg + cur.Zone.Records.Count),
+                    GroupRecords = x.Records.Count,
                     GroupKey = x.Id.ToString(),
                     GroupName = x.Name
                 });

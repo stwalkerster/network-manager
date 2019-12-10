@@ -1,7 +1,9 @@
 namespace DnsWebApp.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
@@ -30,7 +32,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.TopLevelDomain)
                 .Include(x => x.Registrar)
                 .Include(x => x.Owner)
-                .Include(x => x.ZoneRecords)
+                .Include(x => x.Records)
                 .Include(x => x.FavouriteDomains)
                 .ThenInclude(x => x.User)
                 .ToList();
@@ -43,11 +45,24 @@ namespace DnsWebApp.Controllers
         [Route("/zone/{zone:int}")]
         public IActionResult ShowZone(int zone)
         {
-            return this.View(this.db.Zones
+            var zoneObject = this.db.Zones
                 .Include(x => x.TopLevelDomain)
                 .Include(x => x.Owner)
                 .Include(x => x.Registrar)
-                .FirstOrDefault(x => x.Id == zone));
+                .Include(x => x.Records)
+                .Include(x => x.ZoneGroupMembers)
+                .ThenInclude(x => x.ZoneGroup)
+                .ThenInclude(x => x.Records)
+                .FirstOrDefault(x => x.Id == zone);
+
+            var records = new Dictionary<RecordType, Tuple<List<Record>, List<Record>>>();
+
+            foreach (var zoneRecord in zoneObject.Records)
+            {
+                
+            }
+            
+            return this.View();
         }
 
         [HttpGet]
@@ -59,7 +74,7 @@ namespace DnsWebApp.Controllers
             zoneCommand.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem("." + x.Domain, x.Id.ToString())).ToList();
             zoneCommand.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
 
-            zoneCommand.Refresh = zoneCommand.Retry = zoneCommand.TimeToLive = 300;
+            zoneCommand.Refresh = zoneCommand.Retry = zoneCommand.TimeToLive = zoneCommand.DefaultTimeToLive = 300;
             zoneCommand.Expire = 86400;
             zoneCommand.PrimaryNameServer = "ns1.stwalkerster.net";
             zoneCommand.TopLevelDomain = this.db.TopLevelDomains.First(x => x.Domain == "com").Id;
@@ -90,6 +105,7 @@ namespace DnsWebApp.Controllers
             zoneObject.Retry = editedZone.Retry;
             zoneObject.Expire = editedZone.Expire;
             zoneObject.TimeToLive = editedZone.TimeToLive;
+            zoneObject.DefaultTimeToLive = editedZone.DefaultTimeToLive;
             
             zoneObject.Enabled = editedZone.Enabled;
             zoneObject.RegistrarId = editedZone.Registrar;
@@ -136,6 +152,7 @@ namespace DnsWebApp.Controllers
             zoneObject.Retry = editedZone.Retry;
             zoneObject.Expire = editedZone.Expire;
             zoneObject.TimeToLive = editedZone.TimeToLive;
+            zoneObject.DefaultTimeToLive = editedZone.DefaultTimeToLive;
             
             zoneObject.Enabled = editedZone.Enabled;
             zoneObject.RegistrarId = editedZone.Registrar;
@@ -175,6 +192,7 @@ namespace DnsWebApp.Controllers
                 RegistrationExpiry = zoneObject.RegistrationExpiry,
                 Retry = zoneObject.Retry,
                 TimeToLive = zoneObject.TimeToLive,
+                DefaultTimeToLive = zoneObject.DefaultTimeToLive,
                 TopLevelDomain = zoneObject.TopLevelDomainId,
 
                 Id = zoneObject.Id,

@@ -29,6 +29,8 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Zones)
                 .ThenInclude(x => x.FavouriteDomains)
                 .ThenInclude(x => x.User)
+                .Include(x => x.Zones)
+                .ThenInclude(x => x.Records)
                 .FirstOrDefault(x => x.Id == item);
 
             if (registrar == null)
@@ -50,7 +52,7 @@ namespace DnsWebApp.Controllers
         {
             var includableQueryable = this.db.Registrar
                 .Include(x => x.Zones)
-                .ThenInclude(x => x.ZoneRecords)
+                .ThenInclude(x => x.Records)
                 .ToList();
 
             var groupedZoneSummaries = includableQueryable.Select(
@@ -58,8 +60,8 @@ namespace DnsWebApp.Controllers
                 {
                     DisabledZones = x.Zones.Count(y => !y.Enabled),
                     EnabledZones = x.Zones.Count(y => y.Enabled),
-                    EnabledRecords = x.Zones.Where(y => y.Enabled).Aggregate(0, (agg, cur) => agg + cur.ZoneRecords.Count),
-                    DisabledRecords = x.Zones.Where(y => !y.Enabled).Aggregate(0, (agg, cur) => agg + cur.ZoneRecords.Count),
+                    EnabledRecords = x.Zones.Where(y => y.Enabled).Aggregate(0, (agg, cur) => agg + cur.Records.Count),
+                    DisabledRecords = x.Zones.Where(y => !y.Enabled).Aggregate(0, (agg, cur) => agg + cur.Records.Count),
                     GroupKey = x.Id.ToString(),
                     GroupName = x.Name
                 });

@@ -33,3 +33,11 @@
     <span asp-validation-for="Owner" class="text-danger"></span>
     <small class="form-text text-muted">The user to whom the domain belongs.</small>
 </div>
+
+
+<div class="form-group">
+    <label asp-for="DefaultTimeToLive"></label>
+    <input asp-for="DefaultTimeToLive" class="form-control"/>
+    <span asp-validation-for="DefaultTimeToLive" class="text-danger"></span>
+    <small class="form-text text-muted">The default TTL to apply to all records in this zone without a TTL defined</small>
+</div>

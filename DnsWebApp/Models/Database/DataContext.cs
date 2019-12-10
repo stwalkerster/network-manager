@@ -26,8 +26,6 @@ namespace DnsWebApp.Models.Database
         public DbSet<ZoneGroup> ZoneGroups { get; set; }
         public DbSet<Registrar> Registrar { get; set; }
         public DbSet<Record> Record { get; set; }
-        public DbSet<ZoneRecord> ZoneRecord { get; set; }
-        public DbSet<ZoneGroupRecord> ZoneGroupRecord { get; set; }
         public DbSet<TopLevelDomain> TopLevelDomains { get; set; }
         public DbSet<RegistrarTldSupport> RegistrarTldSupport { get; set; }
         public DbSet<FavouriteDomains> FavouriteDomains { get; set; }

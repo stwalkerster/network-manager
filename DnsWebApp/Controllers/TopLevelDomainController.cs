@@ -52,6 +52,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Registrar)
                 .Include(x => x.FavouriteDomains)
                 .ThenInclude(x => x.User)
+                .Include(x => x.Records)
                 .Where(x => x.TopLevelDomainId == item)
                 .ToList();
 

@@ -18,5 +18,10 @@ namespace DnsWebApp.Models.Database
         
         [Required]
         public string Value { get; set; }
+        
+        public ZoneGroup ZoneGroup { get; set; }
+        public long? ZoneGroupId { get; set; }
+        public Zone Zone { get; set; }
+        public long? ZoneId { get; set; }
     }
 }

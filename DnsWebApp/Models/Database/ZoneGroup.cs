@@ -11,7 +11,7 @@ namespace DnsWebApp.Models.Database
         [Required]
         public string Name { get; set; }
         
-        public List<ZoneGroupRecord> ZoneGroupRecords { get; set; }
+        public List<Record> Records { get; set; }
         public List<ZoneGroupMember> ZoneGroupMembers { get; set; }
     }
 }

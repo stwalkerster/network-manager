@@ -37,8 +37,12 @@ namespace DnsWebApp.Models.Database
         public int Expire { get; set; }
         
         [Range(60,31536000)]
-        [Display(Name = "Time to Live")]
+        [Display(Name = "Negative Time to Live")]
         public int TimeToLive { get; set; }
+        
+        [Range(60,31536000)]
+        [Display(Name = "Default Time to Live")]
+        public int DefaultTimeToLive { get; set; }
         
         [Required]
         public bool Enabled { get; set; }
@@ -54,7 +58,7 @@ namespace DnsWebApp.Models.Database
         
         public DateTime? WhoisLastUpdated { get; set; }
         
-        public List<ZoneRecord> ZoneRecords { get; set; }
+        public List<Record> Records { get; set; }
         public List<FavouriteDomains> FavouriteDomains { get; set; }
         public List<ZoneGroupMember> ZoneGroupMembers { get; set; }
     }

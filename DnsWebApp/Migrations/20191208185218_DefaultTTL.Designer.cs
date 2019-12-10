@@ -3,15 +3,17 @@ using System;
 using DnsWebApp.Models.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DnsWebApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20191208185218_DefaultTTL")]
+    partial class DefaultTTL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,17 +69,7 @@ namespace DnsWebApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("ZoneGroupId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ZoneId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ZoneGroupId");
-
-                    b.HasIndex("ZoneId");
 
                     b.ToTable("Record");
                 });
@@ -256,6 +248,50 @@ namespace DnsWebApp.Migrations
                     b.HasIndex("ZoneId");
 
                     b.ToTable("ZoneGroupMember");
+                });
+
+            modelBuilder.Entity("DnsWebApp.Models.Database.ZoneGroupRecord", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long>("RecordId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ZoneGroupId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecordId");
+
+                    b.HasIndex("ZoneGroupId");
+
+                    b.ToTable("ZoneGroupRecord");
+                });
+
+            modelBuilder.Entity("DnsWebApp.Models.Database.ZoneRecord", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long>("RecordId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ZoneId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecordId");
+
+                    b.HasIndex("ZoneId");
+
+                    b.ToTable("ZoneRecord");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -467,17 +503,6 @@ namespace DnsWebApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DnsWebApp.Models.Database.Record", b =>
-                {
-                    b.HasOne("DnsWebApp.Models.Database.ZoneGroup", "ZoneGroup")
-                        .WithMany("Records")
-                        .HasForeignKey("ZoneGroupId");
-
-                    b.HasOne("DnsWebApp.Models.Database.Zone", "Zone")
-                        .WithMany("Records")
-                        .HasForeignKey("ZoneId");
-                });
-
             modelBuilder.Entity("DnsWebApp.Models.Database.RegistrarTldSupport", b =>
                 {
                     b.HasOne("DnsWebApp.Models.Database.Registrar", "Registrar")
@@ -520,6 +545,36 @@ namespace DnsWebApp.Migrations
 
                     b.HasOne("DnsWebApp.Models.Database.Zone", "Zone")
                         .WithMany("ZoneGroupMembers")
+                        .HasForeignKey("ZoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DnsWebApp.Models.Database.ZoneGroupRecord", b =>
+                {
+                    b.HasOne("DnsWebApp.Models.Database.Record", "Record")
+                        .WithMany()
+                        .HasForeignKey("RecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DnsWebApp.Models.Database.ZoneGroup", "ZoneGroup")
+                        .WithMany("ZoneGroupRecords")
+                        .HasForeignKey("ZoneGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DnsWebApp.Models.Database.ZoneRecord", b =>
+                {
+                    b.HasOne("DnsWebApp.Models.Database.Record", "Record")
+                        .WithMany()
+                        .HasForeignKey("RecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DnsWebApp.Models.Database.Zone", "Zone")
+                        .WithMany("ZoneRecords")
                         .HasForeignKey("ZoneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
