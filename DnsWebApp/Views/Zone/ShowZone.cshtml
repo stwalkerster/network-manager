@@ -8,8 +8,11 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
     <h1 class="h2">Zone @Model.Fqdn</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="@Url.Action("EditZone", "Zone", new {zone = Model.Zone.Id})" class="btn btn-sm btn-outline-secondary">
+        <a href="@Url.Action("EditZone", "Zone", new {zone = Model.Zone.Id})" class="btn btn-sm btn-outline-secondary ml-2">
             <i class="fas fa-pencil-alt"></i>&nbsp;Edit SOA
+        </a>
+        <a href="@Url.Action("ShowZoneFile", "Zone", new {zone = Model.Zone.Id})" class="btn btn-sm btn-outline-secondary ml-2">
+            <i class="fas fa-file-alt"></i>&nbsp;Show Zone File
         </a>
     </div>
 </div>

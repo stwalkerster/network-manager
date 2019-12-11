@@ -1,0 +1,24 @@
+@model DnsWebApp.Models.ViewModels.ZoneFileDisplay
+@{
+    ViewBag.Title = "Zone File";
+    Layout = "_Layout";
+}
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h2">Zone file for @Model.Fqdn</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="@Url.Action("EditZone", "Zone", new {zone = Model.Zone.Id})" class="btn btn-sm btn-outline-secondary ml-2">
+            <i class="fas fa-pencil-alt"></i>&nbsp;Edit SOA
+        </a>
+        <a href="@Url.Action("ShowZone", "Zone", new {zone = Model.Zone.Id})" class="btn btn-sm btn-outline-secondary ml-2">
+            <i class="fas fa-cube"></i>&nbsp;Records
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <pre><partial name="Zonefile"/></pre>
+    </div>
+</div>

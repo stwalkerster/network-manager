@@ -136,6 +136,46 @@ namespace DnsWebApp.Controllers
             return this.View(display);
         }
 
+        [Route("/zone/{zone:int}/zonefile")]
+        public IActionResult ShowZoneFile(int zone)
+        {
+            var zoneObject = this.db.Zones
+                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Owner)
+                .Include(x => x.Registrar)
+                .Include(x => x.Records)
+                .Include(x => x.ZoneGroupMembers)
+                .ThenInclude(x => x.ZoneGroup)
+                .ThenInclude(x => x.Records)
+                .FirstOrDefault(x => x.Id == zone);
+
+            if (zoneObject == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            var display = new ZoneFileDisplay
+            {
+                Zone = zoneObject,
+                Fqdn = zoneObject.Name + "." + zoneObject.TopLevelDomain.Domain
+            };
+            
+            foreach (var zoneRecord in zoneObject.Records)
+            {
+                display.Records.Add(zoneRecord);
+            }
+
+            foreach (var zoneGroup in zoneObject.ZoneGroupMembers.Select(x => x.ZoneGroup))
+            {
+                foreach (var zoneRecord in zoneGroup.Records)
+                {
+                    display.Records.Add(zoneRecord);
+                }
+            }
+            
+            return this.View(display);
+        }
+        
         public IActionResult EditRecord(int record)
         {
             return Content("no.");
