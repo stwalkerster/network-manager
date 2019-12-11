@@ -25,24 +25,24 @@ namespace DnsWebApp.Models.Database
         [DataType(DataType.EmailAddress)]
         public string Administrator { get; set; }
         
-        public int SerialNumber { get; set; }
+        public uint SerialNumber { get; set; }
         
         [Range(60,31536000)]
-        public int Refresh { get; set; }
+        public uint Refresh { get; set; }
         
         [Range(60,31536000)]
-        public int Retry { get; set; }
+        public uint Retry { get; set; }
         
         [Range(60,31536000)]
-        public int Expire { get; set; }
+        public uint Expire { get; set; }
         
         [Range(60,31536000)]
         [Display(Name = "Negative Time to Live")]
-        public int TimeToLive { get; set; }
+        public uint TimeToLive { get; set; }
         
         [Range(60,31536000)]
         [Display(Name = "Default Time to Live")]
-        public int DefaultTimeToLive { get; set; }
+        public uint DefaultTimeToLive { get; set; }
         
         [Required]
         public bool Enabled { get; set; }

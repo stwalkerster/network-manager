@@ -136,6 +136,11 @@ namespace DnsWebApp.Controllers
             return this.View(display);
         }
 
+        public IActionResult EditRecord(int record)
+        {
+            return Content("no.");
+        }
+        
         [HttpGet]
         [Route("/zone/new")]
         public IActionResult NewZone()
