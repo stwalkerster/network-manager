@@ -12,6 +12,7 @@ namespace DnsWebApp.Models.Dns
         public virtual string Name { get => this.record.Name; set => this.record.Name = value; }  
         public virtual string Value { get => this.record.Value; set => this.record.Value = value; }  
         public virtual uint? TimeToLive { get => this.record.TimeToLive; set => this.record.TimeToLive = value; }
+        public RecordType Type { get => this.record.Type; }
 
         public long Id => this.record.Id;
         public long? ZoneGroupId => this.record.ZoneGroupId;

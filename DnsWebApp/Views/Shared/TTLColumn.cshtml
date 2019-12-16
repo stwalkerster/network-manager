@@ -1,0 +1,17 @@
+@model DnsWebApp.Models.Dns.RecordViewModelBase
+
+@if (Model.TimeToLive.HasValue)
+{
+    <td>@Model.TimeToLive</td>
+}
+else
+{
+    if (((uint?)ViewBag.DefaultTTL).HasValue)
+    {
+        <td class="font-italic text-muted">@ViewBag.DefaultTTL&nbsp;<i class="fas fa-info-circle"></i></td>
+    }
+    else
+    {
+        <td></td>
+    }
+}

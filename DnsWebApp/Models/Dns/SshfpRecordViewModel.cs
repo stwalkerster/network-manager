@@ -15,7 +15,7 @@ namespace DnsWebApp.Models.Dns
             set => this.Set(0, ((int)value).ToString(CultureInfo.InvariantCulture));
         }
 
-        public SshfpFingerprintType Type
+        public SshfpFingerprintType FingerprintType
         {
             get => (SshfpFingerprintType)int.Parse(this.Parse()[1]);
             set => this.Set(1, ((int)value).ToString(CultureInfo.InvariantCulture));

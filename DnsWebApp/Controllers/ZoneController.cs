@@ -1,6 +1,5 @@
 namespace DnsWebApp.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using DnsWebApp.Models;
@@ -11,7 +10,6 @@ namespace DnsWebApp.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
     public class ZoneController : Controller
     {
@@ -66,9 +64,7 @@ namespace DnsWebApp.Controllers
                 Zone = zoneObject,
                 Fqdn = zoneObject.Name + "." + zoneObject.TopLevelDomain.Domain
             };
-
-            var records = new Dictionary<RecordType, Tuple<List<Record>, List<Record>>>();
-
+            
             foreach (var zoneRecord in zoneObject.Records)
             {
                 switch (zoneRecord.Type)

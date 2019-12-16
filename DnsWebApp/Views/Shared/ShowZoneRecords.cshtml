@@ -1,0 +1,300 @@
+@using DnsWebApp.Models.Dns
+@model DnsWebApp.Models.ViewModels.ZoneDisplayBase
+@{
+    ViewBag.DefaultTTL = (uint?)Model.DefaultTTL;
+}
+
+<h3 class="mt-4">NS records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Nameserver</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.NsRecords.FromZoneGroup.Select(x => new GenericRecordViewModel(x)))
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Value</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("ShowZoneGroup", "ZoneGroup", new {item = r.ZoneGroupId})" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.NsRecords.FromZone.Select(x => new GenericRecordViewModel(x)))
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Value</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("EditRecord", (string)ViewBag.Controller, new{item = r.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">CAA records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Flags</th><th>Tag</th><th>Value</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.CaaRecords.FromZoneGroup.Select(x => new CaaRecordViewModel(x)))
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Flag</td>
+                <td>@r.Tag</td>
+                <td>@r.Value</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("ShowZoneGroup", "ZoneGroup", new {item = r.ZoneGroupId})" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.CaaRecords.FromZone.Select(x => new CaaRecordViewModel(x)))
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Flag</td>
+                <td>@r.Tag</td>
+                <td>@r.Value</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("EditRecord", (string)ViewBag.Controller, new{item = r.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">MX records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Preference</th><th>Mail Server</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.MxRecords.FromZoneGroup.Select(x => new MxRecordViewModel(x)))
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Preference</td>
+                <td>@r.MailServer</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("ShowZoneGroup", "ZoneGroup", new {item = r.ZoneGroupId})" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.MxRecords.FromZone.Select(x => new MxRecordViewModel(x)))
+        {
+            <tr>
+                <td class="table-button-cell"></td>
+                <td>@r.Name</td>
+                <td>@r.Preference</td>
+                <td>@r.MailServer</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("EditRecord", (string)ViewBag.Controller, new{item = r.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }    
+    </tbody>
+</table>
+
+<h3 class="mt-4">A/AAAA/CNAME records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Type</th><th>Target</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.HostRecords.FromZoneGroup.Select(x => new GenericRecordViewModel(x)))
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Type</td>
+                <td>@r.Value</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("ShowZoneGroup", "ZoneGroup", new {item = r.ZoneGroupId})" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.HostRecords.FromZone.Select(x => new GenericRecordViewModel(x)))
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Type</td>
+                <td>@r.Value</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("EditRecord", (string)ViewBag.Controller, new{item = r.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">TXT records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Value</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.TxtRecords.FromZoneGroup.Select(x => new TxtRecordViewModel(x)))
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Value</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("ShowZoneGroup", "ZoneGroup", new {item = r.ZoneGroupId})" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.TxtRecords.FromZone.Select(x => new TxtRecordViewModel(x)))
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Value</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("EditRecord", (string)ViewBag.Controller, new{item = r.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">SRV records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Protocol</th><th>Service</th><th>Priority</th><th>Weight</th><th>Port</th><th>Target</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.SrvRecords.FromZoneGroup.Select(x => new SrvRecordViewModel(x)))
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Protocol</td>
+                <td>@r.Service</td>
+                <td>@r.Priority</td>
+                <td>@r.Weight</td>
+                <td>@r.Port</td>
+                <td>@r.Target</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("ShowZoneGroup", "ZoneGroup", new {item = r.ZoneGroupId})" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.SrvRecords.FromZone.Select(x => new SrvRecordViewModel(x)))
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Protocol</td>
+                <td>@r.Service</td>
+                <td>@r.Priority</td>
+                <td>@r.Weight</td>
+                <td>@r.Port</td>
+                <td>@r.Target</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("EditRecord", (string)ViewBag.Controller, new{item = r.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">SSHFP records</h3>
+<table class="table table-striped table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsort="disabled"></th><th>Name</th><th>Algorithm</th><th>Type</th><th>Fingerprint</th><th>TTL</th><th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.SshfpRecords.FromZoneGroup.Select(x => new SshfpRecordViewModel(x)))
+        {
+            <tr class="text-muted">
+                <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
+                <td>@r.Name</td>
+                <td>@r.Algorithm</td>
+                <td>@r.FingerprintType</td>
+                <td>@r.Fingerprint</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("ShowZoneGroup", "ZoneGroup", new {item = r.ZoneGroupId})" class="btn btn-sm btn-info">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        @foreach (var r in Model.SshfpRecords.FromZone.Select(x => new SshfpRecordViewModel(x)))
+        {
+            <tr>
+                <td></td>
+                <td>@r.Name</td>
+                <td>@r.Algorithm</td>
+                <td>@r.FingerprintType</td>
+                <td>@r.Fingerprint</td>
+                <partial model="r" name="TTLColumn" />
+                <td class="table-button-cell">
+                    <a href="@Url.Action("EditRecord", (string)ViewBag.Controller, new{item = r.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

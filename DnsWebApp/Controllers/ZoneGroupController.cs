@@ -7,18 +7,16 @@ namespace DnsWebApp.Controllers
     using System.Linq;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
-    using Microsoft.AspNetCore.Identity;
+    using DnsWebApp.Models.ViewModels;
     using Microsoft.EntityFrameworkCore;
 
     public class ZoneGroupController : Controller
     {
         private DataContext db;
-        private UserManager<IdentityUser> userManager;
 
-        public ZoneGroupController(DataContext db, UserManager<IdentityUser> userManager)
+        public ZoneGroupController(DataContext db)
         {
             this.db = db;
-            this.userManager = userManager;
         }
 
         [Route("/zones/group/{item:int}")]
@@ -26,9 +24,48 @@ namespace DnsWebApp.Controllers
         {
             var zoneGroupObject = this.db.ZoneGroups
                 .Include(x => x.ZoneGroupMembers)
+                .Include(x => x.Records)
                 .FirstOrDefault(x => x.Id == item);
             
-            return this.View(zoneGroupObject);
+            if (zoneGroupObject == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+            
+            var display = new ZoneGroupDisplay();
+            display.ZoneGroup = zoneGroupObject;
+            
+            foreach (var zoneRecord in zoneGroupObject.Records)
+            {
+                switch (zoneRecord.Type)
+                {
+                    case RecordType.A:
+                    case RecordType.AAAA:
+                    case RecordType.CNAME:
+                        display.HostRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.CAA:
+                        display.CaaRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.MX:
+                        display.MxRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.NS:
+                        display.NsRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.SRV:
+                        display.SrvRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.SSHFP:
+                        display.SshfpRecords.FromZone.Add(zoneRecord);
+                        break;
+                    case RecordType.TXT:
+                        display.TxtRecords.FromZone.Add(zoneRecord);
+                        break;
+                }
+            }
+            
+            return this.View(display);
         }
         
         [Route("/zones/group/{item:int}/zones")]
