@@ -31,6 +31,9 @@
       <None Update="log4net.config.xml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Remove="mono_crash.mem.32105.1.blob" />
+      <None Remove="mono_crash.mem.26443.1.blob" />
+      <None Remove="mono_crash.mem.1241.1.blob" />
     </ItemGroup>
 
 </Project>
