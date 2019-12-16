@@ -8,6 +8,7 @@ namespace DnsWebApp.Controllers
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
+    using DnsWebApp.Services;
     using Microsoft.EntityFrameworkCore;
 
     public class ZoneGroupController : Controller
@@ -157,6 +158,8 @@ namespace DnsWebApp.Controllers
                 zoneGroup.ZoneGroupMembers.AddRange(zoneMembers);
             }
 
+            zoneGroup.TouchSerialNumber();
+            
             this.db.ZoneGroups.Add(zoneGroup);
             this.db.SaveChanges();
             
@@ -230,6 +233,8 @@ namespace DnsWebApp.Controllers
                 zoneGroupObject.ZoneGroupMembers.RemoveAll(x => true);
             }
 
+            zoneGroupObject.TouchSerialNumber();
+            
             this.db.SaveChanges();
             
             return this.RedirectToAction("Index");

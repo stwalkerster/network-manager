@@ -1,9 +1,9 @@
-@using DnsWebApp.Models.Dns
 @model DnsWebApp.Models.ViewModels.ZoneDisplay
 @{
     ViewBag.Title = "Zone";
     Layout = "_Layout";
     ViewBag.Controller = "Zone";
+    ViewBag.Id = Model.Zone.Id;
 }
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
@@ -23,15 +23,25 @@
     <tr>
         <th>Default TTL</th><th>Primary Nameserver</th><th>Administrator</th>
         <th>Refresh</th><th>Retry</th><th>Expire</th><th>Negative TTL</th>
+        <th>Serial number</th><th>Last updated</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>@Model.Zone.DefaultTimeToLive</td><td>@Model.Zone.PrimaryNameServer</td><td>@Model.Zone.Administrator</td>
-        <td>@Model.Zone.Refresh</td><td>@Model.Zone.Retry</td><td>@Model.Zone.Expire</td><td>@Model.Zone.TimeToLive</td>
+        <td>@Format.AsReadableTimespan(Model.Zone.DefaultTimeToLive)</td>
+        <td>@Model.Zone.PrimaryNameServer</td>
+        <td>@Model.Zone.Administrator</td>
+        <td>@Format.AsReadableTimespan(@Model.Zone.Refresh)</td>
+        <td>@Format.AsReadableTimespan(@Model.Zone.Retry)</td>
+        <td>@Format.AsReadableTimespan(@Model.Zone.Expire)</td>
+        <td>@Format.AsReadableTimespan(@Model.Zone.TimeToLive)</td>
+        <td>@Model.Zone.SerialNumber</td>
+        <td>@Format.AsReadableDateTime(@Model.Zone.LastUpdated)</td>
     </tr>
     </tbody>
 </table>
+
+<hr />
 
 <partial name="ShowZoneRecords" />
 

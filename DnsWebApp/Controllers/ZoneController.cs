@@ -187,7 +187,7 @@ namespace DnsWebApp.Controllers
             zoneCommand.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
 
             zoneCommand.Refresh = zoneCommand.Retry = zoneCommand.TimeToLive = zoneCommand.DefaultTimeToLive = 300;
-            zoneCommand.Expire = 86400;
+            zoneCommand.Expire = 7*86400;
             zoneCommand.PrimaryNameServer = "ns1.stwalkerster.net";
             zoneCommand.TopLevelDomain = this.db.TopLevelDomains.First(x => x.Domain == "com").Id;
             
@@ -224,6 +224,8 @@ namespace DnsWebApp.Controllers
             zoneObject.OwnerId = editedZone.Owner;
             zoneObject.RegistrationExpiry = editedZone.RegistrationExpiry;
 
+            zoneObject.TouchSerialNumber();
+            
             this.db.Zones.Add(zoneObject);
             this.db.SaveChanges();
             
@@ -270,6 +272,8 @@ namespace DnsWebApp.Controllers
             zoneObject.RegistrarId = editedZone.Registrar;
             zoneObject.OwnerId = editedZone.Owner;
             zoneObject.RegistrationExpiry = editedZone.RegistrationExpiry;
+            
+            zoneObject.TouchSerialNumber();
             
             this.db.SaveChanges();
             

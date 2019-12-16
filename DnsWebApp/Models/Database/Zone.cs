@@ -4,7 +4,6 @@ namespace DnsWebApp.Models.Database
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.VisualBasic.CompilerServices;
 
     public class Zone
     {
@@ -57,6 +56,9 @@ namespace DnsWebApp.Models.Database
         public string OwnerId { get; set; }
         
         public DateTime? WhoisLastUpdated { get; set; }
+        
+        [Required]
+        public DateTime LastUpdated { get; set; }
         
         public List<Record> Records { get; set; }
         public List<FavouriteDomains> FavouriteDomains { get; set; }

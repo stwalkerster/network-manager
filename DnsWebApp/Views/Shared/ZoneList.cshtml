@@ -2,7 +2,19 @@
 
 <table class="table table-striped table-hover sortable">
     <thead><tr>
-        <th data-defaultsort="disabled"></th><th>Zone</th><th>Registrar</th><th>Owner</th><th>#</th><th>Nameservers</th><th>Ref.</th><th>Ret.</th><th>Exp.</th><th>TTL</th><th>Admin</th><th>Expiry</th><th data-defaultsort="disabled"></th>
+        <th data-defaultsort="disabled"></th>
+        <th>Zone</th>
+        <th>Registrar</th>
+        <th>Owner</th>
+        <th><abbr title="Number of records in this zone">#</abbr></th>
+        <th>Nameserver</th>
+        <th><abbr title="Refresh - how often secondary nameservers refresh their information">Ref</abbr></th>
+        <th><abbr title="Retry - how often secondary nameservers retry a failed refresh">Ret</abbr></th>
+        <th><abbr title="Expiry - how long secondary nameservers will continue to serve potentially outdated zone information">Ex</abbr></th>
+        <th><abbr title="Negative TTL - how long nameservers cache a negative result">TTL</abbr></th>
+        <th>Admin</th>
+        <th><abbr title="Expiration date of this domain registration">Expiry</abbr></th>
+        <th data-defaultsort="disabled"></th>
     </tr></thead>
     <tbody>
     @foreach (var zone in Model)
@@ -19,6 +31,7 @@
                     else
                     {
                         <button type="submit" class="btn btn-sm btn-outline-info"><i class="far fa-star"></i></button>
+                        
                     }
                 </form>
             </td>
@@ -27,10 +40,10 @@
             <td>@zone.Owner</td>
             <td>@(zone.Records?.Count ?? 0)</td>
             <td>@zone.PrimaryNameServer</td>
-            <td>@zone.Refresh</td>
-            <td>@zone.Retry</td>
-            <td>@zone.Expire</td>
-            <td>@zone.TimeToLive</td>
+            <td data-value="@zone.Refresh">@Format.AsReadableTimespan(zone.Refresh)</td>
+            <td data-value="@zone.Retry">@Format.AsReadableTimespan(@zone.Retry)</td>
+            <td data-value="@zone.Expire">@Format.AsReadableTimespan(@zone.Expire)</td>
+            <td data-value="@zone.TimeToLive">@Format.AsReadableTimespan(@zone.TimeToLive)</td>
             <td>@zone.Administrator</td>
             <td data-dateformat="YYYY-MM-DD">@Format.AsReadableDate(zone.RegistrationExpiry)</td>
             <td class="table-button-cell">
