@@ -1,42 +1,67 @@
 @model DnsWebApp.Models.Dns.SrvRecordViewModel
 
+<partial name="NameTtlEditControl" />
 
-<div class="form-group">
-    <label asp-for="Name"></label>
-    <input asp-for="Name" class="form-control"/>
-    <span asp-validation-for="Name" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Protocol"></label>
-    <input asp-for="Protocol" class="form-control"/>
-    <span asp-validation-for="Protocol" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Service"></label>
-    <input asp-for="Service" class="form-control"/>
-    <span asp-validation-for="Service" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Priority"></label>
-    <input asp-for="Priority" class="form-control"/>
-    <span asp-validation-for="Priority" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Weight"></label>
-    <input asp-for="Weight" class="form-control"/>
-    <span asp-validation-for="Weight" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Port"></label>
-    <input asp-for="Port" class="form-control"/>
-    <span asp-validation-for="Port" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Target"></label>
-    <input asp-for="Target" class="form-control"/>
-    <span asp-validation-for="Target" class="text-danger"></span>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Protocol"></label>
+                    <select asp-for="Protocol" asp-items="Model.Protocols" class="form-control"></select>
+                    <span asp-validation-for="Protocol" class="text-danger"></span>
+                    <small class="form-text text-muted">The underlying protocol in use. Consult the service documentation to determine what to use here.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Service"></label>
+                    <input asp-for="Service" class="form-control"/>
+                    <span asp-validation-for="Service" class="text-danger"></span>
+                    <small class="form-text text-muted">The name of the service. This should be prefixed with an underscore - consult the service documentation to determine what to use here.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Priority"></label>
+                    <input asp-for="Priority" class="form-control"/>
+                    <span asp-validation-for="Priority" class="text-danger"></span>
+                    <small class="form-text text-muted">The priority of the server - lower is first.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Weight"></label>
+                    <input asp-for="Weight" class="form-control"/>
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                    <small class="form-text text-muted">The load weighting of the server at this priority level</small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<partial name="TTLEditForm"/>
+<div class="row">
+    <div class="col-lg-9">
+        <div class="form-group">
+            <label asp-for="Target"></label>
+            <input asp-for="Target" class="form-control"/>
+            <span asp-validation-for="Target" class="text-danger"></span>
+            <small class="form-text text-muted">The hostname of the target server. This must be either an A or an AAAA record.</small>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            <label asp-for="Port"></label>
+            <input asp-for="Port" class="form-control"/>
+            <span asp-validation-for="Port" class="text-danger"></span>
+            <small class="form-text text-muted">The TCP/UDP port at which the service can be found</small>
+        </div>
+    </div>
+</div>
 
 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save</button>

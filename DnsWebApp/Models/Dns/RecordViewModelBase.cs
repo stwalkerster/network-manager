@@ -2,8 +2,10 @@ namespace DnsWebApp.Models.Dns
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using DnsWebApp.Models.Database;
+    using Microsoft.Extensions.WebEncoders.Testing;
 
     public class RecordViewModelBase
     {
@@ -11,7 +13,10 @@ namespace DnsWebApp.Models.Dns
 
         public virtual string Name { get => this.Record.Name; set => this.Record.Name = value; }  
         public virtual string Value { get => this.Record.Value; set => this.Record.Value = value; }  
+        
+        [Display(Name = "Time to Live")]
         public virtual uint? TimeToLive { get => this.Record.TimeToLive; set => this.Record.TimeToLive = value; }
+        
         public RecordType Type { get => this.Record.Type; set => this.Record.Type = value; }
         public RecordClass Class { get => this.Record.Class; set => this.Record.Class = value; }
 
@@ -20,7 +25,8 @@ namespace DnsWebApp.Models.Dns
         public long? ZoneId { get => this.Record.ZoneId; set => this.Record.ZoneId = value; }
 
         protected int NameMaxParts { private get; set; } = 1;
-        protected int ValueParts { private get; set; } = 1;
+
+        private List<string> valueParts, nameParts;
         
         protected RecordViewModelBase(Record record, RecordType type)
         {
@@ -36,10 +42,21 @@ namespace DnsWebApp.Models.Dns
                 throw new ArgumentOutOfRangeException(nameof(record));
             }
         }
-        
+
+        [Obsolete]
         protected List<string> Parse(bool name = false)
         {
+            return this.Parse(name, true);
+        }
+        
+        private List<string> Parse(bool name, bool @internal)
+        {
             var recordValue = name ? this.Record.Name : this.Record.Value;
+
+            if (recordValue == null)
+            {
+                recordValue = string.Empty;
+            }
             
             var items = new List<string>();
             var current = string.Empty;
@@ -81,17 +98,62 @@ namespace DnsWebApp.Models.Dns
 
         protected void Set(int index, string value, bool name = false)
         {
-            var parts = this.Parse(name);
-            parts[index] = value;
-            var resultant = string.Join(" ", parts.Select(x => x.Contains(" ") ? $"\"{x}\"" : x));
+            var partsList = name ? this.nameParts : this.valueParts;
+            
+            if (partsList == null)
+            {
+                partsList = this.Parse(name, true);
+            }
+
+            if (partsList.Count <= index)
+            {
+                while (partsList.Count <= index)
+                {
+                    partsList.Add(string.Empty);
+                }
+            }
+            
+            partsList[index] = value;
+
+            var resultant = string.Join(name ? "." : " ", partsList.Where(x => x != null).Select(x => x.Contains(" ") ? $"\"{x}\"" : x));
 
             if (name)
             {
+                this.nameParts = partsList;
                 this.Record.Name = resultant;
             }
             else
             {
+                this.valueParts = partsList;
                 this.Record.Value = resultant;
+            }
+        }
+
+        protected string Get(int index, bool name = false)
+        {
+            var partsList = name ? this.nameParts : this.valueParts;
+            
+            if (partsList == null)
+            {
+                partsList = this.Parse(name, true);
+                
+                if (name)
+                {
+                    this.nameParts = partsList;
+                }
+                else
+                {
+                    this.valueParts = partsList;
+                }
+            }
+
+            if (partsList.Count > index)
+            {
+                return partsList[index];
+            }
+            else
+            {
+                return "";
             }
         }
     }

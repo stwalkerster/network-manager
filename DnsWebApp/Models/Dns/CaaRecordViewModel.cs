@@ -1,5 +1,8 @@
 namespace DnsWebApp.Models.Dns
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using DnsWebApp.Models.Database;
 
     public class CaaRecordViewModel : RecordViewModelBase
@@ -11,21 +14,42 @@ namespace DnsWebApp.Models.Dns
         {
         }
 
-        public string Flag
+        public byte Flag
         {
-            get => this.Parse()[0];
-            set => this.Set(0, value);
+            get => byte.Parse(string.IsNullOrEmpty(this.Get(0)) ? "0" : this.Get(0));
+            set => this.Set(0, value.ToString(CultureInfo.InvariantCulture));
         }
 
-        public string Tag
+        [Display(Name = "Issuer Critical")]
+        public bool IssuerCritical
         {
-            get => this.Parse()[1];
-            set => this.Set(1, value);
+            get => (this.Flag & 0b1000_0000) == 0b1000_0000;
+            set
+            {
+                if (value)
+                {
+                    this.Flag |= 1 << 7;
+                }
+                else
+                {
+                    this.Flag &= unchecked((byte) ~(1 << 7));
+                }
+            }
         }
 
+        [Required]
+        public CaaTag Tag
+        {
+            get => string.IsNullOrWhiteSpace(this.Get(1))
+                ? CaaTag.issue
+                : (CaaTag) Enum.Parse(typeof(CaaTag), this.Get(1));
+            set => this.Set(1, value.ToString());
+        }
+
+        [Required]
         public override string Value
         {
-            get => this.Parse()[2];
+            get => this.Get(2);
             set => this.Set(2, value);
         }
     }

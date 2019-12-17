@@ -24,7 +24,7 @@
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
                 <td>@r.Name</td>
-                <td>@r.Value</td>
+                <td>@r.Nameserver</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
                     <a href="@Url.Action("ShowZoneGroup", "ZoneGroup", new {item = r.ZoneGroupId})" class="btn btn-sm btn-outline-info">
@@ -38,7 +38,7 @@
             <tr>
                 <td></td>
                 <td>@r.Name</td>
-                <td>@r.Value</td>
+                <td>@r.Nameserver</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
                     <a href="@Url.Action("EditRecord", (string) ViewBag.Controller, new {item = r.Id})" class="btn btn-sm btn-secondary">

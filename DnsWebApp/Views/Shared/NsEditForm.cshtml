@@ -1,18 +1,17 @@
 @model DnsWebApp.Models.Dns.NsRecordViewModel
 
+<partial name="NameTtlEditControl" />
 
-<div class="form-group">
-    <label asp-for="Name"></label>
-    <input asp-for="Name" class="form-control"/>
-    <span asp-validation-for="Name" class="text-danger"></span>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label asp-for="Nameserver"></label>
+            <input asp-for="Nameserver" class="form-control"/>
+            <span asp-validation-for="Nameserver" class="text-danger"></span>
+            <small class="form-text text-muted">The hostname of an authoritative nameserver for this zone. Note that this does not take effect from here; these records need to be updated at the registrar as well.</small>
+        </div>
+    </div>
 </div>
 
-<div class="form-group">
-    <label asp-for="Value"></label>
-    <input asp-for="Value" class="form-control"/>
-    <span asp-validation-for="Value" class="text-danger"></span>
-</div>
-
-<partial name="TTLEditForm"/>
 
 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save</button>

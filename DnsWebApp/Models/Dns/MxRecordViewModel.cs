@@ -1,5 +1,7 @@
 namespace DnsWebApp.Models.Dns
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using DnsWebApp.Models.Database;
 
     public class MxRecordViewModel : RecordViewModelBase
@@ -12,15 +14,18 @@ namespace DnsWebApp.Models.Dns
         {
         }
 
-        public string Preference
+        [Required]
+        public ushort Preference
         {
-            get => this.Parse()[0];
-            set => this.Set(0, value);
+            get => ushort.Parse(string.IsNullOrEmpty(this.Get(0)) ? "10" : this.Get(0));
+            set => this.Set(0, value.ToString(CultureInfo.InvariantCulture));
         }
 
+        [Required]
+        [Display(Name = "Mail server")]
         public string MailServer
         {
-            get => this.Parse()[1];
+            get => this.Get(1);
             set => this.Set(1, value);
         }
     }

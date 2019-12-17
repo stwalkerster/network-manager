@@ -1,0 +1,20 @@
+@model DnsWebApp.Models.Dns.RecordViewModelBase
+
+<div class="row">
+    <div class="col-lg-8 col-xl-10">
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control"/>
+            <span asp-validation-for="Name" class="text-danger"></span>
+            
+        </div>
+    </div>
+    <div class="col-lg-4 col-xl-2">
+        <div class="form-group">
+            <label asp-for="TimeToLive"></label>
+            <input asp-for="TimeToLive" class="form-control"/>
+            <span asp-validation-for="TimeToLive" class="text-danger"></span>
+            <small class="form-text text-muted">The time-to-live (TTL) for this record. Leaving this blank will use the default TTL of the zone.</small>
+        </div>
+    </div>
+</div>
