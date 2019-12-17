@@ -7,22 +7,31 @@ namespace DnsWebApp.Models.Dns
 
     public class RecordViewModelBase
     {
-        private readonly Record record;
+        public Record Record { get; }
 
-        public virtual string Name { get => this.record.Name; set => this.record.Name = value; }  
-        public virtual string Value { get => this.record.Value; set => this.record.Value = value; }  
-        public virtual uint? TimeToLive { get => this.record.TimeToLive; set => this.record.TimeToLive = value; }
-        public RecordType Type { get => this.record.Type; }
+        public virtual string Name { get => this.Record.Name; set => this.Record.Name = value; }  
+        public virtual string Value { get => this.Record.Value; set => this.Record.Value = value; }  
+        public virtual uint? TimeToLive { get => this.Record.TimeToLive; set => this.Record.TimeToLive = value; }
+        public RecordType Type { get => this.Record.Type; set => this.Record.Type = value; }
+        public RecordClass Class { get => this.Record.Class; set => this.Record.Class = value; }
 
-        public long Id => this.record.Id;
-        public long? ZoneGroupId => this.record.ZoneGroupId;
+        public long Id => this.Record.Id;
+        public long? ZoneGroupId { get => this.Record.ZoneGroupId; set => this.Record.ZoneGroupId = value; }
+        public long? ZoneId { get => this.Record.ZoneId; set => this.Record.ZoneId = value; }
 
         protected int NameMaxParts { private get; set; } = 1;
+        protected int ValueParts { private get; set; } = 1;
         
         protected RecordViewModelBase(Record record, RecordType type)
         {
-            this.record = record;
-            if (record.Type != type)
+            this.Record = record;
+
+            if (record == null)
+            {
+                this.Record = new Record {Type = type, Class = RecordClass.IN};
+            }
+            
+            if (this.Record.Type != type)
             {
                 throw new ArgumentOutOfRangeException(nameof(record));
             }
@@ -30,7 +39,7 @@ namespace DnsWebApp.Models.Dns
         
         protected List<string> Parse(bool name = false)
         {
-            var recordValue = name ? this.record.Name : this.record.Value;
+            var recordValue = name ? this.Record.Name : this.Record.Value;
             
             var items = new List<string>();
             var current = string.Empty;
@@ -78,11 +87,11 @@ namespace DnsWebApp.Models.Dns
 
             if (name)
             {
-                this.record.Name = resultant;
+                this.Record.Name = resultant;
             }
             else
             {
-                this.record.Value = resultant;
+                this.Record.Value = resultant;
             }
         }
     }

@@ -1,0 +1,7 @@
+@model DnsWebApp.Models.Dns.RecordViewModelBase
+
+<div class="form-group">
+    <label asp-for="TimeToLive"></label>
+    <input asp-for="TimeToLive" class="form-control"/>
+    <span asp-validation-for="TimeToLive" class="text-danger"></span>
+</div>

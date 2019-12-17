@@ -1,0 +1,27 @@
+@model DnsWebApp.Models.Dns.SshfpRecordViewModel
+
+
+<div class="form-group">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" class="form-control"/>
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Algorithm"></label>
+    <input asp-for="Algorithm" class="form-control"/>
+    <span asp-validation-for="Algorithm" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="FingerprintType"></label>
+    <input asp-for="FingerprintType" class="form-control"/>
+    <span asp-validation-for="FingerprintType" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Fingerprint"></label>
+    <input asp-for="Fingerprint" class="form-control"/>
+    <span asp-validation-for="Fingerprint" class="text-danger"></span>
+</div>
+
+<partial name="TTLEditForm"/>
+
+<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save</button>

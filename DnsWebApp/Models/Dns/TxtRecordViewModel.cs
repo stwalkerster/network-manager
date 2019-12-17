@@ -8,9 +8,13 @@ namespace DnsWebApp.Models.Dns
         {
         }
 
+        public TxtRecordViewModel() : this(null)
+        {
+        }
+        
         public override string Value
         {
-            get => base.Value.Trim('"');
+            get => base.Value?.Trim('"');
             set => base.Value = $"\"{value}\"";
         }
     }

@@ -9,6 +9,10 @@ namespace DnsWebApp.Models.Dns
             this.NameMaxParts = 3;
         }
 
+        public SrvRecordViewModel() : this(null)
+        {
+        }
+
         public string Protocol
         {
             get => this.Parse(true)[1];

@@ -1,0 +1,42 @@
+@model DnsWebApp.Models.Dns.SrvRecordViewModel
+
+
+<div class="form-group">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" class="form-control"/>
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Protocol"></label>
+    <input asp-for="Protocol" class="form-control"/>
+    <span asp-validation-for="Protocol" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Service"></label>
+    <input asp-for="Service" class="form-control"/>
+    <span asp-validation-for="Service" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Priority"></label>
+    <input asp-for="Priority" class="form-control"/>
+    <span asp-validation-for="Priority" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Weight"></label>
+    <input asp-for="Weight" class="form-control"/>
+    <span asp-validation-for="Weight" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Port"></label>
+    <input asp-for="Port" class="form-control"/>
+    <span asp-validation-for="Port" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Target"></label>
+    <input asp-for="Target" class="form-control"/>
+    <span asp-validation-for="Target" class="text-danger"></span>
+</div>
+
+<partial name="TTLEditForm"/>
+
+<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save</button>

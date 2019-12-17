@@ -8,6 +8,10 @@ namespace DnsWebApp.Models.Dns
         {
         }
 
+        public MxRecordViewModel() : this(null)
+        {
+        }
+
         public string Preference
         {
             get => this.Parse()[0];

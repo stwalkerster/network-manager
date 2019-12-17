@@ -1,0 +1,15 @@
+@model DnsWebApp.Models.Dns.HostRecordViewModel
+
+@{
+    ViewBag.Title = "Add record";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Adding @Model.Type record</h1>
+</div>
+
+<form asp-action="AddHostRecord">
+    <partial name="RecordComponents"/>
+    <partial name="HostEditForm"/>
+</form>

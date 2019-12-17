@@ -9,6 +9,10 @@ namespace DnsWebApp.Models.Dns
         {
         }
 
+        public SshfpRecordViewModel() : this(null)
+        {
+        }
+
         public SshfpAlgorithm Algorithm
         {
             get => (SshfpAlgorithm)int.Parse(this.Parse()[0]);

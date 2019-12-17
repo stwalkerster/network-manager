@@ -19,7 +19,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var r in Model.NsRecords.FromZoneGroup.Select(x => new GenericRecordViewModel(x)))
+        @foreach (var r in Model.NsRecords.FromZoneGroup.Select(x => new NsRecordViewModel(x)))
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
@@ -33,7 +33,7 @@
                 </td>
             </tr>
         }
-        @foreach (var r in Model.NsRecords.FromZone.Select(x => new GenericRecordViewModel(x)))
+        @foreach (var r in Model.NsRecords.FromZone.Select(x => new NsRecordViewModel(x)))
         {
             <tr>
                 <td></td>
@@ -184,7 +184,7 @@ else
         </tr>
         </thead>
         <tbody>
-        @foreach (var r in Model.HostRecords.FromZoneGroup.Select(x => new GenericRecordViewModel(x)))
+        @foreach (var r in Model.HostRecords.FromZoneGroup.Select(x => new HostRecordViewModel(x)))
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
@@ -199,7 +199,7 @@ else
                 </td>
             </tr>
         }
-        @foreach (var r in Model.HostRecords.FromZone.Select(x => new GenericRecordViewModel(x)))
+        @foreach (var r in Model.HostRecords.FromZone.Select(x => new HostRecordViewModel(x)))
         {
             <tr>
                 <td></td>

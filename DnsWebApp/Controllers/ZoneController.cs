@@ -4,6 +4,7 @@ namespace DnsWebApp.Controllers
     using System.Linq;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using DnsWebApp.Models.Dns;
     using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
     using Microsoft.AspNetCore.Identity;
@@ -177,6 +178,7 @@ namespace DnsWebApp.Controllers
             return Content("no.");
         }
         
+        #region NewZone
         [HttpGet]
         [Route("/zone/new")]
         public IActionResult NewZone()
@@ -231,8 +233,8 @@ namespace DnsWebApp.Controllers
             
             return this.RedirectToAction("Index");
         }
-
-        
+        #endregion
+        #region EditZone
         [HttpPost]
         [Route("/zone/edit/{zone:int}")]
         public IActionResult EditZone(int zone, ZoneCommand editedZone)
@@ -320,7 +322,8 @@ namespace DnsWebApp.Controllers
             
             return this.View(cmd);
         }
-
+        #endregion
+        
         [HttpPost]
         [Route("/zone/togglefave")]
         public IActionResult ToggleFave(int zone, string returnto)
@@ -357,5 +360,179 @@ namespace DnsWebApp.Controllers
             this.db.SaveChanges();
             return this.Redirect(returnto);
         }
+        
+        #region Records
+        
+        private IActionResult AddRecord(int id, RecordViewModelBase recordViewModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(recordViewModel);
+            }
+
+            var zone = this.db.Zones.Include(x => x.Records).FirstOrDefault(x => x.Id == id);
+            if (zone == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            zone.TouchSerialNumber();
+            zone.Records.Add(recordViewModel.Record);
+
+            this.db.SaveChanges();
+
+            return this.RedirectToAction("ShowZone", new {zone = id});
+        }
+       
+
+        [HttpGet]
+        [Route("/zone/{id:int}/add/ns")]
+        public IActionResult AddNsRecord(int id)
+        {
+            return this.View(
+                new NsRecordViewModel(
+                    new Record
+                    {
+                        ZoneId = id,
+                        Type = RecordType.NS,
+                        Class = RecordClass.IN
+                    }));
+        }
+        
+        [HttpPost]
+        [Route("/zone/{id:int}/add/ns")]
+        public IActionResult AddNsRecord(int id, NsRecordViewModel recordViewModel)
+        {
+            return this.AddRecord(id, recordViewModel);
+        }
+
+        [HttpGet]
+        [Route("/zone/{id:int}/add/caa")]
+        public IActionResult AddCaaRecord(int id)
+        {
+            return this.View(
+                new CaaRecordViewModel(
+                    new Record
+                    {
+                        ZoneId = id,
+                        Type = RecordType.CAA,
+                        Class = RecordClass.IN
+                    }));        
+        }
+        
+        [HttpPost]
+        [Route("/zone/{id:int}/add/caa")]
+        public IActionResult AddCaaRecord(int id, CaaRecordViewModel recordViewModel)
+        {
+            return this.AddRecord(id, recordViewModel);
+        }
+        
+        [HttpGet]
+        [Route("/zone/{id:int}/add/mx")]
+        public IActionResult AddMxRecord(int id)
+        {
+            return this.View(
+                new MxRecordViewModel(
+                    new Record
+                    {
+                        ZoneId = id,
+                        Type = RecordType.MX,
+                        Class = RecordClass.IN
+                    }));        
+        }
+        
+        [HttpPost]
+        [Route("/zone/{id:int}/add/mx")]
+        public IActionResult AddMxRecord(int id, MxRecordViewModel recordViewModel)
+        {
+            return this.AddRecord(id, recordViewModel);
+        }
+        
+        [HttpGet]
+        [Route("/zone/{id:int}/add/host")]
+        public IActionResult AddHostRecord(int id)
+        {
+            return this.View(
+                new HostRecordViewModel(
+                    new Record
+                    {
+                        ZoneId = id,
+                        Class = RecordClass.IN,
+                        Type = RecordType.A
+                    }));        
+        }
+        
+        [HttpPost]
+        [Route("/zone/{id:int}/add/host")]
+        public IActionResult AddHostRecord(int id, HostRecordViewModel recordViewModel)
+        {
+            return this.AddRecord(id, recordViewModel);
+        }
+        
+        [HttpGet]
+        [Route("/zone/{id:int}/add/txt")]
+        public IActionResult AddTxtRecord(int id)
+        {
+            return this.View(
+                new TxtRecordViewModel(
+                    new Record
+                    {
+                        ZoneId = id,
+                        Type = RecordType.TXT,
+                        Class = RecordClass.IN
+                    }));        
+        }
+        
+        [HttpPost]
+        [Route("/zone/{id:int}/add/txt")]
+        public IActionResult AddTxtRecord(int id, TxtRecordViewModel recordViewModel)
+        {
+            return this.AddRecord(id, recordViewModel);
+        }
+        
+        
+        [HttpGet]
+        [Route("/zone/{id:int}/add/srv")]
+        public IActionResult AddSrvRecord(int id)
+        {
+            return this.View(
+                new SrvRecordViewModel(
+                    new Record
+                    {
+                        ZoneId = id,
+                        Type = RecordType.SRV,
+                        Class = RecordClass.IN
+                    }));        
+        }
+        
+        [HttpPost]
+        [Route("/zone/{id:int}/add/srv")]
+        public IActionResult AddSrvRecord(int id, SrvRecordViewModel recordViewModel)
+        {
+            return this.AddRecord(id, recordViewModel);
+        }
+        
+        [HttpGet]
+        [Route("/zone/{id:int}/add/sshfp")]
+        public IActionResult AddSshfpRecord(int id)
+        {
+            return this.View(
+                new SshfpRecordViewModel(
+                    new Record
+                    {
+                        ZoneId = id,
+                        Type = RecordType.SSHFP,
+                        Class = RecordClass.IN
+                    }));        
+        }
+        
+        [HttpPost]
+        [Route("/zone/{id:int}/add/sshfp")]
+        public IActionResult AddSshfpRecord(int id, SshfpRecordViewModel recordViewModel)
+        {
+            return this.AddRecord(id, recordViewModel);
+        }
+        
+        #endregion
     }
 }

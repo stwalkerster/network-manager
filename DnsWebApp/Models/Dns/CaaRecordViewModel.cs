@@ -7,6 +7,9 @@ namespace DnsWebApp.Models.Dns
         public CaaRecordViewModel(Record record) : base(record, RecordType.CAA)
         {
         }
+        public CaaRecordViewModel() : this(null)
+        {
+        }
 
         public string Flag
         {
