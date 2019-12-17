@@ -258,14 +258,18 @@ namespace DnsWebApp.Controllers
                 return this.View(recordViewModel);
             }
 
-            var zone = this.db.Zones.Include(x => x.Records).FirstOrDefault(x => x.Id == id);
-            if (zone == null)
+            var zoneGroup = this.db.ZoneGroups
+                .Include(x => x.Records)
+                .Include(x => x.ZoneGroupMembers)
+                .ThenInclude(x => x.Zone)
+                .FirstOrDefault(x => x.Id == id);
+            if (zoneGroup == null)
             {
                 return this.RedirectToAction("Index");
             }
 
-            zone.TouchSerialNumber();
-            zone.Records.Add(recordViewModel.Record);
+            zoneGroup.TouchSerialNumber();
+            zoneGroup.Records.Add(recordViewModel.Record);
 
             this.db.SaveChanges();
 
