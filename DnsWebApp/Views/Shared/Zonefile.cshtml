@@ -7,14 +7,13 @@
 ;
 ; Managed in DNS Manager, last modified @Format.AsReadableDateTime(Model.Zone.LastUpdated)
 ;
-$ORIGIN .
 $TTL    @Model.Zone.DefaultTimeToLive
 ;
 ; Start of Authority
 @("@".PadRight(Model.NameMinWidth))@("".PadRight(Model.TtlMinWidth))IN SOA     @Model.Zone.PrimaryNameServer. @Model.Zone.Administrator.Replace('@', '.'). @Model.Zone.SerialNumber @Model.Zone.Refresh @Model.Zone.Retry @Model.Zone.Expire @Model.Zone.TimeToLive
 ;
 ; Remaining records
-@foreach (var r in Model.Records.OrderBy(x => string.Join('.', (x.Name ?? "@").Split('.').Reverse())))
+@foreach (var r in Model.Records.OrderBy(x => string.Join('.', (x.Name ?? "@").Split('.').Reverse())).ThenBy(x => x.Type.ToString()))
 {
     @(r.Name != null ? r.Name.PadRight(Model.NameMinWidth) : "@".PadRight(Model.NameMinWidth)) @(r.TimeToLive != null ? r.TimeToLive.ToString().PadRight(Model.TtlMinWidth) : string.Empty.PadRight(Model.TtlMinWidth)) @r.Class.ToString().PadRight(3) @r.Type.ToString().PadRight(8) @Html.Raw(r.Value)
 @:

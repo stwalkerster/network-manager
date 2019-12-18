@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace DnsWebApp.Controllers
 {
     using System.Linq;
-    using System.Text.Json;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
     using Microsoft.EntityFrameworkCore;
@@ -24,10 +23,11 @@ namespace DnsWebApp.Controllers
             var zones = this.db.Zones
                 .Include(x => x.TopLevelDomain)
                 .Where(x => x.Enabled)
-                .Select(x => new {id = x.Id, name = x.Name + "." + x.TopLevelDomain.Domain})
+                .Select(x => x.Name + "." + x.TopLevelDomain.Domain + "|" +  x.Id)
                 .ToList();
-            
-            return Content(JsonSerializer.Serialize(zones, new JsonSerializerOptions()));
+
+            this.Response.ContentType = "text/plain";
+            return Content(string.Join('\n', zones));
         }
         
         public IActionResult ZoneFile(int id)
