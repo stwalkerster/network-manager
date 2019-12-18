@@ -41,7 +41,7 @@
                 <td>@r.Nameserver</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditRecord", (string) ViewBag.Controller, new {item = r.Id})" class="btn btn-sm btn-secondary">
+                    <a href="@Url.Action("EditNsRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </td>
@@ -98,7 +98,7 @@ else
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditRecord", (string) ViewBag.Controller, new {item = r.Id})" class="btn btn-sm btn-secondary">
+                    <a href="@Url.Action("EditCaaRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </td>
@@ -153,7 +153,7 @@ else
                 <td>@r.MailServer</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditRecord", (string) ViewBag.Controller, new {item = r.Id})" class="btn btn-sm btn-secondary">
+                    <a href="@Url.Action("EditMxRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </td>
@@ -208,7 +208,7 @@ else
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditRecord", (string) ViewBag.Controller, new {item = r.Id})" class="btn btn-sm btn-secondary">
+                    <a href="@Url.Action("EditHostRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </td>
@@ -261,7 +261,7 @@ else
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditRecord", (string) ViewBag.Controller, new {item = r.Id})" class="btn btn-sm btn-secondary">
+                    <a href="@Url.Action("EditTxtRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </td>
@@ -324,7 +324,7 @@ else
                 <td>@r.Target</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditRecord", (string) ViewBag.Controller, new {item = r.Id})" class="btn btn-sm btn-secondary">
+                    <a href="@Url.Action("EditSrvRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </td>
@@ -381,7 +381,7 @@ else
                 <td>@r.Fingerprint</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditRecord", (string) ViewBag.Controller, new {item = r.Id})" class="btn btn-sm btn-secondary">
+                    <a href="@Url.Action("EditSshfpRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </td>

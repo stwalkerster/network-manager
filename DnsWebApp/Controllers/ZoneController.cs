@@ -383,8 +383,42 @@ namespace DnsWebApp.Controllers
 
             return this.RedirectToAction("ShowZone", new {zone = id});
         }
-       
 
+        private IActionResult EditRecord(int item, RecordViewModelBase recordViewModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(recordViewModel);
+            }
+            
+            var record = this.db.Record
+                .Include(x => x.Zone)
+                .FirstOrDefault(x => x.Id == item);
+
+            if (record == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            record.Name = recordViewModel.Record.Name;
+            record.Value = recordViewModel.Record.Value;
+            record.TimeToLive = recordViewModel.Record.TimeToLive;
+            record.Type = recordViewModel.Type;
+            
+            record.Zone.TouchSerialNumber();
+
+            this.db.SaveChanges();
+
+            return this.RedirectToAction("ShowZone", new {zone = record.ZoneId});
+        }
+
+        private Record GetRecord(int item)
+        {
+            return this.db.Record
+                .Include(x => x.Zone)
+                .FirstOrDefault(x => x.Id == item);
+        }
+        
         [HttpGet]
         [Route("/zone/{id:int}/add/ns")]
         public IActionResult AddNsRecord(int id)
@@ -490,7 +524,6 @@ namespace DnsWebApp.Controllers
             return this.AddRecord(id, recordViewModel);
         }
         
-        
         [HttpGet]
         [Route("/zone/{id:int}/add/srv")]
         public IActionResult AddSrvRecord(int id)
@@ -532,6 +565,106 @@ namespace DnsWebApp.Controllers
         {
             return this.AddRecord(id, recordViewModel);
         }
+        
+        [HttpGet]
+        [Route("/zone/{id:int}/edit/ns/{item:int}")]
+        public IActionResult EditNsRecord(int id, int item)
+        {
+            return this.View(new NsRecordViewModel(this.GetRecord(item)));
+        }
+
+        [HttpPost]
+        [Route("/zone/{id:int}/edit/ns/{item:int}")]
+        public IActionResult EditNsRecord(int id, int item, NsRecordViewModel recordViewModel)
+        {
+            return this.EditRecord(item, recordViewModel);
+        }
+
+        [HttpGet]
+        [Route("/zone/{id:int}/edit/caa/{item:int}")]
+        public IActionResult EditCaaRecord(int id, int item)
+        {
+            return this.View(new CaaRecordViewModel(this.GetRecord(item)));
+        }
+
+        [HttpPost]
+        [Route("/zone/{id:int}/edit/caa/{item:int}")]
+        public IActionResult EditCaaRecord(int id, int item, CaaRecordViewModel recordViewModel)
+        {
+            return this.EditRecord(item, recordViewModel);
+        }
+
+        [HttpGet]
+        [Route("/zone/{id:int}/edit/mx/{item:int}")]
+        public IActionResult EditMxRecord(int id, int item)
+        {
+            return this.View(new MxRecordViewModel(this.GetRecord(item)));
+        }
+
+        [HttpPost]
+        [Route("/zone/{id:int}/edit/mx/{item:int}")]
+        public IActionResult EditMxRecord(int id, int item, MxRecordViewModel recordViewModel)
+        {
+            return this.EditRecord(item, recordViewModel);
+        }
+
+        [HttpGet]
+        [Route("/zone/{id:int}/edit/host/{item:int}")]
+        public IActionResult EditHostRecord(int id, int item)
+        {
+            return this.View(new HostRecordViewModel(this.GetRecord(item)));
+        }
+
+        [HttpPost]
+        [Route("/zone/{id:int}/edit/host/{item:int}")]
+        public IActionResult EditHostRecord(int id, int item, HostRecordViewModel recordViewModel)
+        {
+            return this.EditRecord(item, recordViewModel);
+        }
+
+        [HttpGet]
+        [Route("/zone/{id:int}/edit/txt/{item:int}")]
+        public IActionResult EditTxtRecord(int id, int item)
+        {
+            return this.View(new TxtRecordViewModel(this.GetRecord(item)));
+        }
+
+        [HttpPost]
+        [Route("/zone/{id:int}/edit/txt/{item:int}")]
+        public IActionResult EditTxtRecord(int id, int item, TxtRecordViewModel recordViewModel)
+        {
+            return this.EditRecord(item, recordViewModel);
+        }
+
+
+        [HttpGet]
+        [Route("/zone/{id:int}/edit/srv/{item:int}")]
+        public IActionResult EditSrvRecord(int id, int item)
+        {
+            return this.View(new SrvRecordViewModel(this.GetRecord(item)));
+        }
+
+        [HttpPost]
+        [Route("/zone/{id:int}/edit/srv/{item:int}")]
+        public IActionResult EditSrvRecord(int id, int item, SrvRecordViewModel recordViewModel)
+        {
+            return this.EditRecord(item, recordViewModel);
+        }
+
+        [HttpGet]
+        [Route("/zone/{id:int}/edit/sshfp/{item:int}")]
+        public IActionResult EditSshfpRecord(int id, int item)
+        {
+            return this.View(new SshfpRecordViewModel(this.GetRecord(item)));
+        }
+
+        [HttpPost]
+        [Route("/zone/{id:int}/edit/sshfp/{item:int}")]
+        public IActionResult EditSshfpRecord(int id, int item, SshfpRecordViewModel recordViewModel)
+        {
+            return this.EditRecord(item, recordViewModel);
+        }
+
         
         #endregion
     }
