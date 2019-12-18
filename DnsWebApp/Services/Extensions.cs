@@ -3,8 +3,7 @@ namespace DnsWebApp.Services
     using System;
     using System.Linq;
     using DnsWebApp.Models.Database;
-    using Renci.SshNet.Compression;
-
+    
     public static class Extensions
     {
         public static void TouchSerialNumber(this Zone zone)

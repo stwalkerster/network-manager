@@ -1,4 +1,7 @@
 @model DnsWebApp.Models.ViewModels.ZoneFileDisplay
+@{
+    Layout = null;
+}
 ;
 ; BIND data file for @Model.Fqdn
 ;
@@ -13,6 +16,7 @@ $TTL    @Model.Zone.DefaultTimeToLive
 ; Remaining records
 @foreach (var r in Model.Records.OrderBy(x => string.Join('.', (x.Name ?? "@").Split('.').Reverse())))
 {
-    @(r.Name != null ? r.Name.PadRight(Model.NameMinWidth) : "@".PadRight(Model.NameMinWidth)) @(r.TimeToLive != null ? r.TimeToLive.ToString().PadRight(Model.TtlMinWidth) : string.Empty.PadRight(Model.TtlMinWidth)) @r.Class.ToString().PadRight(3) @r.Type.ToString().PadRight(8) @r.Value @Environment.NewLine
+    @(r.Name != null ? r.Name.PadRight(Model.NameMinWidth) : "@".PadRight(Model.NameMinWidth)) @(r.TimeToLive != null ? r.TimeToLive.ToString().PadRight(Model.TtlMinWidth) : string.Empty.PadRight(Model.TtlMinWidth)) @r.Class.ToString().PadRight(3) @r.Type.ToString().PadRight(8) @Html.Raw(r.Value)
+@:
 }
 ; End of zone file
