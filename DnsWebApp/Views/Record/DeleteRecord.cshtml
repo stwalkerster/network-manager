@@ -1,0 +1,26 @@
+@model DnsWebApp.Models.Database.Record
+
+@{
+    ViewBag.Title = "Delete record";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    @if (Model.Zone != null)
+    {
+        <h1 class="h2">Deleting @Model.Type record from zone @(Model.Zone.Name).@Model.Zone.TopLevelDomain.Domain</h1>
+    }
+    else
+    {
+        <h1 class="h2">Deleting @Model.Type record from group @(Model.ZoneGroup.Name)</h1>
+    }
+</div>
+
+<p class="lead text-danger">You are about to delete the @Model.Name @Model.Type record with value <code>@Model.Value</code></p>
+
+<p>Are you sure you want to do this?</p>
+
+<form asp-action="DeleteRecord">
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger" type="submit">Yes, delete this record</button>
+</form>
