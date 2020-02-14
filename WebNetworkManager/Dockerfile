@@ -5,6 +5,7 @@ RUN apk add shadow \
     && mkdir /home/user/app \
     && chown user:user /home/user/app
 USER user
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 WORKDIR /home/user/app
 COPY --chown=user *.csproj ./
 RUN dotnet restore
@@ -22,6 +23,7 @@ USER user
 WORKDIR /home/user/app
 EXPOSE 8080
 ENV ASPNETCORE_ENVIRONMENT=Production \
-    ASPNETCORE_URLS="http://+:8080"
+    ASPNETCORE_URLS="http://+:8080" \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
 COPY --from=build-env --chown=user /home/user/app/out .
 ENTRYPOINT ["dotnet", "WebNetworkManager.dll"]
