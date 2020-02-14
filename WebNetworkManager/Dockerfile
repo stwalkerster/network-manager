@@ -8,9 +8,7 @@ USER user
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 WORKDIR /home/user/app
 COPY --chown=user *.csproj ./
-RUN mkdir -p .nuget/NuGet \
-    && echo '<?xml version="1.0" encoding="utf-8"?><configuration><packageSources><add key="nexus" value="https://nexus.scimonshouse.net/repository/nuget-group/" /></packageSources></configuration>' > .nuget/NuGet/NuGet.Config \
-    && dotnet restore
+RUN dotnet restore
 COPY --chown=user . ./
 RUN dotnet publish -c Release -o out
 
