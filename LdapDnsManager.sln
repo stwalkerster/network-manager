@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnsWebApp", "DnsWebApp\DnsWebApp.csproj", "{0E9599B5-8A31-42B3-B0C7-29144AF60929}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebNetworkManager", "WebNetworkManager\WebNetworkManager.csproj", "{0E9599B5-8A31-42B3-B0C7-29144AF60929}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

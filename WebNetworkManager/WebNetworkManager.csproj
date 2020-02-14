@@ -3,6 +3,8 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <Company>Simon Walker</Company>
+        <AssemblyName>WebNetworkManager</AssemblyName>
+        <RootNamespace>DnsWebApp</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
