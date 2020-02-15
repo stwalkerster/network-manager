@@ -98,5 +98,45 @@ namespace DnsWebApp.Controllers
             
             return this.RedirectToAction("Index");
         }
+        
+        [HttpGet]
+        [Route("/tld/{item:int}/delete")]
+        public IActionResult Delete(int item)
+        {
+            var obj = this.db.TopLevelDomains
+                .Include(x => x.Zones)
+                .FirstOrDefault(x => x.Id == item);
+            
+            if (obj == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+            
+            return this.View(obj);
+        }
+        
+        [HttpPost]
+        [Route("/tld/{item:int}/delete")]
+        public IActionResult Delete(int item, TopLevelDomain record)
+        {
+            var obj = this.db.TopLevelDomains
+                .Include(x => x.Zones)
+                .FirstOrDefault(x => x.Id == item);
+            
+            if (obj == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            if (obj.Zones.Any())
+            {
+                return this.RedirectToAction("Index");  
+            }
+          
+            this.db.TopLevelDomains.Remove(obj);
+            this.db.SaveChanges();
+            
+            return this.RedirectToAction("Index");
+        }
     }
 }

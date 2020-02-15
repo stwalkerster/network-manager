@@ -16,7 +16,35 @@ namespace DnsWebApp.Models.Database
             
             //modelBuilder.Entity<Zone>().HasIndex(x => new {x.TopLevelDomain, x.Name}).IsUnique();
             modelBuilder.Entity<Registrar>().HasIndex(x => x.Name).IsUnique();
+            
             modelBuilder.Entity<TopLevelDomain>().HasIndex(x => x.Domain).IsUnique();
+            modelBuilder.Entity<TopLevelDomain>()
+                .HasData(
+                    new TopLevelDomain
+                    {
+                        Id = -1,
+                        Domain = "com", 
+                        Registry = "Verisign",
+                        RegistryUrl = "https://www.verisign.com/en_US/domain-names/com-domain-names/index.xhtml",
+                        WhoisServer = "whois.verisign-grs.com"
+                    },
+                    new TopLevelDomain
+                    {
+                        Id = -2,
+                        Domain = "net", 
+                        Registry = "Verisign",
+                        RegistryUrl = "https://www.verisign.com/en_US/domain-names/net-domain-names/index.xhtml",
+                        WhoisServer = "whois.verisign-grs.com"
+
+                    },
+                    new TopLevelDomain
+                    {
+                        Id = -3,
+                        Domain = "org", 
+                        Registry = "Public Interest Registry",
+                        RegistryUrl = "https://thenew.org/org-people/",
+                        WhoisServer = "whois.pir.org"
+                    });
             
             modelBuilder.Entity<Record>().Property(x => x.Class).HasConversion<string>();
             modelBuilder.Entity<Record>().Property(x => x.Type).HasConversion<string>();
