@@ -2,12 +2,16 @@ namespace DnsWebApp.Models.Database
 {
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Hosting;
 
     public class DataContext : IdentityDbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options, IHostEnvironment env) : base(options)
         {
-           // this.Database.Migrate();
+            if (env.IsProduction())
+            {
+                this.Database.Migrate();
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
