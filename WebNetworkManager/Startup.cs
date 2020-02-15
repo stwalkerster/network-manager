@@ -48,7 +48,7 @@ namespace DnsWebApp
                 });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment()) 
             {
@@ -59,6 +59,8 @@ namespace DnsWebApp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            IdentitySeedDataInitialiser.SeedData(userManager, roleManager);
             
             app.UseEndpoints(
                 endpoints =>
