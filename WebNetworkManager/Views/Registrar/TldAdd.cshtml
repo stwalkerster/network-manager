@@ -1,0 +1,40 @@
+@model DnsWebApp.Models.Database.RegistrarTldSupport
+
+@{
+    ViewBag.Title = "New TLD support for Registrar";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">New TLD support for Registrar</h1>
+</div>
+
+<form asp-controller="Registrar" asp-action="TldAdd">
+    <input type="hidden" asp-for="RegistrarId" />
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="TopLevelDomainId"></label>
+                <select asp-for="TopLevelDomainId" asp-items="ViewBag.TopLevelDomains" class="form-control"></select>
+                <span asp-validation-for="TopLevelDomainId" class="text-danger"></span>
+                <small class="form-text text-muted">The top-level domain offered by this provider</small>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="RenewalPrice"></label>
+                <input asp-for="RenewalPrice" class="form-control"/>
+                <span asp-validation-for="RenewalPrice" class="text-danger"></span>
+                <small class="form-text text-muted">Price of a 1-year renewal on this TLD</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save settings</button>
+        </div>
+    </div>
+</form>

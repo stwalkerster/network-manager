@@ -1,0 +1,28 @@
+@model DnsWebApp.Models.Database.Registrar
+
+@{
+    ViewBag.Title = "Delete registrar";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Deleting registrar @Model.Name</h1>
+</div>
+
+@if (Model.Zones.Any())
+{
+    <div class="alert alert-danger" role="alert">
+        This registrar has zones underneath it. As such, you cannot delete this registrar until you have removed all child zones.
+    </div>
+}
+else
+{
+    <p class="lead text-danger">You are about to delete the <code>@Model.Name</code> registrar</p>
+
+    <p>Are you sure you want to do this?</p>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id"/>
+        <button class="btn btn-danger" type="submit">Yes, delete this registrar</button>
+    </form>
+}

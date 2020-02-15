@@ -1,0 +1,14 @@
+@model DnsWebApp.Models.Database.Registrar
+
+@{
+    ViewBag.Title = "New Registrar";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">New Registrar</h1>
+</div>
+
+<form asp-controller="Registrar" asp-action="New">
+    <partial name="RegistrarForm"/>
+</form>

@@ -8,6 +8,15 @@
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Zones for registrar @ViewData["Registrar"]</h1>
+    
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="@Url.Action("Edit", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-secondary ml-2">
+            <i class="fas fa-pencil-alt"></i>&nbsp;Edit Registrar
+        </a>
+        <a href="@Url.Action("TldList", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-secondary ml-2">
+            <i class="fas fa-server"></i>&nbsp;TLD Support
+        </a>
+    </div>
 </div>
 
 <partial name="ZoneList"/>

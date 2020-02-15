@@ -1,0 +1,21 @@
+@model DnsWebApp.Models.Database.Registrar
+
+<div class="row">
+    <div class="col-md-12">
+        <fieldset>
+            <legend>Registrar</legend>
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <small class="form-text text-muted">Enter the name of the Registrar</small>
+            </div>
+        </fieldset>
+    </div>
+</div>
+    
+<div class="row">
+    <div class="col-md-6">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save settings</button>
+    </div>
+</div>

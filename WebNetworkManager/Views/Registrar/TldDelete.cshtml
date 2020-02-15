@@ -1,0 +1,19 @@
+@model DnsWebApp.Models.Database.RegistrarTldSupport
+
+@{
+    ViewBag.Title = "Delete registrar";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Deleting TLD support of @Model.TopLevelDomain.Domain from registrar @Model.Registrar.Name</h1>
+</div>
+
+<p class="lead text-danger">You are about to delete the <code>@Model.TopLevelDomain.Domain</code> domain from registrar @Model.Registrar.Name</p>
+
+<p>Are you sure you want to do this?</p>
+
+<form asp-action="TldDelete">
+    <input type="hidden" asp-for="Id"/>
+    <button class="btn btn-danger" type="submit">Yes, delete this TLD</button>
+</form>
