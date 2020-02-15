@@ -22,9 +22,11 @@ namespace DnsWebApp.ViewComponents
             var favouriteDomains = this.db.FavouriteDomains
                 .Include(x => x.Zone)
                 .ThenInclude(x => x.TopLevelDomain)
+                .Include(x => x.Zone)
+                .ThenInclude(x => x.HorizonView)
                 .Where(x => x.UserId == this.userManager.GetUserId(this.HttpContext.User))
-                .ToDictionary(z => z.Zone.Id, x => x.Zone.Name + "." + x.Zone.TopLevelDomain.Domain);
-
+                .ToList();
+            
             return this.View(favouriteDomains);
         }
     }

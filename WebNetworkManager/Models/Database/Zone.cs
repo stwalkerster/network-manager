@@ -60,6 +60,9 @@ namespace DnsWebApp.Models.Database
         [Required]
         public DateTime LastUpdated { get; set; }
         
+        public HorizonView HorizonView { get; set; }
+        public long? HorizonViewId { get; set; }
+        
         public List<Record> Records { get; set; }
         public List<FavouriteDomains> FavouriteDomains { get; set; }
         public List<ZoneGroupMember> ZoneGroupMembers { get; set; }

@@ -18,11 +18,11 @@ namespace DnsWebApp.Controllers
             this.db = db;
         }
         
-        public IActionResult Zones()
+        public IActionResult Zones(long horizon)
         {
             var zones = this.db.Zones
                 .Include(x => x.TopLevelDomain)
-                .Where(x => x.Enabled)
+                .Where(x => x.Enabled && x.HorizonViewId.GetValueOrDefault() == horizon)
                 .Select(x => x.Name + "." + x.TopLevelDomain.Domain + "|" +  x.Id)
                 .ToList();
 

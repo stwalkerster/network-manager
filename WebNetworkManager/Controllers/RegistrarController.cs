@@ -28,6 +28,8 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Zones)
                 .ThenInclude(x => x.Owner)
                 .Include(x => x.Zones)
+                .ThenInclude(x => x.HorizonView)
+                .Include(x => x.Zones)
                 .ThenInclude(x => x.FavouriteDomains)
                 .ThenInclude(x => x.User)
                 .Include(x => x.Zones)
@@ -148,7 +150,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/registrar/{item:int}/delete")]
-        public IActionResult Delete(int item, TopLevelDomain record)
+        public IActionResult Delete(int item, Registrar record)
         {
             var obj = this.db.Registrar
                 .Include(x => x.Zones)

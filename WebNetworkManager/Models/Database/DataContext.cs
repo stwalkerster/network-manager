@@ -34,5 +34,6 @@ namespace DnsWebApp.Models.Database
         public DbSet<TopLevelDomain> TopLevelDomains { get; set; }
         public DbSet<RegistrarTldSupport> RegistrarTldSupport { get; set; }
         public DbSet<FavouriteDomains> FavouriteDomains { get; set; }
+        public DbSet<HorizonView> HorizonViews { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-@model Dictionary<long, string>
+@model List<DnsWebApp.Models.Database.FavouriteDomains>
 @{
     Layout = null;
 }
@@ -53,6 +53,12 @@
                 @Html.Raw(ViewBag.Active == "ZoneGroup" ? "<span class=\"sr-only\">(current)</span>" : "")
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewBag.Active == "Horizon" ? "active" : "")" href="@Url.Action("Index", "Horizon")">
+                <i class="fas fa-mountain"></i>&nbsp;Split-Horizon Views
+                @Html.Raw(ViewBag.Active == "Horizon" ? "<span class=\"sr-only\">(current)</span>" : "")
+            </a>
+        </li>
     </ul>
     
     @if (Model.Any())
@@ -64,8 +70,8 @@
             @foreach (var z in Model)
             {
                 <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("ShowZone", "Zone", new {zone = z.Key})">
-                        <i class="fas fa-cube"></i>&nbsp;@z.Value
+                    <a class="nav-link" href="@Url.Action("ShowZone", "Zone", new {zone = z.Zone.Id})">
+                        <i class="fas fa-cube"></i>&nbsp;@z.Zone.Name.@z.Zone.TopLevelDomain.Domain <partial name="SplitHorizonTag" model="z.Zone.HorizonView"/>
                     </a>
                 </li>
             }

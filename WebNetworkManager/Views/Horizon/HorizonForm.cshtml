@@ -1,0 +1,48 @@
+@model DnsWebApp.Models.Database.HorizonView
+
+<div class="row">
+    <div class="col-md-12">
+        <fieldset>
+            <legend>Split-Horizon View</legend>
+            <div class="form-group">
+                <label asp-for="ViewName"></label>
+                <input asp-for="ViewName" class="form-control"/>
+                <span asp-validation-for="ViewName" class="text-danger"></span>
+                <small class="form-text text-muted">Enter the name of the view</small>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <fieldset>
+            <legend>Tag</legend>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="ViewTag"></label>
+                        <input asp-for="ViewTag" class="form-control"/>
+                        <span asp-validation-for="ViewTag" class="text-danger"></span>
+                        <small class="form-text text-muted">A short name to quickly identify a view</small>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="ViewTagColour"></label>
+                        <input asp-for="ViewTagColour" class="form-control"/>
+                        <span asp-validation-for="ViewTagColour" class="text-danger"></span>
+                        <small class="form-text text-muted">A colour to help identify a view</small>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+    
+<div class="row">
+    <div class="col-md-6">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save settings</button>
+    </div>
+</div>

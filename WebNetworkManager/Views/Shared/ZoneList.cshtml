@@ -4,6 +4,7 @@
     <thead><tr>
         <th data-defaultsort="disabled"></th>
         <th>Zone</th>
+        <th />
         <th>Registrar</th>
         <th>Owner</th>
         <th><abbr title="Number of records in this zone">#</abbr></th>
@@ -36,6 +37,7 @@
                 </form>
             </td>
             <td class="font-weight-bold">@(zone.Name + "." + zone.TopLevelDomain.Domain)</td>
+            <td data-value="@zone.HorizonView?.ViewTag"><partial name="SplitHorizonTag" model="zone.HorizonView"/></td>
             <td>@zone.Registrar?.Name</td>
             <td>@zone.Owner</td>
             <td>@(zone.Records?.Count ?? 0)</td>

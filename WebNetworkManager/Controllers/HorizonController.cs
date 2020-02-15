@@ -1,71 +1,56 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace DnsWebApp.Controllers
 {
     using System.Linq;
     using DnsWebApp.Models.Database;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
-    public class TopLevelDomainController : Controller
+    public class HorizonController : Controller
     {
         private readonly DataContext db;
 
-        public TopLevelDomainController(DataContext db)
+        public HorizonController(DataContext db)
         {
             this.db = db;
         }
-        
-        [Route("/tld")]
+
+        [Route("/horizon")]
         public IActionResult Index()
         {
-            return View(this.db.TopLevelDomains.Include(x => x.Zones).ToList());
-        }
+            var horizons = this.db.HorizonViews
+                .Include(x => x.Zones)
+                .ToList();
 
+            return this.View(horizons);
+        }
+        
         [HttpGet]
-        [Route("/tld/new")]
+        [Route("/horizon/new")]
         public IActionResult New()
         {
-            return this.View(new TopLevelDomain());
+            return this.View(new HorizonView());
         }
         
         [HttpPost]
-        [Route("/tld/new")]
-        public IActionResult New(TopLevelDomain command)
+        [Route("/horizon/new")]
+        public IActionResult New(HorizonView command)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(command);
             }
 
-            this.db.TopLevelDomains.Add(command);
+            this.db.HorizonViews.Add(command);
             this.db.SaveChanges();
             
             return this.RedirectToAction("Index");
         }
         
-        [Route("/tld/{item:int}")]
-        public IActionResult ShowZones(int item)
-        {
-            var zones = this.db.Zones
-                .Include(x => x.TopLevelDomain)
-                .Include(x => x.Owner)
-                .Include(x => x.Registrar)
-                .Include(x => x.HorizonView)
-                .Include(x => x.FavouriteDomains)
-                .ThenInclude(x => x.User)
-                .Include(x => x.Records)
-                .Where(x => x.TopLevelDomainId == item)
-                .ToList();
-
-            this.ViewData["TLD"] = this.db.TopLevelDomains.FirstOrDefault(x => x.Id == item)?.Domain;
-            return this.View(zones);
-        }
-        
         [HttpGet]
-        [Route("/tld/{item:int}/edit")]
+        [Route("/horizon/{item:int}/edit")]
         public IActionResult Edit(int item)
         {
-            var obj = this.db.TopLevelDomains.FirstOrDefault(x => x.Id == item);
+            var obj = this.db.HorizonViews.FirstOrDefault(x => x.Id == item);
             
             if (obj == null)
             {
@@ -76,35 +61,35 @@ namespace DnsWebApp.Controllers
         }
         
         [HttpPost]
-        [Route("/tld/{item:int}/edit")]
-        public IActionResult Edit(int item, TopLevelDomain editedTld)
+        [Route("/horizon/{item:int}/edit")]
+        public IActionResult Edit(int item, HorizonView editedView)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View(editedTld);
+                return this.View(editedView);
             }
             
-            var obj = this.db.TopLevelDomains.FirstOrDefault(x => x.Id == item);
+            var obj = this.db.HorizonViews.FirstOrDefault(x => x.Id == item);
             
             if (obj == null)
             {
                 return this.RedirectToAction("Index");
             }
 
-            obj.Registry = editedTld.Registry;
-            obj.RegistryUrl = editedTld.RegistryUrl;
-            obj.WhoisServer = editedTld.WhoisServer;
+            obj.ViewName = editedView.ViewName;
+            obj.ViewTag = editedView.ViewTag;
+            obj.ViewTagColour = editedView.ViewTagColour;
 
             this.db.SaveChanges();
             
             return this.RedirectToAction("Index");
         }
-        
+
         [HttpGet]
-        [Route("/tld/{item:int}/delete")]
+        [Route("/horizon/{item:int}/delete")]
         public IActionResult Delete(int item)
         {
-            var obj = this.db.TopLevelDomains
+            var obj = this.db.HorizonViews
                 .Include(x => x.Zones)
                 .FirstOrDefault(x => x.Id == item);
             
@@ -117,10 +102,10 @@ namespace DnsWebApp.Controllers
         }
         
         [HttpPost]
-        [Route("/tld/{item:int}/delete")]
-        public IActionResult Delete(int item, TopLevelDomain record)
+        [Route("/horizon/{item:int}/delete")]
+        public IActionResult Delete(int item, HorizonView record)
         {
-            var obj = this.db.TopLevelDomains
+            var obj = this.db.HorizonViews
                 .Include(x => x.Zones)
                 .FirstOrDefault(x => x.Id == item);
             
@@ -134,10 +119,13 @@ namespace DnsWebApp.Controllers
                 return this.RedirectToAction("Index");  
             }
           
-            this.db.TopLevelDomains.Remove(obj);
+            this.db.HorizonViews.Remove(obj);
             this.db.SaveChanges();
             
             return this.RedirectToAction("Index");
         }
+
+
+        
     }
 }

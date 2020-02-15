@@ -55,8 +55,12 @@ namespace DnsWebApp.Models.ViewModels
         public long TopLevelDomain { get; set; }
 
         public string Owner { get; set; }
+        
+        [Display(Name = "Split-horizon view")]
+        public long? HorizonView { get; set; }
 
         public List<SelectListItem> Registrars { get; set; }
+        public List<SelectListItem> HorizonViews { get; set; }
         public List<SelectListItem> TopLevelDomains { get; set; }
         public List<SelectListItem> Owners { get; set; }
         

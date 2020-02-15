@@ -1,0 +1,42 @@
+@model List<DnsWebApp.Models.Database.HorizonView>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Split-Horizon Views";
+    ViewBag.Active = "Horizon";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Split-Horizon Views</h1>
+    
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="@Url.Action("New", "Horizon")" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-plus"></i>&nbsp;New view
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped table-hover sortable">
+    <thead><tr>
+        <th data-defaultsort="disabled"></th>
+        <th>View Name</th>
+        <th>View Tag</th>
+        <th>Zones</th>
+        <th data-defaultsort="disabled"></th>
+    </tr></thead>
+    <tbody>
+        @foreach (var view in Model)
+        {
+            <tr>
+                <td></td>
+                <td>@view.ViewName</td>
+                <td><partial name="SplitHorizonTag" model="view"/></td>
+                <td>@view.Zones.Count</td>
+                <td class="table-button-cell">
+                    <a href="@Url.Action("Edit", "Horizon", new {item = view.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>&nbsp;Edit View
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

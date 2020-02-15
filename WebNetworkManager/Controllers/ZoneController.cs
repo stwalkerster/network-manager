@@ -33,6 +33,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Registrar)
                 .Include(x => x.Owner)
                 .Include(x => x.Records)
+                .Include(x => x.HorizonView)
                 .Include(x => x.FavouriteDomains)
                 .ThenInclude(x => x.User)
                 .ToList();
@@ -50,6 +51,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Owner)
                 .Include(x => x.Registrar)
                 .Include(x => x.Records)
+                .Include(x => x.HorizonView)
                 .Include(x => x.ZoneGroupMembers)
                 .ThenInclude(x => x.ZoneGroup)
                 .ThenInclude(x => x.Records)
@@ -141,6 +143,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Owner)
                 .Include(x => x.Registrar)
                 .Include(x => x.Records)
+                .Include(x => x.HorizonView)
                 .Include(x => x.ZoneGroupMembers)
                 .ThenInclude(x => x.ZoneGroup)
                 .ThenInclude(x => x.Records)
@@ -182,6 +185,7 @@ namespace DnsWebApp.Controllers
             zoneCommand.Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
             zoneCommand.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem("." + x.Domain, x.Id.ToString())).ToList();
             zoneCommand.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
+            zoneCommand.HorizonViews = this.db.HorizonViews.Select(x => new SelectListItem(x.ViewName, x.Id.ToString())).ToList();
 
             zoneCommand.Refresh = zoneCommand.Retry = zoneCommand.TimeToLive = zoneCommand.DefaultTimeToLive = 300;
             zoneCommand.Expire = 7*86400;
@@ -199,7 +203,8 @@ namespace DnsWebApp.Controllers
                 editedZone.Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
                 editedZone.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList();
                 editedZone.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
-                
+                editedZone.HorizonViews = this.db.HorizonViews.Select(x => new SelectListItem(x.ViewName, x.Id.ToString())).ToList();
+
                 return this.View(editedZone);
             }
 
@@ -218,6 +223,7 @@ namespace DnsWebApp.Controllers
             zoneObject.Enabled = editedZone.Enabled;
             zoneObject.RegistrarId = editedZone.Registrar;
             zoneObject.OwnerId = editedZone.Owner;
+            zoneObject.HorizonViewId = editedZone.HorizonView;
             zoneObject.RegistrationExpiry = editedZone.RegistrationExpiry;
 
             zoneObject.TouchSerialNumber();
@@ -237,6 +243,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.TopLevelDomain)
                 .Include(x => x.Owner)
                 .Include(x => x.Registrar)
+                .Include(x => x.HorizonView)
                 .FirstOrDefault(x => x.Id == zone);
 
             if (zoneObject == null)
@@ -252,6 +259,8 @@ namespace DnsWebApp.Controllers
                     this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList();
                 editedZone.TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList();
                 editedZone.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
+                editedZone.HorizonViews = this.db.HorizonViews.Select(x => new SelectListItem(x.ViewName, x.Id.ToString())).ToList();
+
                 
                 return this.View(editedZone);
             }
@@ -268,6 +277,7 @@ namespace DnsWebApp.Controllers
             zoneObject.RegistrarId = editedZone.Registrar;
             zoneObject.OwnerId = editedZone.Owner;
             zoneObject.RegistrationExpiry = editedZone.RegistrationExpiry;
+            zoneObject.HorizonViewId = editedZone.HorizonView;
             
             zoneObject.TouchSerialNumber();
             
@@ -306,12 +316,15 @@ namespace DnsWebApp.Controllers
                 TimeToLive = zoneObject.TimeToLive,
                 DefaultTimeToLive = zoneObject.DefaultTimeToLive,
                 TopLevelDomain = zoneObject.TopLevelDomainId,
+                HorizonView = zoneObject.HorizonViewId,
 
                 Id = zoneObject.Id,
                 Name = zoneObject.Name + "." + zoneObject.TopLevelDomain.Domain,
                 Registrars = this.db.Registrar.Select(x => new SelectListItem(x.Name, x.Id.ToString())).ToList(),
                 TopLevelDomains = this.db.TopLevelDomains.Select(x => new SelectListItem(x.Domain, x.Id.ToString())).ToList(),
-                Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList()
+                Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList(),
+                HorizonViews = this.db.HorizonViews.Select(x => new SelectListItem(x.ViewName, x.Id.ToString())).ToList()
+
             };
             
             return this.View(cmd);

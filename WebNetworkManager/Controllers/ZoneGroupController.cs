@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DnsWebApp.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -77,6 +78,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.TopLevelDomain)
                 .Include(x => x.Owner)
                 .Include(x => x.Registrar)
+                .Include(x => x.HorizonView)
                 .Include(x => x.FavouriteDomains).ThenInclude(x => x.User)
                 .Include(x => x.ZoneGroupMembers).ThenInclude(x => x.ZoneGroup)
                 .Include(x => x.Records)
@@ -244,7 +246,8 @@ namespace DnsWebApp.Controllers
         {
             var allZones = this.db.Zones
                 .Include(x => x.TopLevelDomain)
-                .Select(x => new {label = x.Name + "." + x.TopLevelDomain.Domain, value = x.Id.ToString(CultureInfo.InvariantCulture)})
+                .Include(x => x.HorizonView)
+                .Select(x => new {label = x.Name + "." + x.TopLevelDomain.Domain + (x.HorizonViewId.HasValue ? $" ({x.HorizonView.ViewTag})" : String.Empty), value = x.Id.ToString(CultureInfo.InvariantCulture)})
                 .ToList();
             return allZones;
         }
