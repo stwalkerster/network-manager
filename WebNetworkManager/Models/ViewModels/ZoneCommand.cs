@@ -3,6 +3,7 @@ namespace DnsWebApp.Models.ViewModels
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using DnsWebApp.Validation;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class ZoneCommand
@@ -50,6 +51,7 @@ namespace DnsWebApp.Models.ViewModels
         
         [Required]
         [Display(Name = "Top level domain")]
+        [NotEqual(0)]
         public long TopLevelDomain { get; set; }
 
         public string Owner { get; set; }

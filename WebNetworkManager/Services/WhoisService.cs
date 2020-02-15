@@ -9,14 +9,17 @@ namespace DnsWebApp.Services
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
 
     public class WhoisService
     {
         private readonly DataContext db;
+        private readonly ILogger<WhoisService> logger;
 
-        public WhoisService(DataContext db)
+        public WhoisService(DataContext db, ILogger<WhoisService> logger)
         {
             this.db = db;
+            this.logger = logger;
         }
 
         public WhoisResult GetWhoisData(long zoneId)
@@ -69,26 +72,35 @@ namespace DnsWebApp.Services
             
             foreach (var zone in zones)
             {
-                // update if:
-                //   * no exiry date set
-                //   * not refreshed
-                //   * < 14 days to expiry, refresh every 6 hours
-                //   * every 7 days.
-                if (!zone.RegistrationExpiry.HasValue
-                    || !zone.WhoisLastUpdated.HasValue
-                    || ((DateTime.UtcNow - zone.RegistrationExpiry.Value).TotalDays < 14 
-                        && (DateTime.UtcNow-zone.WhoisLastUpdated.Value).TotalHours > 6)
-                    || (DateTime.UtcNow-zone.WhoisLastUpdated.GetValueOrDefault(DateTime.MinValue)).TotalDays > 7
-                    )
+                try
                 {
-                    var whoisResult = this.GetWhoisData(zone);
-                    
-                    if (whoisResult.Expiry.HasValue)
+                    // update if:
+                    //   * no exiry date set
+                    //   * not refreshed
+                    //   * < 14 days to expiry, refresh every 6 hours
+                    //   * every 7 days.
+                    if (!zone.RegistrationExpiry.HasValue
+                        || !zone.WhoisLastUpdated.HasValue
+                        || ((DateTime.UtcNow - zone.RegistrationExpiry.Value).TotalDays < 14
+                            && (DateTime.UtcNow - zone.WhoisLastUpdated.Value).TotalHours > 6)
+                        || (DateTime.UtcNow - zone.WhoisLastUpdated.GetValueOrDefault(DateTime.MinValue)).TotalDays > 7
+                    )
                     {
-                        zone.RegistrationExpiry = whoisResult.Expiry;
-                        zone.WhoisLastUpdated = DateTime.UtcNow;
-                        changed = true;
+                        var whoisResult = this.GetWhoisData(zone);
+
+                        if (whoisResult.Expiry.HasValue)
+                        {
+                            zone.RegistrationExpiry = whoisResult.Expiry;
+                            zone.WhoisLastUpdated = DateTime.UtcNow;
+                            changed = true;
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    this.logger.LogError(
+                        ex,
+                        $"Exception encountered updating whois data for zone {zone.Id}:{zone.Name}");
                 }
             }
 

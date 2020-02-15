@@ -186,7 +186,6 @@ namespace DnsWebApp.Controllers
             zoneCommand.Refresh = zoneCommand.Retry = zoneCommand.TimeToLive = zoneCommand.DefaultTimeToLive = 300;
             zoneCommand.Expire = 7*86400;
             zoneCommand.PrimaryNameServer = "ns1.stwalkerster.net";
-            zoneCommand.TopLevelDomain = this.db.TopLevelDomains.First(x => x.Domain == "com").Id;
             
             return this.View(zoneCommand);
         }
