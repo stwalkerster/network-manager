@@ -152,32 +152,6 @@ namespace DnsWebApp.Migrations
                         .IsUnique();
 
                     b.ToTable("TopLevelDomains");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -1L,
-                            Domain = "com",
-                            Registry = "Verisign",
-                            RegistryUrl = "https://www.verisign.com/en_US/domain-names/com-domain-names/index.xhtml",
-                            WhoisServer = "whois.verisign-grs.com"
-                        },
-                        new
-                        {
-                            Id = -2L,
-                            Domain = "net",
-                            Registry = "Verisign",
-                            RegistryUrl = "https://www.verisign.com/en_US/domain-names/net-domain-names/index.xhtml",
-                            WhoisServer = "whois.verisign-grs.com"
-                        },
-                        new
-                        {
-                            Id = -3L,
-                            Domain = "org",
-                            Registry = "Public Interest Registry",
-                            RegistryUrl = "https://thenew.org/org-people/",
-                            WhoisServer = "whois.pir.org"
-                        });
                 });
 
             modelBuilder.Entity("DnsWebApp.Models.Database.Zone", b =>
