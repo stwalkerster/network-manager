@@ -18,8 +18,15 @@ namespace DnsWebApp.Models.ViewModels
             this.vat = vat;
         }
 
+        public override string ToString()
+        {
+            return $"{nameof(this.Registrar)}: {this.Registrar.Name}, {nameof(this.Domain)}: {this.Domain}";
+        }
+
         public long RegistrarId => this.tldSupport.RegistrarId;
+        public Registrar Registrar => this.tldSupport.Registrar;
         public long Id => this.tldSupport.Id;
+        public long TopLevelDomainId => this.tldSupport.TopLevelDomainId;
 
         public string Domain => this.tldSupport.TopLevelDomain.Domain;
         public int EnabledZones => this.tldSupport.TopLevelDomain.Zones.Where(x => x.RegistrarId == this.tldSupport.RegistrarId && x.Enabled).Select(x => x.Name).Distinct().Count();
@@ -77,7 +84,7 @@ namespace DnsWebApp.Models.ViewModels
             ? string.Format(this.baseCurrency.Symbol, this.TransferPriceInBaseCurrency)
             : string.Empty;
         
-        private decimal? RenewalPriceInBaseCurrency
+        public decimal? RenewalPriceInBaseCurrency
         {
             get
             {
@@ -92,7 +99,14 @@ namespace DnsWebApp.Models.ViewModels
                     return null;
                 }
 
-                var convertedValue = this.tldSupport.RenewalPrice.Value / this.tldSupport.Registrar.Currency.ExchangeRate.Value
+                var renewal = this.tldSupport.RenewalPrice.Value;
+
+                if (!this.tldSupport.PrivacyIncluded)
+                {
+                    renewal += this.tldSupport.Registrar.PrivacyFee.GetValueOrDefault(0m);
+                }
+                
+                var convertedValue = renewal / this.tldSupport.Registrar.Currency.ExchangeRate.Value
                                      * this.baseCurrency.ExchangeRate.Value;
 
                 var valueWithTax = convertedValue * (this.tldSupport.Registrar.PricesIncludeVat ? 1m : this.vat);
@@ -101,7 +115,7 @@ namespace DnsWebApp.Models.ViewModels
             }
         }
         
-        private decimal? TransferPriceInBaseCurrency
+        public decimal? TransferPriceInBaseCurrency
         {
             get
             {
@@ -127,12 +141,37 @@ namespace DnsWebApp.Models.ViewModels
                     transferPrice += this.tldSupport.RenewalPrice.Value;
                 }
                 
+                if (!this.tldSupport.PrivacyIncluded)
+                {
+                    transferPrice += this.tldSupport.Registrar.PrivacyFee.GetValueOrDefault(0m);
+                }
+                
                 var convertedValue = transferPrice / this.tldSupport.Registrar.Currency.ExchangeRate.Value
                                      * this.baseCurrency.ExchangeRate.Value;
 
                 var valueWithTax = convertedValue * (this.tldSupport.Registrar.PricesIncludeVat ? 1m : 1.2m);
 
                 return valueWithTax;
+            }
+        }
+
+        public decimal? TransferOutInBaseCurrency
+        {
+            get
+            {
+                if (!this.tldSupport.Registrar.Currency.ExchangeRate.HasValue
+                    || !this.baseCurrency.ExchangeRate.HasValue)
+                {
+                    return null;
+                }
+                
+                if (this.tldSupport.Registrar.TransferOutFee.HasValue)
+                {
+                    return this.tldSupport.Registrar.TransferOutFee.Value / this.tldSupport.Registrar.Currency.ExchangeRate.Value
+                                         * this.baseCurrency.ExchangeRate.Value;
+                }
+
+                return null;
             }
         }
 

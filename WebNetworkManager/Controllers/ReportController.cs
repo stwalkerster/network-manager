@@ -3,19 +3,26 @@ namespace DnsWebApp.Controllers
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Linq;
+    using System.Reflection.Metadata;
     using DnsWebApp.Models.Database;
+    using DnsWebApp.Models.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using MoreLinq.Extensions;
 
     [Route("/report/{action=Index}")]
     public class ReportController : Controller
     {
         private readonly DataContext db;
+        private readonly IConfiguration configuration;
 
-        public ReportController(DataContext db)
+        public ReportController(DataContext db, IConfiguration configuration)
         {
             this.db = db;
+            this.configuration = configuration;
         }
         
         public IActionResult Index()
@@ -25,63 +32,153 @@ namespace DnsWebApp.Controllers
 
         public IActionResult RenewalCosts()
         {
-            var registrarSnippet = this.db.Registrar
-                .Include(x => x.RegistrarTldSupports)
-                .OrderBy(x => x.Name)
-                .Select(x => string.Format("\"{0}\" NUMERIC", x.Name))
-                .ToList()
-                .Aggregate("\"Domain\" TEXT", (a, c) => a + ", " + c);
-
-            var commandCore = "select '.' || tld.\"Domain\", registrar.\"Name\", \n       tldSupport.\"RenewalPrice\" * coalesce(registrarCcy.\"ExchangeRate\", -1) * baseCcy.\"ExchangeRate\"\nfrom \"TopLevelDomains\" tld\n         cross join \"Registrar\" registrar\n         left join \"RegistrarTldSupport\" tldSupport on tld.\"Id\" = tldSupport.\"TopLevelDomainId\" and registrar.\"Id\" = tldSupport.\"RegistrarId\"\n         left join \"Currencies\" registrarCcy on registrar.\"CurrencyId\" = registrarCcy.\"Id\"\n         cross join \"Currencies\" baseCcy\nwhere baseCcy.\"Code\" = 'GBP'\norder by 1,2\n";
-            var costsPivot = string.Format(
-                "SELECT * FROM public.crosstab($q$ {0} $q$) AS final_result({1})",
-                commandCore,
-                registrarSnippet);
-
-
-            var renewal = @"
-with d as (
-    select distinct z.""Id""                                                             as zoneid,
-                    z.""Name""                                                           as zonename,
-                    z.""TopLevelDomainId""                                               as tldid,
-                    z.""OwnerId""                                                        as owner,
-                    tld.""Domain""                                                       as tld,
-                    r.""Id""                                                             as regid,
-                    r.""Name""                                                           as regname,
-                    min(RTS.""RenewalPrice"") over (partition by RTS.""TopLevelDomainId"") as MinRenewalPrice,
-                    rrtld.""RenewalPrice""                                               as actualrenewalprice
-    from ""Zones"" z
-             inner join ""TopLevelDomains"" tld on z.""TopLevelDomainId"" = tld.""Id""
-             inner join ""RegistrarTldSupport"" RTS on tld.""Id"" = RTS.""TopLevelDomainId""
-             inner join ""Registrar"" r on z.""RegistrarId"" = r.""Id""
-             inner join ""RegistrarTldSupport"" rrtld
-                        on r.""Id"" = rrtld.""RegistrarId"" and rrtld.""TopLevelDomainId"" = z.""TopLevelDomainId""
-)
-select --d.zoneid,
-       d.zonename || '.' || d.tld as ""Domain"",
-       d.regname as ""Current registrar"",
-       to_char(d.actualrenewalprice, 'LFM9999990.00') as ""Current Price"",
-       to_char(d.MinRenewalPrice, 'LFM9999990.00') as ""Min Price"",       
-       to_char(d.actualrenewalprice - d.MinRenewalPrice, 'LFM9999990.00') as ""Saving"",
-       to_char(SUM(d.actualrenewalprice - d.MinRenewalPrice) OVER (PARTITION BY d.owner), 'LFM9999990.00') as ""Total Saving"",
-       prr.""Name"" as ""New registrar"",
-    --   d.owner,
-       u.""UserName"" as ""Owner""
-from d
-         inner join ""RegistrarTldSupport"" prtld
-                    on prtld.""RenewalPrice"" = d.MinRenewalPrice and prtld.""TopLevelDomainId"" = d.tldid
-         inner join ""Registrar"" prr on prtld.""RegistrarId"" = prr.""Id""
-         inner join ""AspNetUsers"" u on u.""Id"" = d.owner
-where d.MinRenewalPrice < d.actualrenewalprice
-";
-
-            var results = new List<Tuple<List<string>, List<string[]>>>
-                {this.GetSqlResult(costsPivot), this.GetSqlResult(renewal)};
+            var results = new List<ReportResult> {this.GetRenewalAnalysis()};
 
             return this.View(results);
         }
 
-        private Tuple<List<string>, List<string[]>> GetSqlResult(string query)
+        private ReportResult GetRenewalAnalysis()
+        {
+            var baseCurrency = this.db.Currencies.FirstOrDefault(
+                x => x.Code == this.configuration.GetValue<string>("BaseCurrency"));
+           
+            var tldData = this.db.RegistrarTldSupport
+                .Include(x => x.Registrar)
+                .ThenInclude(x => x.Currency)
+                .Include(x => x.TopLevelDomain)
+                .Select(x => new TldSupportDisplay(x, baseCurrency, this.configuration.GetValue<decimal>("Vat")))
+                .ToDictionary(x => x.RegistrarId + "|" + x.TopLevelDomainId);
+
+            var zones = this.db.Zones
+                .Include(x => x.Owner)
+                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Registrar)
+                .DistinctBy(x => new {x.TopLevelDomainId, x.Name})
+                .ToList();
+
+            var columnHeaders = new List<string>
+            {
+                "Owner", "TLD", "Domain", "Current registrar", "Renewal price", "Transfer price", "Renewal post transfer", "Recommendation", "Saving"
+            };
+            var rows = new List<string[]>();
+            var rowsDataValues = new List<string[]>();
+            
+            foreach (var zone in zones)
+            {
+                var rowData = new string[columnHeaders.Count];
+                var rowDataValues = new string[columnHeaders.Count];
+
+                rowData[0] = zone.Owner.UserName;
+                rowData[1] = zone.TopLevelDomain.Domain;
+                rowData[2] = $"{zone.Name}.{zone.TopLevelDomain.Domain}";
+                rowData[3] = zone.Registrar.Name;
+
+                var renewalPrice = decimal.MaxValue;
+                var renewalObject = tldData[zone.RegistrarId + "|" + zone.TopLevelDomainId];
+                if (!zone.Registrar.AllowRenewals)
+                {
+                    rowData[4] = "Prohibited";
+                    renewalPrice = renewalObject.RenewalPriceInBaseCurrency.Value;
+                }
+                else
+                {
+                    if (renewalObject.RenewalPriceInBaseCurrency.HasValue)
+                    {
+                        renewalPrice = renewalObject.RenewalPriceInBaseCurrency.Value;
+                        rowDataValues[4] = renewalPrice.ToString(CultureInfo.InvariantCulture);
+                        rowData[4] = renewalObject.RealRenewalPrice;
+                    }
+                    else
+                    {
+                        rowData[4] = "Unavailable";
+                    }
+                }
+                
+                var transferPrice = decimal.MaxValue;
+                var tldSupportList = tldData.Values
+                    .Where(x => x.TopLevelDomainId == zone.TopLevelDomainId)
+                    .Where(x => x.RegistrarId != zone.RegistrarId)
+                    .Where(x => x.Registrar.AllowTransfers)
+                    .Where(x => x.TransferPriceInBaseCurrency.HasValue)
+                    .ToList();
+                
+                var transferObject = tldSupportList
+                    .OrderBy(x => x.TransferPriceInBaseCurrency)
+                    .FirstOrDefault();
+                
+                if (transferObject == null)
+                {                        
+                    rowData[4] = "Unavailable";
+                }
+                else
+                {
+                    var extraTransferFee = renewalObject.TransferOutInBaseCurrency;
+                    var extraTransfer = "";
+                    if (extraTransferFee.HasValue)
+                    {
+                        extraTransfer = $" (+{string.Format(baseCurrency.Symbol, extraTransferFee.Value)} outbound)";
+                    }
+
+                    transferPrice = transferObject.TransferPriceInBaseCurrency.Value;
+                    rowDataValues[5] = (transferPrice + extraTransferFee.GetValueOrDefault()).ToString(CultureInfo.InvariantCulture);
+                    rowData[5] = $"{transferObject.RealTransferPrice} ({transferObject.Registrar.Name}){extraTransfer}";
+                    
+                    var renewalChange = renewalPrice.CompareTo(transferObject.RenewalPriceInBaseCurrency);
+                    string renewalChangeIcon = "";
+
+                    if (renewalPrice != decimal.MaxValue)
+                    {
+                        if (renewalChange == -1)
+                        {
+                            renewalChangeIcon =
+                                $"⇧ ({string.Format(baseCurrency.Symbol, transferObject.RenewalPriceInBaseCurrency.Value - renewalPrice)})";
+                        }
+                        else if (renewalChange == 1)
+                        {
+                            renewalChangeIcon =
+                                $"⇩ ({string.Format(baseCurrency.Symbol, transferObject.RenewalPriceInBaseCurrency.Value - renewalPrice)})";
+                        }
+                        
+                        rowDataValues[6] = (transferObject.RenewalPriceInBaseCurrency.Value - renewalPrice).ToString(CultureInfo.InvariantCulture);
+                    }
+
+                    rowData[6] = $"{transferObject.RealRenewalPrice} {renewalChangeIcon}";
+                }
+
+                if (renewalPrice <= transferPrice && renewalPrice != decimal.MaxValue && rowData[4] != "Prohibited")
+                {
+                    rowData[7] = "Renew";
+
+                } 
+                else if ((renewalPrice == decimal.MaxValue || rowData[4] == "Prohibited") && transferPrice != decimal.MaxValue)
+                {
+                    rowData[7] = "Transfer to " + transferObject.Registrar.Name;
+                    if (renewalPrice != decimal.MaxValue)
+                    {
+                        rowData[8] = string.Format(baseCurrency.Symbol, renewalPrice - transferPrice);
+                        rowDataValues[8] = (renewalPrice - transferPrice).ToString(CultureInfo.InvariantCulture);
+                    }
+                }
+                else if (transferPrice <= renewalPrice && transferPrice != decimal.MaxValue && renewalPrice != decimal.MaxValue)
+                {
+                    rowData[7] = "Transfer to " + transferObject.Registrar.Name;
+                    rowData[8] = string.Format(baseCurrency.Symbol, renewalPrice - transferPrice);
+                    rowDataValues[8] = (renewalPrice - transferPrice).ToString(CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    rowData[6] = "Unknown"; 
+                }
+                
+                
+                rows.Add(rowData);
+                rowsDataValues.Add(rowDataValues);
+            }
+
+            return new ReportResult("Transfer/Renewal Recommendations", columnHeaders, rows, rowsDataValues);
+        }
+
+        private ReportResult GetSqlResult(string query, string title)
         {
             using (var command = this.db.Database.GetDbConnection().CreateCommand())
             {
@@ -111,7 +208,7 @@ where d.MinRenewalPrice < d.actualrenewalprice
                         rows.Add(data);
                     }
 
-                    return new Tuple<List<string>, List<string[]>>(columns, rows);
+                    return new ReportResult(title, columns, rows);
                 }
             }
         }

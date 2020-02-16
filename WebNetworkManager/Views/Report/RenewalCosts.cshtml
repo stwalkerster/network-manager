@@ -1,4 +1,4 @@
-@model List<Tuple<List<string>, List<string[]>>>
+@model List<DnsWebApp.Models.ViewModels.ReportResult>
 @{
     ViewBag.Title = "Renewal Costs";
     Layout = "_Layout";
@@ -10,24 +10,32 @@
 
 @foreach (var query in Model)
 {
+    <h3>@query.Title</h3>
     <table class="table table-striped table-hover table-bordered sortable">
         <thead>
         <tr>
-            @foreach (var column in query.Item1)
+            @foreach (var column in query.Columns)
             {
                 <th>@column</th>
             }
         </tr>
         </thead>
         <tbody>
-        @foreach (var row in query.Item2)
+        @for (var i = 0; i < query.Data.Count; i++)
         {
             <tr>
-                @foreach (var cell in row)
+                @for (var j = 0; j < query.Data[i].Length; j++)
                 {
-                    <td>
-                        @cell
-                    </td>
+                    @if (!string.IsNullOrWhiteSpace(query.DataValues[i][j]))
+                    {
+                        <td data-value="@query.DataValues[i][j]">
+                            @query.Data[i][j]
+                        </td>
+                    } else {
+                        <td>
+                            @query.Data[i][j]
+                        </td>
+                    }
                 }
             </tr>
         }
