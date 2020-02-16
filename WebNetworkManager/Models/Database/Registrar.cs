@@ -14,6 +14,10 @@ namespace DnsWebApp.Models.Database
         [Display(Name = "Prices include VAT?")]
         public bool PricesIncludeVat { get; set; }
         
+        [Required]
+        [Display(Name = "Allow renewals and transfers?")]
+        public bool AllowRenewals { get; set; }
+        
         public Currency Currency { get; set; }
         [Display(Name="Currency")]
         public long? CurrencyId { get; set; }

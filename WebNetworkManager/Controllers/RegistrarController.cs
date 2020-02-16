@@ -129,6 +129,7 @@ namespace DnsWebApp.Controllers
             obj.Name = editedRegistrar.Name;
             obj.PricesIncludeVat = editedRegistrar.PricesIncludeVat;
             obj.CurrencyId = editedRegistrar.CurrencyId;
+            obj.AllowRenewals = editedRegistrar.AllowRenewals;
 
             this.db.SaveChanges();
             

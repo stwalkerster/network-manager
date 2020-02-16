@@ -10,6 +10,13 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
                 <small class="form-text text-muted">Enter the name of the Registrar</small>
             </div>
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="AllowRenewals"/>
+                    <label class="custom-control-label" asp-for="AllowRenewals"></label>
+                    <small class="form-text text-muted">For reporting use only</small>
+                </div>
+            </div>
         </fieldset>
     </div>
     
