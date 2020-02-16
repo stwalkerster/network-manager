@@ -27,7 +27,6 @@ namespace DnsWebApp.Controllers
         {
             var registrarSnippet = this.db.Registrar
                 .Include(x => x.RegistrarTldSupports)
-                .Where(x => x.RegistrarTldSupports != null && x.RegistrarTldSupports.Count > 0)
                 .OrderBy(x => x.Name)
                 .Select(x => string.Format("\"{0}\" NUMERIC", x.Name))
                 .ToList()
