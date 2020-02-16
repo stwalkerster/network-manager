@@ -29,11 +29,11 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.RegistrarTldSupports)
                 .Where(x => x.RegistrarTldSupports != null && x.RegistrarTldSupports.Count > 0)
                 .OrderBy(x => x.Name)
-                .Select(x => string.Format("\"{0}\" TEXT", x.Name))
+                .Select(x => string.Format("\"{0}\" NUMERIC", x.Name))
                 .ToList()
                 .Aggregate("\"Domain\" TEXT", (a, c) => a + ", " + c);
 
-            var commandCore = "select '.' || tld.\"Domain\", r.\"Name\", to_char(rts.\"RenewalPrice\", 'LFM9999990.00') from \"TopLevelDomains\" tld cross join \"Registrar\" R left join \"RegistrarTldSupport\" RTS on tld.\"Id\" = RTS.\"TopLevelDomainId\" and R.\"Id\" = RTS.\"RegistrarId\" order by 1,2";
+            var commandCore = "select '.' || tld.\"Domain\", registrar.\"Name\", \n       tldSupport.\"RenewalPrice\" * coalesce(registrarCcy.\"ExchangeRate\", -1) * baseCcy.\"ExchangeRate\"\nfrom \"TopLevelDomains\" tld\n         cross join \"Registrar\" registrar\n         left join \"RegistrarTldSupport\" tldSupport on tld.\"Id\" = tldSupport.\"TopLevelDomainId\" and registrar.\"Id\" = tldSupport.\"RegistrarId\"\n         left join \"Currencies\" registrarCcy on registrar.\"CurrencyId\" = registrarCcy.\"Id\"\n         cross join \"Currencies\" baseCcy\nwhere baseCcy.\"Code\" = 'GBP'\norder by 1,2\n";
             var costsPivot = string.Format(
                 "SELECT * FROM public.crosstab($q$ {0} $q$) AS final_result({1})",
                 commandCore,
