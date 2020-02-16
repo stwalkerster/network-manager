@@ -130,6 +130,9 @@ namespace DnsWebApp.Controllers
             obj.PricesIncludeVat = editedRegistrar.PricesIncludeVat;
             obj.CurrencyId = editedRegistrar.CurrencyId;
             obj.AllowRenewals = editedRegistrar.AllowRenewals;
+            obj.AllowTransfers = editedRegistrar.AllowTransfers;
+            obj.TransferOutFee = editedRegistrar.TransferOutFee;
+            obj.PrivacyFee = editedRegistrar.PrivacyFee;
 
             this.db.SaveChanges();
             
@@ -281,6 +284,7 @@ namespace DnsWebApp.Controllers
             obj.TransferPrice = command.TransferPrice;
             obj.RenewalPriceUpdated = DateTime.Now;
             obj.TransferIncludesRenewal = command.TransferIncludesRenewal;
+            obj.PrivacyIncluded = command.PrivacyIncluded;
 
             this.db.SaveChanges();
             

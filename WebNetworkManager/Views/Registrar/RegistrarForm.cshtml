@@ -17,6 +17,14 @@
                     <small class="form-text text-muted">For reporting use only</small>
                 </div>
             </div>
+            
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="AllowTransfers"/>
+                    <label class="custom-control-label" asp-for="AllowTransfers"></label>
+                    <small class="form-text text-muted">For reporting use only</small>
+                </div>
+            </div>
         </fieldset>
     </div>
     
@@ -39,7 +47,20 @@
                 <span asp-validation-for="CurrencyId" class="text-danger"></span>
                 <small class="form-text text-muted">The currency in which prices are shown</small>
             </div>
-
+            
+            <div class="form-group">
+                <label asp-for="PrivacyFee"></label>
+                <input asp-for="PrivacyFee" class="form-control"/>
+                <span asp-validation-for="PrivacyFee" class="text-danger"></span>
+                <small class="form-text text-muted">Cost of additional privacy services</small>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="TransferOutFee"></label>
+                <input asp-for="TransferOutFee" class="form-control"/>
+                <span asp-validation-for="TransferOutFee" class="text-danger"></span>
+                <small class="form-text text-muted">Cost of transferring a domain out of this registrar</small>
+            </div>
         </fieldset>
     </div>
 </div>

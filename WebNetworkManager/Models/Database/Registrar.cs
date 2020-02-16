@@ -15,8 +15,19 @@ namespace DnsWebApp.Models.Database
         public bool PricesIncludeVat { get; set; }
         
         [Required]
-        [Display(Name = "Allow renewals and transfers?")]
+        [Display(Name = "Allow renewals?")]
         public bool AllowRenewals { get; set; }
+        
+        [Required]
+        [Display(Name = "Allow transfers?")]
+        public bool AllowTransfers { get; set; }
+        
+        [Display(Name = "Outbound transfer fee")]
+        public decimal? TransferOutFee { get; set; }
+        
+        [Display(Name = "WHOIS Privacy Fee")]
+        public decimal? PrivacyFee { get; set; }
+            
         
         public Currency Currency { get; set; }
         [Display(Name="Currency")]
