@@ -1,0 +1,44 @@
+@model List<DnsWebApp.Models.Database.Currency>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Currencies";
+    ViewBag.Active = "Currency";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Currencies</h1>
+    
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="@Url.Action("New", "Currency")" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-plus"></i>&nbsp;New currency
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped table-hover sortable">
+    <thead><tr>
+        <th data-defaultsort="disabled"></th>
+        <th>Currency Name</th>
+        <th>Code</th>
+        <th>Exchange rate</th>
+        <th>Last update</th>
+        <th data-defaultsort="disabled"></th>
+    </tr></thead>
+    <tbody>
+        @foreach (var view in Model)
+        {
+            <tr>
+                <td></td>
+                <td>@view.Name</td>
+                <td>@view.Code</td>
+                <td>@view.ExchangeRate</td>
+                <td>@view.ExchangeRateUpdated</td>
+                <td class="table-button-cell">
+                    <a href="@Url.Action("Edit", "Currency", new {item = view.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>&nbsp;Edit currency
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

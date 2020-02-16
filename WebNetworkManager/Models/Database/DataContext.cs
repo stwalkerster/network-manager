@@ -17,14 +17,21 @@ namespace DnsWebApp.Models.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Zone>().HasIndex(x => new {x.TopLevelDomainId, x.Name, x.HorizonViewId}).IsUnique();
             
-            //modelBuilder.Entity<Zone>().HasIndex(x => new {x.TopLevelDomain, x.Name}).IsUnique();
             modelBuilder.Entity<Registrar>().HasIndex(x => x.Name).IsUnique();
+            
+            modelBuilder.Entity<RegistrarTldSupport>()
+                .HasIndex(x => new {x.RegistrarId, x.TopLevelDomainId})
+                .IsUnique();
             
             modelBuilder.Entity<TopLevelDomain>().HasIndex(x => x.Domain).IsUnique();
           
             modelBuilder.Entity<Record>().Property(x => x.Class).HasConversion<string>();
             modelBuilder.Entity<Record>().Property(x => x.Type).HasConversion<string>();
+
+            modelBuilder.Entity<Currency>().HasIndex(x => x.Code).IsUnique();
         }
 
         public DbSet<Zone> Zones { get; set; }
@@ -35,5 +42,7 @@ namespace DnsWebApp.Models.Database
         public DbSet<RegistrarTldSupport> RegistrarTldSupport { get; set; }
         public DbSet<FavouriteDomains> FavouriteDomains { get; set; }
         public DbSet<HorizonView> HorizonViews { get; set; }
+        
+        public DbSet<Currency> Currencies { get; set; }
     }
 }

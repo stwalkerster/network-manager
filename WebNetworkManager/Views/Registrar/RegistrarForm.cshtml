@@ -1,7 +1,7 @@
 @model DnsWebApp.Models.Database.Registrar
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-lg-6">
         <fieldset>
             <legend>Registrar</legend>
             <div class="form-group">
@@ -10,6 +10,29 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
                 <small class="form-text text-muted">Enter the name of the Registrar</small>
             </div>
+        </fieldset>
+    </div>
+    
+    <div class="col-lg-6">
+        <fieldset>
+            <legend>Financial</legend>
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="PricesIncludeVat"/>
+                    <label class="custom-control-label" asp-for="PricesIncludeVat"></label>
+                    <small class="form-text text-muted">Whether to add VAT or not onto prices</small>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="CurrencyId"></label>
+                <select asp-for="CurrencyId" asp-items="ViewBag.Currencies" class="form-control">
+                    <option value="">(none)</option>
+                </select>
+                <span asp-validation-for="CurrencyId" class="text-danger"></span>
+                <small class="form-text text-muted">The currency in which prices are shown</small>
+            </div>
+
         </fieldset>
     </div>
 </div>

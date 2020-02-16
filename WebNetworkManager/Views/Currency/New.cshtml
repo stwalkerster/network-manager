@@ -1,0 +1,14 @@
+@model DnsWebApp.Models.Database.Currency
+
+@{
+    ViewBag.Title = "New Currency";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">New Currency</h1>
+</div>
+
+<form asp-controller="Currency" asp-action="New">
+    <partial name="CurrencyForm"/>
+</form>

@@ -1,5 +1,6 @@
 namespace DnsWebApp.Models.Database
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using DnsWebApp.Validation;
 
@@ -22,5 +23,7 @@ namespace DnsWebApp.Models.Database
         
         [Display(Name = "Renewal price")]
         public decimal? RenewalPrice { get; set; }
+        
+        public DateTime? RenewalPriceUpdated { get; set; }
     }
 }

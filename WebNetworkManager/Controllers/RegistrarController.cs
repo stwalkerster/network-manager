@@ -1,8 +1,10 @@
 namespace DnsWebApp.Controllers
 {
+    using System;
     using System.Linq;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,17 +25,11 @@ namespace DnsWebApp.Controllers
         public IActionResult Item(long item)
         {
             var registrar = this.db.Registrar
-                .Include(x => x.Zones)
-                .ThenInclude(x => x.TopLevelDomain)
-                .Include(x => x.Zones)
-                .ThenInclude(x => x.Owner)
-                .Include(x => x.Zones)
-                .ThenInclude(x => x.HorizonView)
-                .Include(x => x.Zones)
-                .ThenInclude(x => x.FavouriteDomains)
-                .ThenInclude(x => x.User)
-                .Include(x => x.Zones)
-                .ThenInclude(x => x.Records)
+                .Include(x => x.Zones).ThenInclude(x => x.TopLevelDomain)
+                .Include(x => x.Zones).ThenInclude(x => x.Owner)
+                .Include(x => x.Zones).ThenInclude(x => x.HorizonView)
+                .Include(x => x.Zones).ThenInclude(x => x.FavouriteDomains).ThenInclude(x => x.User)
+                .Include(x => x.Zones).ThenInclude(x => x.Records)
                 .FirstOrDefault(x => x.Id == item);
 
             if (registrar == null)
@@ -77,6 +73,8 @@ namespace DnsWebApp.Controllers
         [Route("/registrar/new")]
         public IActionResult New()
         {
+            this.ViewBag.Currencies = this.db.Currencies.Select(x => new SelectListItem($"{x.Name} ({x.Code})", x.Id.ToString())).ToList();
+
             return this.View(new Registrar());
         }
         
@@ -85,7 +83,8 @@ namespace DnsWebApp.Controllers
         public IActionResult New(Registrar command)
         {
             if (!this.ModelState.IsValid)
-            {
+            {            
+                this.ViewBag.Currencies = this.db.Currencies.Select(x => new SelectListItem($"{x.Name} ({x.Code})", x.Id.ToString())).ToList();
                 return this.View(command);
             }
 
@@ -106,6 +105,7 @@ namespace DnsWebApp.Controllers
                 return this.RedirectToAction("Index");
             }
             
+            this.ViewBag.Currencies = this.db.Currencies.Select(x => new SelectListItem($"{x.Name} ({x.Code})", x.Id.ToString())).ToList();
             return this.View(obj);
         }
         
@@ -115,6 +115,7 @@ namespace DnsWebApp.Controllers
         {
             if (!this.ModelState.IsValid)
             {
+                this.ViewBag.Currencies = this.db.Currencies.Select(x => new SelectListItem($"{x.Name} ({x.Code})", x.Id.ToString())).ToList();
                 return this.View(editedRegistrar);
             }
             
@@ -126,6 +127,8 @@ namespace DnsWebApp.Controllers
             }
 
             obj.Name = editedRegistrar.Name;
+            obj.PricesIncludeVat = editedRegistrar.PricesIncludeVat;
+            obj.CurrencyId = editedRegistrar.CurrencyId;
 
             this.db.SaveChanges();
             
@@ -177,21 +180,27 @@ namespace DnsWebApp.Controllers
         [Route("/registrar/{item:int}/tlds")]
         public IActionResult TldList(int item)
         {
-            var registrar = this.db.Registrar
-                .Include(x => x.RegistrarTldSupports)
-                .ThenInclude(x => x.TopLevelDomain)
-                .ThenInclude(x => x.Zones)
-                .FirstOrDefault(x => x.Id == item);
-
+            var registrar = this.db.Registrar.FirstOrDefault(x => x.Id == item);
+            
             if (registrar == null)
             {
                 return this.RedirectToAction("Index");
             }
+
+            var supports = this.db.RegistrarTldSupport
+                .Include(x => x.TopLevelDomain)
+                .ThenInclude(x => x.Zones)
+                .Include(x => x.Registrar)
+                .ThenInclude(x => x.Currency)
+                .Where(x => x.RegistrarId == item)
+                .ToList();
+
+            var targetCurrency = this.db.Currencies.FirstOrDefault(x => x.Code == "GBP");
             
             this.ViewData["Registrar"] = registrar.Name;
             this.ViewData["RegistrarId"] = registrar.Id;
             
-            return this.View(registrar.RegistrarTldSupports);
+            return this.View(supports.Select(x => new TldSupportDisplay(x, targetCurrency)).ToList());
         }
         
         [HttpGet]
@@ -265,7 +274,8 @@ namespace DnsWebApp.Controllers
             }
 
             obj.RenewalPrice = command.RenewalPrice;
-            
+            obj.RenewalPriceUpdated = DateTime.Now;
+
             this.db.SaveChanges();
             
             return this.RedirectToAction("TldList", new{item = item});
