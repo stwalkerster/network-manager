@@ -29,6 +29,15 @@
                 <span asp-validation-for="RenewalPrice" class="text-danger"></span>
                 <small class="form-text text-muted">Price of a 1-year renewal on this TLD</small>
             </div>
+        </div>    
+        
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="TransferPrice"></label>
+                <input asp-for="TransferPrice" class="form-control"/>
+                <span asp-validation-for="TransferPrice" class="text-danger"></span>
+                <small class="form-text text-muted">Price of a transfer to this registrar</small>
+            </div>
         </div>
     </div>
     

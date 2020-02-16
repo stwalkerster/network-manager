@@ -43,11 +43,36 @@ namespace DnsWebApp.Models.ViewModels
 
             }
         }
+        
+        public string TransferPrice
+        {
+            get
+            {
+                if (!this.tldSupport.TransferPrice.HasValue)
+                {
+                    return string.Empty;
+                }
+
+                if (this.tldSupport.Registrar.Currency != null)
+                {
+                    return string.Format(
+                        this.tldSupport.Registrar.Currency?.Symbol ?? "{0:N2}",
+                        this.tldSupport.TransferPrice.Value);
+                }
+
+                return this.tldSupport.TransferPrice.Value.ToString(CultureInfo.InvariantCulture);
+
+            }
+        }
 
         public DateTime? RenewalPriceUpdated => this.tldSupport.RenewalPriceUpdated;
 
         public string RealRenewalPrice => this.RenewalPriceInBaseCurrency.HasValue
             ? string.Format(this.baseCurrency.Symbol, this.RenewalPriceInBaseCurrency)
+            : string.Empty;
+        
+        public string RealTransferPrice => this.TransferPriceInBaseCurrency.HasValue
+            ? string.Format(this.baseCurrency.Symbol, this.TransferPriceInBaseCurrency)
             : string.Empty;
         
         private decimal? RenewalPriceInBaseCurrency
@@ -66,6 +91,30 @@ namespace DnsWebApp.Models.ViewModels
                 }
 
                 var convertedValue = this.tldSupport.RenewalPrice.Value / this.tldSupport.Registrar.Currency.ExchangeRate.Value
+                                     * this.baseCurrency.ExchangeRate.Value;
+
+                var valueWithTax = convertedValue * (this.tldSupport.Registrar.PricesIncludeVat ? 1m : 1.2m);
+
+                return valueWithTax;
+            }
+        }
+        
+        private decimal? TransferPriceInBaseCurrency
+        {
+            get
+            {
+                if (!this.tldSupport.TransferPrice.HasValue || this.tldSupport.Registrar.Currency == null)
+                {
+                    return null;
+                }
+
+                if (!this.tldSupport.Registrar.Currency.ExchangeRate.HasValue
+                    || !this.baseCurrency.ExchangeRate.HasValue)
+                {
+                    return null;
+                }
+
+                var convertedValue = this.tldSupport.TransferPrice.Value / this.tldSupport.Registrar.Currency.ExchangeRate.Value
                                      * this.baseCurrency.ExchangeRate.Value;
 
                 var valueWithTax = convertedValue * (this.tldSupport.Registrar.PricesIncludeVat ? 1m : 1.2m);

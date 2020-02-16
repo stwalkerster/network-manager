@@ -15,6 +15,7 @@ namespace DnsWebApp.Models.Database
         public bool PricesIncludeVat { get; set; }
         
         public Currency Currency { get; set; }
+        [Display(Name="Currency")]
         public long? CurrencyId { get; set; }
 
         public List<Zone> Zones { get; set; }

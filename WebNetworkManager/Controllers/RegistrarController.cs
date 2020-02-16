@@ -274,6 +274,7 @@ namespace DnsWebApp.Controllers
             }
 
             obj.RenewalPrice = command.RenewalPrice;
+            obj.TransferPrice = command.TransferPrice;
             obj.RenewalPriceUpdated = DateTime.Now;
 
             this.db.SaveChanges();

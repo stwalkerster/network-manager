@@ -29,9 +29,11 @@
         <th>Enabled zones</th>
         <th>Disabled zones</th>
         <th>Advertised Renewal price</th>
-        <th>Price last updated</th>
         <th>Actual renewal price</th>
         <th>Yearly cost of renewal</th>
+        <th>Advertised Transfer price</th>
+        <th>Actual transfer price</th>
+        <th>Prices last updated</th>
         <th data-defaultsort="disabled"></th>
     </tr></thead>
     <tbody>
@@ -43,11 +45,14 @@
                 <td>@entry.EnabledZones</td>
                 <td>@entry.DisabledZones</td>
                 <td>@entry.RenewalPrice</td>
-                <td>@entry.RenewalPriceUpdated</td>
                 
                 <td>@entry.RealRenewalPrice</td>
                 <td>@entry.TotalYearlyCost</td>
+                
+                <td>@entry.TransferPrice</td>
+                <td>@entry.RealTransferPrice</td>
 
+                <td>@entry.RenewalPriceUpdated</td>
                 <td class="table-button-cell">
                     <a href="@Url.Action("TldEdit", "Registrar", new {item = entry.RegistrarId, tld = entry.Id})" class="btn btn-sm btn-secondary">
                         <i class="fas fa-pencil-alt"></i>&nbsp;Edit

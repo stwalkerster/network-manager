@@ -24,6 +24,10 @@ namespace DnsWebApp.Models.Database
         [Display(Name = "Renewal price")]
         public decimal? RenewalPrice { get; set; }
         
+        [Display(Name = "Transfer price")]
+        public decimal? TransferPrice { get; set; }
+        
+        [Display(Name = "Last price update")]
         public DateTime? RenewalPriceUpdated { get; set; }
     }
 }
