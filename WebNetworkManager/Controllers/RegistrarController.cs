@@ -217,6 +217,7 @@ namespace DnsWebApp.Controllers
             this.ViewBag.TopLevelDomains = this.db.TopLevelDomains
                 .Where(x => !supportedTlds.Contains(x.Id))
                 .Select(x => new SelectListItem("." + x.Domain, x.Id.ToString()))
+                .OrderBy(x => x.Text)
                 .ToList();
 
             return this.View(new RegistrarTldSupport{ RegistrarId = item});
@@ -235,6 +236,7 @@ namespace DnsWebApp.Controllers
                 this.ViewBag.TopLevelDomains = this.db.TopLevelDomains
                     .Where(x => !supportedTlds.Contains(x.Id))
                     .Select(x => new SelectListItem("." + x.Domain, x.Id.ToString()))
+                    .OrderBy(x => x.Text)
                     .ToList();
                 
                 return this.View(command);
