@@ -238,6 +238,9 @@ namespace DnsWebApp.Controllers
                 return this.View(command);
             }
 
+
+            command.RenewalPriceUpdated = DateTime.Now;
+            
             this.db.RegistrarTldSupport.Add(command);
             this.db.SaveChanges();
             
@@ -277,6 +280,7 @@ namespace DnsWebApp.Controllers
             obj.RenewalPrice = command.RenewalPrice;
             obj.TransferPrice = command.TransferPrice;
             obj.RenewalPriceUpdated = DateTime.Now;
+            obj.TransferIncludesRenewal = command.TransferIncludesRenewal;
 
             this.db.SaveChanges();
             
@@ -302,7 +306,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/registrar/{item:int}/tld/{tld:int}/delete")]
-        public IActionResult Delete(int item, int tld, RegistrarTldSupport record)
+        public IActionResult TldDelete(int item, int tld, RegistrarTldSupport record)
         {
             var obj = this.db.RegistrarTldSupport
                 .FirstOrDefault(x => x.Id == tld);

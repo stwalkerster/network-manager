@@ -114,7 +114,18 @@ namespace DnsWebApp.Models.ViewModels
                     return null;
                 }
 
-                var convertedValue = this.tldSupport.TransferPrice.Value / this.tldSupport.Registrar.Currency.ExchangeRate.Value
+                var transferPrice = this.tldSupport.TransferPrice.Value;
+                if (!this.tldSupport.TransferIncludesRenewal)
+                {
+                    if (!this.tldSupport.RenewalPrice.HasValue)
+                    {
+                        return null;
+                    }
+
+                    transferPrice += this.tldSupport.RenewalPrice.Value;
+                }
+                
+                var convertedValue = transferPrice / this.tldSupport.Registrar.Currency.ExchangeRate.Value
                                      * this.baseCurrency.ExchangeRate.Value;
 
                 var valueWithTax = convertedValue * (this.tldSupport.Registrar.PricesIncludeVat ? 1m : 1.2m);
