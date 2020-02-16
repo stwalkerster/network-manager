@@ -1,4 +1,4 @@
-@model Dictionary<string, DnsWebApp.Models.GroupedZoneSummary>
+@model List<DnsWebApp.Models.ViewModels.RegistrarDisplay>
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Registrars";
@@ -15,11 +15,42 @@
     </div>
 </div>
 
-<div class="row row-cols-1 row-cols-xl-4 row-cols-lg-3 row-cols-md-2">
-    @foreach (var reg in Model)
+<table class="table table-striped table-hover sortable">
+    <thead><tr>
+        <th data-defaultsort="disabled"></th>
+        <th>Registrar</th>
+        <th>Enabled zones</th>
+        <th>Disabled zones</th>
+        <th>TLDs supported</th>
+        <th>Allow Renewal</th>
+        <th>Allow Transfer</th>
+        <th>Privacy Fee</th>
+        <th>Transfer Out Fee</th>
+        <th data-defaultsort="disabled"></th>
+    </tr></thead>
+    <tbody>
+    @foreach (var item in Model)
     {
-        <div class="col mb-4">
-            <partial name="GroupedZoneSummary" model="@reg.Value"/>
-        </div>
+        <tr>
+            <td></td>
+            <th>@item.Registrar.Name</th>
+            <td>@item.Registrar.Zones.Count(x => x.Enabled)</td>
+            <td>@item.Registrar.Zones.Count(x => !x.Enabled)</td>
+            <td>@item.Registrar.RegistrarTldSupports.Count()</td>
+            <td>@item.Registrar.AllowRenewals</td>
+            <td>@item.Registrar.AllowTransfers</td>
+            <td>@item.PrivacyFee</td>
+            <td>@item.TransferOutFee</td>
+            
+            <td class="table-button-cell">
+                <a href="@Url.Action("Edit", "Registrar", new {item = item.Registrar.Id})" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-pencil-alt"></i>&nbsp;Edit
+                </a>
+                <a href="@Url.Action("Item", "Registrar", new {item = item.Registrar.Id})" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-cubes"></i>&nbsp;View Zones
+                </a>
+            </td>
+        </tr>
     }
-</div>
+    </tbody>
+</table>

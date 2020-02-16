@@ -2,23 +2,25 @@ namespace DnsWebApp.Controllers
 {
     using System;
     using System.Linq;
-    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
 
     public class RegistrarController : Controller
     {
         private readonly DataContext db;
         private readonly WhoisService whoisService;
+        private readonly IConfiguration configuration;
 
-        public RegistrarController(DataContext db, WhoisService whoisService)
+        public RegistrarController(DataContext db, WhoisService whoisService, IConfiguration configuration)
         {
             this.db = db;
             this.whoisService = whoisService;
+            this.configuration = configuration;
         }
 
         [Route("/registrar/{item}")]
@@ -50,24 +52,20 @@ namespace DnsWebApp.Controllers
         [Route("/registrar")]
         public IActionResult Index()
         {
+            var baseCurrency = this.db.Currencies.FirstOrDefault(x => x.Code == this.configuration.GetValue<string>("BaseCurrency"));
+            
             var includableQueryable = this.db.Registrar
                 .Include(x => x.Zones)
                 .ThenInclude(x => x.Records)
+                .Include(x => x.RegistrarTldSupports)
+                .Include(x => x.Currency)
+                .Select(x => new RegistrarDisplay(x, baseCurrency))
                 .ToList();
 
-            var groupedZoneSummaries = includableQueryable.Select(
-                x => new GroupedZoneSummary
-                {
-                    DisabledZones = x.Zones.Count(y => !y.Enabled),
-                    EnabledZones = x.Zones.Count(y => y.Enabled),
-                    EnabledRecords = x.Zones.Where(y => y.Enabled).Aggregate(0, (agg, cur) => agg + cur.Records.Count),
-                    DisabledRecords = x.Zones.Where(y => !y.Enabled).Aggregate(0, (agg, cur) => agg + cur.Records.Count),
-                    GroupKey = x.Id.ToString(),
-                    GroupName = x.Name
-                });
-
-            return this.View(groupedZoneSummaries.ToDictionary(x => x.GroupKey));
+            return this.View(includableQueryable);
         }
+        
+        #region registrar crud
         
         [HttpGet]
         [Route("/registrar/new")]
@@ -178,7 +176,8 @@ namespace DnsWebApp.Controllers
             
             return this.RedirectToAction("Index");
         }
-
+        #endregion
+        
         #region TLD support
         [HttpGet]
         [Route("/registrar/{item:int}/tlds")]
@@ -199,12 +198,12 @@ namespace DnsWebApp.Controllers
                 .Where(x => x.RegistrarId == item)
                 .ToList();
 
-            var targetCurrency = this.db.Currencies.FirstOrDefault(x => x.Code == "GBP");
+            var targetCurrency = this.db.Currencies.FirstOrDefault(x => x.Code == this.configuration.GetValue<string>("BaseCurrency"));
             
             this.ViewData["Registrar"] = registrar.Name;
             this.ViewData["RegistrarId"] = registrar.Id;
             
-            return this.View(supports.Select(x => new TldSupportDisplay(x, targetCurrency)).ToList());
+            return this.View(supports.Select(x => new TldSupportDisplay(x, targetCurrency, this.configuration.GetValue<decimal>("Vat"))).ToList());
         }
         
         [HttpGet]

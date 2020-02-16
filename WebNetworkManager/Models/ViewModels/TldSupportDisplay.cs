@@ -9,11 +9,13 @@ namespace DnsWebApp.Models.ViewModels
     {
         private readonly RegistrarTldSupport tldSupport;
         private readonly Currency baseCurrency;
+        private readonly decimal vat;
 
-        public TldSupportDisplay(RegistrarTldSupport tldSupport, Currency baseCurrency)
+        public TldSupportDisplay(RegistrarTldSupport tldSupport, Currency baseCurrency, decimal vat)
         {
             this.tldSupport = tldSupport;
             this.baseCurrency = baseCurrency;
+            this.vat = vat;
         }
 
         public long RegistrarId => this.tldSupport.RegistrarId;
@@ -93,7 +95,7 @@ namespace DnsWebApp.Models.ViewModels
                 var convertedValue = this.tldSupport.RenewalPrice.Value / this.tldSupport.Registrar.Currency.ExchangeRate.Value
                                      * this.baseCurrency.ExchangeRate.Value;
 
-                var valueWithTax = convertedValue * (this.tldSupport.Registrar.PricesIncludeVat ? 1m : 1.2m);
+                var valueWithTax = convertedValue * (this.tldSupport.Registrar.PricesIncludeVat ? 1m : this.vat);
 
                 return valueWithTax;
             }
