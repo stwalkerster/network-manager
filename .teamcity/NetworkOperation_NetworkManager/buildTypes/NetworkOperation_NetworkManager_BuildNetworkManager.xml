@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="b95bbd73-efe2-49a7-98ed-bc7b327ef9bf" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2018.1/project-config.xsd">
+  <name>Build NetworkManager</name>
+  <description />
+  <settings>
+    <parameters>
+      <param name="imagetag" value="unknown" />
+    </parameters>
+    <build-runners>
+      <runner id="RUNNER_48" name="Configure docker image tag" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[#!/bin/bash
+
+if [[ "%teamcity.build.branch.is_default%" == "true" ]]; then
+	echo "##teamcity[setParameter name='imagetag' value='latest']"
+else
+	echo "##teamcity[setParameter name='imagetag' value='%teamcity.build.branch%']"
+fi]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_46" name="Run docker build" type="DockerCommand">
+        <parameters>
+          <param name="command.args"><![CDATA[--pull
+--no-cache
+--label "teamcity.build=%build.number%"
+--label "teamcity.git=%build.vcs.number%"
+--label "teamcity.trigger=%teamcity.build.triggeredBy%"]]></param>
+          <param name="docker.command.type" value="build" />
+          <param name="docker.image.namesAndTags"><![CDATA[docker.scimonshouse.net/webnetworkmanager:%imagetag%
+docker.scimonshouse.net/webnetworkmanager:%build.number%]]></param>
+          <param name="docker.push.remove.image" value="true" />
+          <param name="dockerImage.platform" value="linux" />
+          <param name="dockerfile.content"><![CDATA[FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine
+WORKDIR /opt
+EXPOSE 8080
+ENV ASPNETCORE_ENVIRONMENT=Production \
+    ASPNETCORE_URLS="http://+:8080" \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
+COPY WebNetworkManager/bin/Debug/netcoreapp3.0/publish .
+ENTRYPOINT ["dotnet", "WebNetworkManager.dll"]]]></param>
+          <param name="dockerfile.path" value="WebNetworkManager/Dockerfile" />
+          <param name="dockerfile.source" value="PATH" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_38" name="Push images" type="DockerCommand">
+        <parameters>
+          <param name="docker.command.type" value="push" />
+          <param name="docker.image.namesAndTags"><![CDATA[docker.scimonshouse.net/webnetworkmanager:%imagetag%
+docker.scimonshouse.net/webnetworkmanager:%build.number%]]></param>
+          <param name="docker.push.remove.image" value="true" />
+          <param name="dockerfile.source" value="PATH" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="NetworkOperation_LdapDnsManager" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter" value="+:*" />
+          <param name="groupCheckinsByCommitter" value="true" />
+          <param name="perCheckinTriggering" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <build-extensions>
+      <extension id="DockerSupport" type="DockerSupport">
+        <parameters>
+          <param name="login2registry" value="PROJECT_EXT_18" />
+          <param name="loginCheckbox" value="on" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <cleanup />
+  </settings>
+</build-type>
+
