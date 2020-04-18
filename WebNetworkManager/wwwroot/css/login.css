@@ -60,3 +60,10 @@ body {
 div.alert.field-validation-valid {
     display: none;
 }
+
+.validation-summary-errors.alert.alert-danger {
+    text-align: left;
+}
+.validation-summary-errors.alert.alert-danger ul {
+    padding-left: 1rem;
+}

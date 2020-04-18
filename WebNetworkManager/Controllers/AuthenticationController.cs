@@ -12,7 +12,9 @@ namespace DnsWebApp.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
 
-        public AuthenticationController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AuthenticationController(
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -43,7 +45,7 @@ namespace DnsWebApp.Controllers
                 this.ModelState.AddModelError("LoginStatus", "Login failed.");
                 return this.View(model);
             }
-            
+
             return this.Redirect("/");
         }
 
@@ -53,7 +55,7 @@ namespace DnsWebApp.Controllers
         {
             return this.View();
         }
-        
+
         [Route("/register")]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterCommand command)
@@ -87,6 +89,42 @@ namespace DnsWebApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await this.signInManager.SignOutAsync();
+            return this.Redirect("/");
+        }
+
+        [Route("/changepw")]
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return this.View();
+        }
+
+        [Route("/changepw")]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            var identityUser = await this.userManager.GetUserAsync(this.HttpContext.User);
+
+            var result = await this.userManager.ChangePasswordAsync(
+                identityUser,
+                command.OldPassword,
+                command.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    this.ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                return this.View();
+            }
+
             return this.Redirect("/");
         }
     }
