@@ -1,4 +1,5 @@
 @using DnsWebApp.Models.Dns
+@using DnsWebApp.Models
 @model DnsWebApp.Models.ViewModels.ZoneDisplayBase
 @{
     ViewBag.DefaultTTL = Model.DefaultTTL;
@@ -6,9 +7,12 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-4">
     <h4 class="pt-1">NS Records</h4>
     <div class="btn-toolbar mb-2 mb-md-0 pb-2">
-        <a href="@Url.Action("AddNsRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
-            <i class="fas fa-plus"></i>&nbsp;Add
-        </a>
+        @if (User.IsInRole(RoleDefinition.DnsManager))
+        {
+            <a href="@Url.Action("AddNsRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
+                <i class="fas fa-plus"></i>&nbsp;Add
+            </a>
+        }
     </div>
 </div>@if (Model.NsRecords.Any())
 {
@@ -41,9 +45,12 @@
                 <td>@r.Nameserver</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditNsRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.DnsManager))
+                    {
+                        <a href="@Url.Action("EditNsRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    }
                 </td>
             </tr>
         }
@@ -58,9 +65,12 @@ else
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-4">
     <h4 class="pt-1">CAA Records</h4>
     <div class="btn-toolbar mb-2 mb-md-0 pb-2">
-        <a href="@Url.Action("AddCaaRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
-            <i class="fas fa-plus"></i>&nbsp;Add
-        </a>
+        @if (User.IsInRole(RoleDefinition.DnsManager))
+        {
+            <a href="@Url.Action("AddCaaRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
+                <i class="fas fa-plus"></i>&nbsp;Add
+            </a>
+        }
     </div>
 </div>
 @if (Model.CaaRecords.Any())
@@ -98,9 +108,12 @@ else
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditCaaRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.DnsManager))
+                    {
+                        <a href="@Url.Action("EditCaaRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    }
                 </td>
             </tr>
         }
@@ -115,9 +128,12 @@ else
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-4">
     <h4 class="pt-1">MX Records</h4>
     <div class="btn-toolbar mb-2 mb-md-0 pb-2">
-        <a href="@Url.Action("AddMxRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
-            <i class="fas fa-plus"></i>&nbsp;Add
-        </a>
+        @if (User.IsInRole(RoleDefinition.DnsManager))
+        {
+            <a href="@Url.Action("AddMxRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
+                <i class="fas fa-plus"></i>&nbsp;Add
+            </a>
+        }
     </div>
 </div>
 @if (Model.MxRecords.Any())
@@ -153,9 +169,12 @@ else
                 <td>@r.MailServer</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditMxRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.DnsManager))
+                    {
+                        <a href="@Url.Action("EditMxRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    }
                 </td>
             </tr>
         }
@@ -170,9 +189,12 @@ else
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-4">
     <h4 class="pt-1">A/AAAA/CNAME Records</h4>
     <div class="btn-toolbar mb-2 mb-md-0 pb-2">
-        <a href="@Url.Action("AddHostRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
-            <i class="fas fa-plus"></i>&nbsp;Add
-        </a>
+        @if (User.IsInRole(RoleDefinition.DnsManager))
+        {
+            <a href="@Url.Action("AddHostRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
+                <i class="fas fa-plus"></i>&nbsp;Add
+            </a>
+        }
     </div>
 </div>
 @if (Model.HostRecords.Any())
@@ -208,9 +230,12 @@ else
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditHostRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.DnsManager))
+                    {
+                        <a href="@Url.Action("EditHostRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    }
                 </td>
             </tr>
         }
@@ -225,9 +250,12 @@ else
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-4">
     <h4 class="pt-1">TXT Records</h4>
     <div class="btn-toolbar mb-2 mb-md-0 pb-2">
-        <a href="@Url.Action("AddTxtRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
-            <i class="fas fa-plus"></i>&nbsp;Add
-        </a>
+        @if (User.IsInRole(RoleDefinition.DnsManager))
+        {
+            <a href="@Url.Action("AddTxtRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
+                <i class="fas fa-plus"></i>&nbsp;Add
+            </a>
+        }
     </div>
 </div>
 @if (Model.TxtRecords.Any())
@@ -261,9 +289,12 @@ else
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditTxtRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.DnsManager))
+                    {
+                        <a href="@Url.Action("EditTxtRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    }
                 </td>
             </tr>
         }
@@ -278,9 +309,12 @@ else
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-4">
     <h4 class="pt-1">SRV Records</h4>
     <div class="btn-toolbar mb-2 mb-md-0 pb-2">
-        <a href="@Url.Action("AddSrvRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
-            <i class="fas fa-plus"></i>&nbsp;Add
-        </a>
+        @if (User.IsInRole(RoleDefinition.DnsManager))
+        {
+            <a href="@Url.Action("AddSrvRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
+                <i class="fas fa-plus"></i>&nbsp;Add
+            </a>
+        }
     </div>
 </div>
 @if (Model.SrvRecords.Any())
@@ -324,9 +358,12 @@ else
                 <td>@r.Target</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditSrvRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.DnsManager))
+                    {
+                        <a href="@Url.Action("EditSrvRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    }
                 </td>
             </tr>
         }
@@ -341,9 +378,12 @@ else
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mt-4">
     <h4 class="pt-1">SSHFP Records</h4>
     <div class="btn-toolbar mb-2 mb-md-0 pb-2">
-        <a href="@Url.Action("AddSshfpRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
-            <i class="fas fa-plus"></i>&nbsp;Add
-        </a>
+        @if (User.IsInRole(RoleDefinition.DnsManager))
+        {
+            <a href="@Url.Action("AddSshfpRecord", (string) ViewBag.Controller, new {id = ViewBag.Id})" class="btn btn-sm btn-outline-success ml-2">
+                <i class="fas fa-plus"></i>&nbsp;Add
+            </a>
+        }
     </div>
 </div>
 @if (Model.SshfpRecords.Any())
@@ -381,9 +421,12 @@ else
                 <td>@r.Fingerprint</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("EditSshfpRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.DnsManager))
+                    {
+                        <a href="@Url.Action("EditSshfpRecord", (string) ViewBag.Controller, new {item = r.Id, id = ViewBag.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    }
                 </td>
             </tr>
         }

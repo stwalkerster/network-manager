@@ -1,3 +1,4 @@
+@using DnsWebApp.Models
 @model List<DnsWebApp.Models.Database.TopLevelDomain>
 @{
     Layout = "_Layout";
@@ -9,9 +10,12 @@
     <h1 class="h2">All top level domains</h1>
     
     <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="@Url.Action("New", "TopLevelDomain")" class="btn btn-sm btn-outline-success">
-            <i class="fas fa-plus"></i>&nbsp;New top level domain
-        </a>
+        @if (User.IsInRole(RoleDefinition.StaticData))
+        {
+            <a href="@Url.Action("New", "TopLevelDomain")" class="btn btn-sm btn-outline-success">
+                <i class="fas fa-plus"></i>&nbsp;New top level domain
+            </a>
+        }
     </div>
 </div>
 
@@ -31,9 +35,12 @@
                 <a href="@Url.Action("ShowZones", "TopLevelDomain", new {item = tld.Id})" class="btn btn-sm btn-secondary">
                     <i class="fas fa-cubes"></i>&nbsp;View Zones
                 </a>
-                <a href="@Url.Action("Edit", "TopLevelDomain", new {item = tld.Id})" class="btn btn-sm btn-secondary">
-                    <i class="fas fa-pencil-alt"></i>&nbsp;Edit
-                </a>
+                @if (User.IsInRole(RoleDefinition.StaticData))
+                {
+                    <a href="@Url.Action("Edit", "TopLevelDomain", new {item = tld.Id})" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-pencil-alt"></i>&nbsp;Edit
+                    </a>
+                }
             </td>
         </tr>
     }

@@ -1,9 +1,10 @@
 namespace DnsWebApp.Controllers
 {
     using System.Linq;
+    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
     public class CurrencyController : Controller
     {
@@ -25,6 +26,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/currency/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult New()
         {
             return this.View(new Currency());
@@ -32,6 +34,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/currency/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult New(Currency command)
         {
             if (!this.ModelState.IsValid)
@@ -47,6 +50,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/currency/{item:int}/edit")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Edit(int item)
         {
             var obj = this.db.Currencies.FirstOrDefault(x => x.Id == item);
@@ -61,6 +65,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/currency/{item:int}/edit")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Edit(int item, Currency editedView)
         {
             if (!this.ModelState.IsValid)
@@ -88,6 +93,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/currency/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Delete(int item)
         {
             var obj = this.db.Currencies
@@ -103,6 +109,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/currency/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Delete(int item, Currency record)
         {
             var obj = this.db.Currencies
@@ -118,8 +125,5 @@ namespace DnsWebApp.Controllers
             
             return this.RedirectToAction("Index");
         }
-
-
-        
     }
 }

@@ -29,6 +29,7 @@ namespace DnsWebApp.Controllers
         }
 
         [Route("/users")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         public async Task<IActionResult> Index()
         {
             var identityUsers = this.db.Users.ToList();
@@ -60,6 +61,7 @@ namespace DnsWebApp.Controllers
         }
         
         [Route("/users/roles/{item}")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         [HttpGet]
         public async Task<IActionResult> EditRoles(string item)
         {
@@ -77,6 +79,7 @@ namespace DnsWebApp.Controllers
         }
         
         [Route("/users/roles/{item}")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         [HttpPost]
         public async Task<IActionResult> EditRoles(string item, UserRoleCommand command)
         {
@@ -101,6 +104,7 @@ namespace DnsWebApp.Controllers
         
 
         [Route("/users/edit/{item}")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         [HttpGet]
         public async Task<IActionResult> EditUser(string item)
         {
@@ -125,6 +129,7 @@ namespace DnsWebApp.Controllers
         }
 
         [Route("/users/edit/{item}")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         [HttpPost]
         public async Task<IActionResult> EditUser(string item, UserCommand command)
         {
@@ -245,6 +250,7 @@ namespace DnsWebApp.Controllers
         }
 
         [Route("/users/new")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         [HttpGet]
         public IActionResult NewUser()
         {
@@ -255,6 +261,7 @@ namespace DnsWebApp.Controllers
         }
 
         [Route("/users/new")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         [HttpPost]
         public async Task<IActionResult> NewUser(RegisterCommand command)
         {
@@ -303,6 +310,7 @@ namespace DnsWebApp.Controllers
 
         
         [Route("/users/delete/{item}")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         [HttpGet]
         public async Task<IActionResult> DeleteUser(string item)
         {
@@ -326,6 +334,7 @@ namespace DnsWebApp.Controllers
         }
 
         [Route("/users/delete/{item}")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         [HttpPost] 
         public async Task<IActionResult> DeleteUser(string item, DeleteUserCommand command)
         {
@@ -345,6 +354,9 @@ namespace DnsWebApp.Controllers
             return this.RedirectToAction("Index");
         }
 
+
+        [Route("/users/sendemailconfirmation/{item}")]
+        [Authorize(Roles = RoleDefinition.Administrator)]
         public async Task<IActionResult> SendEmailConfirmation(string item)
         {
             var user = await this.userManager.FindByIdAsync(item);

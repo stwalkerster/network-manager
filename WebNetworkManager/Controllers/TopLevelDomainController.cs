@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace DnsWebApp.Controllers
 {
     using System.Linq;
+    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.EntityFrameworkCore;
 
     public class TopLevelDomainController : Controller
@@ -23,6 +25,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/tld/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult New()
         {
             return this.View(new TopLevelDomain());
@@ -30,6 +33,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/tld/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult New(TopLevelDomain command)
         {
             if (!this.ModelState.IsValid)
@@ -63,6 +67,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/tld/{item:int}/edit")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Edit(int item)
         {
             var obj = this.db.TopLevelDomains.FirstOrDefault(x => x.Id == item);
@@ -77,6 +82,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/tld/{item:int}/edit")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Edit(int item, TopLevelDomain editedTld)
         {
             if (!this.ModelState.IsValid)
@@ -102,6 +108,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/tld/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Delete(int item)
         {
             var obj = this.db.TopLevelDomains
@@ -118,6 +125,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/tld/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Delete(int item, TopLevelDomain record)
         {
             var obj = this.db.TopLevelDomains

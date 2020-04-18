@@ -1,3 +1,4 @@
+@using DnsWebApp.Models
 @model List<DnsWebApp.Models.Database.FavouriteDomains>
 @{
     Layout = null;
@@ -83,12 +84,15 @@
     </h6>
         
     <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link @(ViewBag.Active == "UserManagement" ? "active" : "")" href="@Url.Action("Index", "User")">
-                <i class="fas fa-users"></i>&nbsp;Users
-                @Html.Raw(ViewBag.Active == "UserManagement" ? "<span class=\"sr-only\">(current)</span>" : "")
-            </a>
-        </li>
+        @if (User.IsInRole(RoleDefinition.Administrator))
+        {
+            <li class="nav-item">
+                <a class="nav-link @(ViewBag.Active == "UserManagement" ? "active" : "")" href="@Url.Action("Index", "User")">
+                    <i class="fas fa-users"></i>&nbsp;Users
+                    @Html.Raw(ViewBag.Active == "UserManagement" ? "<span class=\"sr-only\">(current)</span>" : "")
+                </a>
+            </li>
+        }
         
         <li class="nav-item">
             <a class="nav-link @(ViewBag.Active == "Currency" ? "active" : "")" href="@Url.Action("Index", "Currency")">

@@ -1,3 +1,4 @@
+@using DnsWebApp.Models
 @model List<DnsWebApp.Models.Database.HorizonView>
 @{
     Layout = "_Layout";
@@ -7,12 +8,14 @@
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Split-Horizon Views</h1>
-    
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="@Url.Action("New", "Horizon")" class="btn btn-sm btn-outline-success">
-            <i class="fas fa-plus"></i>&nbsp;New view
-        </a>
-    </div>
+    @if (User.IsInRole(RoleDefinition.StaticData))
+    {
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="@Url.Action("New", "Horizon")" class="btn btn-sm btn-outline-success">
+                <i class="fas fa-plus"></i>&nbsp;New view
+            </a>
+        </div>
+    }
 </div>
 
 <table class="table table-striped table-hover sortable">
@@ -32,9 +35,12 @@
                 <td><partial name="SplitHorizonTag" model="view"/></td>
                 <td>@view.Zones.Count</td>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("Edit", "Horizon", new {item = view.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>&nbsp;Edit View
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.StaticData))
+                    {
+                        <a href="@Url.Action("Edit", "Horizon", new {item = view.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Edit View
+                        </a>
+                    }
                 </td>
             </tr>
         }

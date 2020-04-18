@@ -7,6 +7,7 @@ namespace DnsWebApp.Controllers
     using DnsWebApp.Models.Dns;
     using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -237,6 +238,7 @@ namespace DnsWebApp.Controllers
         #region EditZone
         [HttpPost]
         [Route("/zone/edit/{zone:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditZone(int zone, ZoneCommand editedZone)
         {
             var zoneObject = this.db.Zones
@@ -288,6 +290,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/zone/edit/{zone:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditZone(int zone)
         {
             var zoneObject = this.db.Zones
@@ -428,6 +431,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/zone/{id:int}/add/ns")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddNsRecord(int id)
         {
             return this.View(
@@ -442,6 +446,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/zone/{id:int}/add/ns")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddNsRecord(int id, NsRecordViewModel recordViewModel)
         {
             return this.AddRecord(id, recordViewModel);
@@ -449,6 +454,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/zone/{id:int}/add/caa")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddCaaRecord(int id)
         {
             return this.View(
@@ -463,6 +469,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/zone/{id:int}/add/caa")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddCaaRecord(int id, CaaRecordViewModel recordViewModel)
         {
             return this.AddRecord(id, recordViewModel);
@@ -470,6 +477,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/zone/{id:int}/add/mx")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddMxRecord(int id)
         {
             return this.View(
@@ -484,6 +492,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/zone/{id:int}/add/mx")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddMxRecord(int id, MxRecordViewModel recordViewModel)
         {
             return this.AddRecord(id, recordViewModel);
@@ -491,6 +500,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/zone/{id:int}/add/host")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddHostRecord(int id)
         {
             return this.View(
@@ -505,6 +515,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/zone/{id:int}/add/host")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddHostRecord(int id, HostRecordViewModel recordViewModel)
         {
             return this.AddRecord(id, recordViewModel);
@@ -512,6 +523,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/zone/{id:int}/add/txt")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddTxtRecord(int id)
         {
             return this.View(
@@ -526,6 +538,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/zone/{id:int}/add/txt")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddTxtRecord(int id, TxtRecordViewModel recordViewModel)
         {
             return this.AddRecord(id, recordViewModel);
@@ -533,6 +546,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/zone/{id:int}/add/srv")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddSrvRecord(int id)
         {
             return this.View(
@@ -547,6 +561,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/zone/{id:int}/add/srv")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddSrvRecord(int id, SrvRecordViewModel recordViewModel)
         {
             return this.AddRecord(id, recordViewModel);
@@ -554,6 +569,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/zone/{id:int}/add/sshfp")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddSshfpRecord(int id)
         {
             return this.View(
@@ -568,6 +584,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/zone/{id:int}/add/sshfp")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult AddSshfpRecord(int id, SshfpRecordViewModel recordViewModel)
         {
             return this.AddRecord(id, recordViewModel);
@@ -575,6 +592,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/zone/{id:int}/edit/ns/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditNsRecord(int id, int item)
         {
             return this.View(new NsRecordViewModel(this.GetRecord(item)));
@@ -582,6 +600,7 @@ namespace DnsWebApp.Controllers
 
         [HttpPost]
         [Route("/zone/{id:int}/edit/ns/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditNsRecord(int id, int item, NsRecordViewModel recordViewModel)
         {
             return this.EditRecord(item, recordViewModel);
@@ -589,6 +608,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/zone/{id:int}/edit/caa/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditCaaRecord(int id, int item)
         {
             return this.View(new CaaRecordViewModel(this.GetRecord(item)));
@@ -596,6 +616,7 @@ namespace DnsWebApp.Controllers
 
         [HttpPost]
         [Route("/zone/{id:int}/edit/caa/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditCaaRecord(int id, int item, CaaRecordViewModel recordViewModel)
         {
             return this.EditRecord(item, recordViewModel);
@@ -603,6 +624,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/zone/{id:int}/edit/mx/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditMxRecord(int id, int item)
         {
             return this.View(new MxRecordViewModel(this.GetRecord(item)));
@@ -610,6 +632,7 @@ namespace DnsWebApp.Controllers
 
         [HttpPost]
         [Route("/zone/{id:int}/edit/mx/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditMxRecord(int id, int item, MxRecordViewModel recordViewModel)
         {
             return this.EditRecord(item, recordViewModel);
@@ -617,6 +640,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/zone/{id:int}/edit/host/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditHostRecord(int id, int item)
         {
             return this.View(new HostRecordViewModel(this.GetRecord(item)));
@@ -624,6 +648,7 @@ namespace DnsWebApp.Controllers
 
         [HttpPost]
         [Route("/zone/{id:int}/edit/host/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditHostRecord(int id, int item, HostRecordViewModel recordViewModel)
         {
             return this.EditRecord(item, recordViewModel);
@@ -631,6 +656,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/zone/{id:int}/edit/txt/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditTxtRecord(int id, int item)
         {
             return this.View(new TxtRecordViewModel(this.GetRecord(item)));
@@ -638,6 +664,7 @@ namespace DnsWebApp.Controllers
 
         [HttpPost]
         [Route("/zone/{id:int}/edit/txt/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditTxtRecord(int id, int item, TxtRecordViewModel recordViewModel)
         {
             return this.EditRecord(item, recordViewModel);
@@ -646,6 +673,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/zone/{id:int}/edit/srv/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditSrvRecord(int id, int item)
         {
             return this.View(new SrvRecordViewModel(this.GetRecord(item)));
@@ -653,6 +681,7 @@ namespace DnsWebApp.Controllers
 
         [HttpPost]
         [Route("/zone/{id:int}/edit/srv/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditSrvRecord(int id, int item, SrvRecordViewModel recordViewModel)
         {
             return this.EditRecord(item, recordViewModel);
@@ -660,6 +689,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/zone/{id:int}/edit/sshfp/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditSshfpRecord(int id, int item)
         {
             return this.View(new SshfpRecordViewModel(this.GetRecord(item)));
@@ -667,6 +697,7 @@ namespace DnsWebApp.Controllers
 
         [HttpPost]
         [Route("/zone/{id:int}/edit/sshfp/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult EditSshfpRecord(int id, int item, SshfpRecordViewModel recordViewModel)
         {
             return this.EditRecord(item, recordViewModel);

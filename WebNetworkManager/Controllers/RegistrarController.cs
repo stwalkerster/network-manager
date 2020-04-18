@@ -2,9 +2,11 @@ namespace DnsWebApp.Controllers
 {
     using System;
     using System.Linq;
+    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
@@ -69,6 +71,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/registrar/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult New()
         {
             this.ViewBag.Currencies = this.db.Currencies.Select(x => new SelectListItem($"{x.Name} ({x.Code})", x.Id.ToString())).ToList();
@@ -78,6 +81,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/registrar/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult New(Registrar command)
         {
             if (!this.ModelState.IsValid)
@@ -94,6 +98,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/registrar/{item:int}/edit")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Edit(int item)
         {
             var obj = this.db.Registrar.FirstOrDefault(x => x.Id == item);
@@ -109,6 +114,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/registrar/{item:int}/edit")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Edit(int item, Registrar editedRegistrar)
         {
             if (!this.ModelState.IsValid)
@@ -139,6 +145,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/registrar/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Delete(int item)
         {
             var obj = this.db.Registrar
@@ -155,6 +162,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/registrar/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Delete(int item, Registrar record)
         {
             var obj = this.db.Registrar
@@ -208,6 +216,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/registrar/{item:int}/tlds/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult TldAdd(int item)
         {
             var supportedTlds = this.db.RegistrarTldSupport.Where(x => x.RegistrarId == item)
@@ -225,6 +234,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/registrar/{item:int}/tlds/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult TldAdd(int item, RegistrarTldSupport command)
         {
             if (!this.ModelState.IsValid)
@@ -253,6 +263,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/registrar/{item:int}/tlds/{tld:int}")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult TldEdit(int item, int tld)
         {
             var obj = this.db.RegistrarTldSupport.FirstOrDefault(x => x.Id == tld);
@@ -267,6 +278,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/registrar/{item:int}/tlds/{tld:int}")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult TldEdit(int item, int tld, RegistrarTldSupport command)
         {
             if (!this.ModelState.IsValid)
@@ -294,6 +306,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/registrar/{item:int}/tld/{tld:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult TldDelete(int item, int tld)
         {
             var obj = this.db.RegistrarTldSupport
@@ -311,6 +324,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/registrar/{item:int}/tld/{tld:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult TldDelete(int item, int tld, RegistrarTldSupport record)
         {
             var obj = this.db.RegistrarTldSupport

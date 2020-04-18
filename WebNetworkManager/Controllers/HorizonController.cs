@@ -1,7 +1,9 @@
 namespace DnsWebApp.Controllers
 {
     using System.Linq;
+    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +28,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/horizon/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult New()
         {
             return this.View(new HorizonView());
@@ -33,6 +36,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/horizon/new")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult New(HorizonView command)
         {
             if (!this.ModelState.IsValid)
@@ -48,6 +52,7 @@ namespace DnsWebApp.Controllers
         
         [HttpGet]
         [Route("/horizon/{item:int}/edit")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Edit(int item)
         {
             var obj = this.db.HorizonViews.FirstOrDefault(x => x.Id == item);
@@ -62,6 +67,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/horizon/{item:int}/edit")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Edit(int item, HorizonView editedView)
         {
             if (!this.ModelState.IsValid)
@@ -87,6 +93,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/horizon/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Delete(int item)
         {
             var obj = this.db.HorizonViews
@@ -103,6 +110,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/horizon/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.StaticData)]
         public IActionResult Delete(int item, HorizonView record)
         {
             var obj = this.db.HorizonViews
@@ -124,8 +132,5 @@ namespace DnsWebApp.Controllers
             
             return this.RedirectToAction("Index");
         }
-
-
-        
     }
 }

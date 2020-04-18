@@ -1,3 +1,4 @@
+@using DnsWebApp.Models
 @model List<DnsWebApp.Models.ViewModels.TldSupportDisplay>
 @{
     Layout = "_Layout"; 
@@ -10,14 +11,17 @@
     <h1 class="h2">TLD support for registrar @ViewData["Registrar"]</h1>
     
     <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="@Url.Action("Edit", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-secondary ml-2">
-            <i class="fas fa-pencil-alt"></i>&nbsp;Edit Registrar
-        </a>
+        @if (User.IsInRole(RoleDefinition.StaticData))
+        {
+            <a href="@Url.Action("Edit", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-secondary ml-2">
+                <i class="fas fa-pencil-alt"></i>&nbsp;Edit Registrar
+            </a>
+            <a href="@Url.Action("TldAdd", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-success ml-2">
+                <i class="fas fa-plus"></i>&nbsp;Add TLD
+            </a>
+        }
         <a href="@Url.Action("Item", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-secondary ml-2">
             <i class="fas fa-cubes"></i>&nbsp;Zone list
-        </a>
-        <a href="@Url.Action("TldAdd", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-success ml-2">
-            <i class="fas fa-plus"></i>&nbsp;Add TLD
         </a>
     </div>
 </div>
@@ -54,9 +58,12 @@
 
                 <td>@entry.RenewalPriceUpdated</td>
                 <td class="table-button-cell">
-                    <a href="@Url.Action("TldEdit", "Registrar", new {item = entry.RegistrarId, tld = entry.Id})" class="btn btn-sm btn-secondary">
-                        <i class="fas fa-pencil-alt"></i>&nbsp;Edit
-                    </a>
+                    @if (User.IsInRole(RoleDefinition.StaticData))
+                    {
+                        <a href="@Url.Action("TldEdit", "Registrar", new {item = entry.RegistrarId, tld = entry.Id})" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Edit
+                        </a>
+                    }
                 </td>
             </tr>
         }

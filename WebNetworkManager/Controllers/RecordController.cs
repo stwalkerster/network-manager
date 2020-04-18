@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace DnsWebApp.Controllers
 {
     using System.Linq;
+    using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.EntityFrameworkCore;
 
     public class RecordController : Controller
@@ -18,6 +20,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/record/delete/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult DeleteRecord(int item)
         {
             var record = this.db.Record
@@ -31,6 +34,7 @@ namespace DnsWebApp.Controllers
         
         [HttpPost]
         [Route("/record/delete/{item:int}")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
         public IActionResult DeleteRecord(int item, Record r)
         {
             var record = this.db.Record
