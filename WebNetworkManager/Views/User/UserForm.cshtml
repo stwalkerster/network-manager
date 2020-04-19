@@ -1,0 +1,32 @@
+@model DnsWebApp.Models.UserCommand
+
+<fieldset>
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" autofocus="autofocus"/>
+        <span asp-validation-for="Username" class="text-danger"></span>
+        <small class="form-text text-muted">Enter the username the user will use to log in.</small>
+    </div>
+                
+    <div class="form-group">
+        <label asp-for="RealName"></label>
+        <input asp-for="RealName" class="form-control"/>
+        <span asp-validation-for="RealName" class="text-danger"></span>
+        <small class="form-text text-muted">The user's actual name.</small>
+    </div>
+                
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control"/>
+        <span asp-validation-for="Email" class="text-danger"></span>
+        <small class="form-text text-muted">The user's email address.</small>
+    </div>
+    
+    <div class="form-group">
+        <div class="custom-control custom-switch">
+            <input class="custom-control-input" asp-for="LockoutEnabled"/>
+            <label class="custom-control-label" asp-for="LockoutEnabled"></label>
+            <small class="form-text text-muted">Enables or disables account lockout for this user</small>
+        </div>
+    </div>
+</fieldset>

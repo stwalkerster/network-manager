@@ -1,0 +1,40 @@
+@model DnsWebApp.Models.RegisterCommand
+
+@{
+    ViewBag.Title = "New User";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">New User</h1>
+</div>
+
+@Html.ValidationSummary(true, "The following errors were encountered:", new{ @class = "alert alert-danger", role = "alert"}, "div")
+
+<form class="form-register" asp-controller="User" asp-action="NewUser">
+    <div class="row">
+        <div class="col-md-6">
+            <partial name="UserForm" />
+        </div>
+        <div class="col-md-6">
+            <fieldset>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save</button>
+        </div>
+    </div>
+</form>

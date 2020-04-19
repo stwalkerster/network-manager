@@ -84,7 +84,7 @@
         
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link disabled @(ViewBag.Active == "UserManagement" ? "active" : "")" href="@Url.Action("Index", "Home")">
+            <a class="nav-link @(ViewBag.Active == "UserManagement" ? "active" : "")" href="@Url.Action("Index", "User")">
                 <i class="fas fa-users"></i>&nbsp;Users
                 @Html.Raw(ViewBag.Active == "UserManagement" ? "<span class=\"sr-only\">(current)</span>" : "")
             </a>

@@ -1,0 +1,55 @@
+@model List<dynamic>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "User Management";
+    ViewBag.Active = "UserManagement";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">User Management</h1>
+    
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="@Url.Action("NewUser", "User")" class="btn btn-sm btn-outline-success">
+            <i class="fas fa-plus"></i>&nbsp;New user
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped table-hover sortable">
+    <thead><tr>
+        <th>Username</th><th>Name</th><th>E-mail Address</th><th>Locked out until</th><th data-defaultsort="disabled"></th>
+    </tr></thead>
+    
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td class="font-weight-bold">@(user.UserName)</td>
+            <td>@user.RealName</td>
+            <td>
+                @user.Email
+                @if (user.EmailConfirmed)
+                {
+                    <span class="badge badge-success"><i class="fas fa-check"></i> Confirmed</span>
+                }
+                else
+                {
+                    <span class="badge badge-danger"><i class="fas fa-times"></i> Not Confirmed</span>
+                }
+            </td>
+            <td>
+                @user.LockoutEnd
+                @if (!user.LockoutEnabled)
+                {
+                    <span class="badge badge-warning"><i class="fas fa-lock-open"></i> Lockout disabled</span>
+                }
+            </td>
+            <td class="table-button-cell">
+                <a href="@Url.Action("EditUser", "User", new {item = user.Id})" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-pencil-alt"></i>&nbsp;Edit
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

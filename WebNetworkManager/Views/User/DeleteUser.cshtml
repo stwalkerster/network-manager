@@ -1,0 +1,28 @@
+@model DnsWebApp.Models.DeleteUserCommand
+
+@{
+    ViewBag.Title = "Delete user";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Deleting user account <code>@Model.UserName</code> for @Model.RealName</h1>
+</div>
+
+@if (Model.Zones.Any())
+{
+    <div class="alert alert-danger" role="alert">
+        This user has zones. As such, you cannot delete this user until you have removed or reassigned all their zones.
+    </div>
+}
+else
+{
+    <p class="lead text-danger">You are about to delete the <code>@Model.UserName</code> user account</p>
+
+    <p>Are you sure you want to do this?</p>
+
+    <form asp-action="DeleteUser">
+        <input type="hidden" asp-for="Id"/>
+        <button class="btn btn-danger" type="submit">Yes, delete this user</button>
+    </form>
+}

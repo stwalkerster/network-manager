@@ -49,42 +49,6 @@ namespace DnsWebApp.Controllers
             return this.Redirect("/");
         }
 
-        [Route("/register")]
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return this.View();
-        }
-
-        [Route("/register")]
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterCommand command)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(command);
-            }
-
-            var newUser = new IdentityUser
-            {
-                UserName = command.Username
-            };
-
-            var result = await this.userManager.CreateAsync(newUser, command.Password);
-
-            if (!result.Succeeded)
-            {
-                foreach (var errorMessage in result.Errors.Select(x => x.Description))
-                {
-                    this.ModelState.AddModelError("LoginStatus", errorMessage);
-                }
-
-                return this.View(command);
-            }
-
-            return this.RedirectToAction("Login");
-        }
-
         [Route("/logout")]
         public async Task<IActionResult> Logout()
         {

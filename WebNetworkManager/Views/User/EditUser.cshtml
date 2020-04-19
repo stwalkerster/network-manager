@@ -1,0 +1,31 @@
+@model DnsWebApp.Models.UserCommand
+
+@{
+    ViewBag.Title = "New User";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Edit User</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="@Url.Action("DeleteUser", "User", new {item = Model.Id})" class="btn btn-sm btn-danger ml-2">
+            <i class="fas fa-trash"></i>&nbsp;Delete
+        </a>
+    </div>
+</div>
+
+@Html.ValidationSummary(true, "The following errors were encountered:", new{ @class = "alert alert-danger", role = "alert"}, "div")
+
+<form class="form-register" asp-controller="User" asp-action="EditUser">
+    <div class="row">
+        <div class="col-md-6">
+            <partial name="UserForm" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save</button>
+        </div>
+    </div>
+</form>

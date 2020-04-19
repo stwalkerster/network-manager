@@ -2,12 +2,8 @@ namespace DnsWebApp.Models
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class RegisterCommand
+    public class RegisterCommand : UserCommand
     {
-        [Required]
-        [Display(Name="Username")]
-        public string Username { get; set; }
-        
         [Required]
         [DataType(DataType.Password)]
         [Display(Name="Password")]
