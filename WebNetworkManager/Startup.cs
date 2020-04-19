@@ -1,5 +1,6 @@
 namespace DnsWebApp
 {
+    using System;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Services;
     using Microsoft.AspNetCore.Authorization;
@@ -25,7 +26,16 @@ namespace DnsWebApp
         {
             services.AddSingleton<FormattingService>();
             services.AddScoped<WhoisService>();
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DataContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>(
+                options =>
+                {
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                    options.Lockout.MaxFailedAccessAttempts = 3;
+
+                    options.Password.RequiredUniqueChars = 4;
+                    options.Password.RequiredLength = 8;
+                }).AddEntityFrameworkStores<DataContext>();
 
             services.AddDbContext<DataContext>(
                 options =>

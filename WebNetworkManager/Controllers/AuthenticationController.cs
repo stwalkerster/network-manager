@@ -1,6 +1,5 @@
 namespace DnsWebApp.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
     using DnsWebApp.Models;
     using Microsoft.AspNetCore.Authorization;
@@ -38,7 +37,7 @@ namespace DnsWebApp.Controllers
                 return this.View(model);
             }
 
-            var result = await this.signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+            var result = await this.signInManager.PasswordSignInAsync(model.Username, model.Password, false, true);
 
             if (!result.Succeeded)
             {
