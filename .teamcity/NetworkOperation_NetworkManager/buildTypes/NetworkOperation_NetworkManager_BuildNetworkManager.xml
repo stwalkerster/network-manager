@@ -32,14 +32,6 @@ fi]]></param>
 docker.scimonshouse.net/webnetworkmanager:%build.number%]]></param>
           <param name="docker.push.remove.image" value="true" />
           <param name="dockerImage.platform" value="linux" />
-          <param name="dockerfile.content"><![CDATA[FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine
-WORKDIR /opt
-EXPOSE 8080
-ENV ASPNETCORE_ENVIRONMENT=Production \
-    ASPNETCORE_URLS="http://+:8080" \
-    DOTNET_CLI_TELEMETRY_OPTOUT=1
-COPY WebNetworkManager/bin/Debug/netcoreapp3.0/publish .
-ENTRYPOINT ["dotnet", "WebNetworkManager.dll"]]]></param>
           <param name="dockerfile.path" value="WebNetworkManager/Dockerfile" />
           <param name="dockerfile.source" value="PATH" />
           <param name="teamcity.step.mode" value="default" />
