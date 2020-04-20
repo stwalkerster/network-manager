@@ -54,6 +54,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.TopLevelDomain)
                 .Include(x => x.Registrar)
                 .DistinctBy(x => new {x.TopLevelDomainId, x.Name})
+                .Where(x => x.TopLevelDomain.Domain != "arpa")
                 .ToList();
 
             var columnHeaders = new List<string>
