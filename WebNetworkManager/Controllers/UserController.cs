@@ -7,6 +7,7 @@ namespace DnsWebApp.Controllers
     using System.Threading.Tasks;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using DnsWebApp.Services;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +17,13 @@ namespace DnsWebApp.Controllers
 
         private readonly DataContext db;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IEmailSender emailSender;
 
-        public UserController(DataContext db, UserManager<IdentityUser> userManager)
+        public UserController(DataContext db, UserManager<IdentityUser> userManager, IEmailSender emailSender)
         {
             this.db = db;
             this.userManager = userManager;
+            this.emailSender = emailSender;
         }
 
         [Route("/users")]
@@ -257,6 +260,43 @@ namespace DnsWebApp.Controllers
 
             await this.userManager.DeleteAsync(identityUser);
             return this.RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> SendEmailConfirmation(string item)
+        {
+            var user = await this.userManager.FindByIdAsync(item);
+            var token = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var confirmationLink = this.Url.Action(
+                nameof(this.ConfirmEmail),
+                "User",
+                new {token, id = user.Id},
+                this.Request.Scheme);
+
+            this.emailSender.Send(new EmailMessage(new[] {user.Email}, "Email address confirmation", confirmationLink));
+
+            return this.RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("/confirmemail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string id)
+        {
+            var user = await this.userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            var result = await this.userManager.ConfirmEmailAsync(user, token);
+
+            if (result.Succeeded)
+            {
+                return this.View();
+            }
+
+            return this.View("EmailConfirmationFailed");
         }
     }
 }

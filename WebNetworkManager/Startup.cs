@@ -1,6 +1,7 @@
 namespace DnsWebApp
 {
     using System;
+    using DnsWebApp.Models.Config;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Services;
     using Microsoft.AspNetCore.Authorization;
@@ -24,6 +25,10 @@ namespace DnsWebApp
         
         public void ConfigureServices(IServiceCollection services)
         {
+            var emailConfig = this.config.GetSection("EmailConfig").Get<EmailConfig>();
+            services.AddSingleton(emailConfig);
+            
+            services.AddSingleton<IEmailSender, EmailSender>();
             services.AddSingleton<FormattingService>();
             services.AddScoped<WhoisService>();
             services.AddIdentity<IdentityUser, IdentityRole>(
@@ -35,7 +40,10 @@ namespace DnsWebApp
 
                     options.Password.RequiredUniqueChars = 4;
                     options.Password.RequiredLength = 8;
-                }).AddEntityFrameworkStores<DataContext>();
+
+                    options.SignIn.RequireConfirmedEmail = true;
+                }).AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
 
             services.AddDbContext<DataContext>(
                 options =>

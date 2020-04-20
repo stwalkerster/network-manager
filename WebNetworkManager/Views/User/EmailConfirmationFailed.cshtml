@@ -1,0 +1,16 @@
+@model DnsWebApp.Models.LoginCommand
+@{
+    Layout = "_BaseLayout";
+    ViewData["Title"] = "Email address confirmation failed.";
+}
+
+@section HeadContent {
+    <link href="~/css/login.css" rel="stylesheet">
+}
+
+<body class="text-center">
+<div class="form-signin">
+    <h1 class="h3 mb-3 font-weight-normal">Email address confirmation failed!</h1>
+    <p>There was an issue confirming your email address. Please contact the system administrator.</p>
+</div>
+</body>

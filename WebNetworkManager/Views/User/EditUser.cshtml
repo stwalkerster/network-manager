@@ -11,6 +11,9 @@
         <a href="@Url.Action("DeleteUser", "User", new {item = Model.Id})" class="btn btn-sm btn-danger ml-2">
             <i class="fas fa-trash"></i>&nbsp;Delete
         </a>
+        <a href="@Url.Action("SendEmailConfirmation", "User", new {item = Model.Id})" class="btn btn-sm btn-secondary ml-2">
+            <i class="fas fa-envelope"></i>&nbsp;Send E-mail confirmation
+        </a>
     </div>
 </div>
 

@@ -1,0 +1,18 @@
+@model DnsWebApp.Models.LoginCommand
+@{
+    Layout = "_BaseLayout";
+    ViewData["Title"] = "Email address confirmed";
+}
+
+@section HeadContent {
+    <link href="~/css/login.css" rel="stylesheet">
+}
+
+<body class="text-center">
+<div class="form-signin">
+    <h1 class="h3 mb-3 font-weight-normal">Email address confirmed!</h1>
+    <p>You have successfully confirmed your email address!</p>
+
+    <a class="btn btn-block btn-primary btn-lg" asp-controller="Authentication" asp-action="Login">Log in</a>
+</div>
+</body>
