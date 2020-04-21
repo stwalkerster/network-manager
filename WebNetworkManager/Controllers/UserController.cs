@@ -203,8 +203,6 @@ namespace DnsWebApp.Controllers
 
             var result = await this.userManager.CreateAsync(newUser, command.Password);
 
-            await this.userManager.AddClaimAsync(newUser, new Claim(ClaimRealName, command.RealName));
-
             if (!result.Succeeded)
             {
                 foreach (var errorMessage in result.Errors.Select(x => x.Description))
@@ -214,6 +212,19 @@ namespace DnsWebApp.Controllers
 
                 return this.View(command);
             }
+            
+            await this.userManager.AddClaimAsync(newUser, new Claim(ClaimRealName, command.RealName));
+            
+            if (!result.Succeeded)
+            {
+                foreach (var errorMessage in result.Errors.Select(x => x.Description))
+                {
+                    this.ModelState.AddModelError(nameof(command.RealName), errorMessage);
+                }
+
+                return this.View(command);
+            }
+            
 
             return this.RedirectToAction("Index");
         }
