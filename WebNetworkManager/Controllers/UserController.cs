@@ -8,6 +8,7 @@ namespace DnsWebApp.Controllers
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -291,6 +292,7 @@ namespace DnsWebApp.Controllers
 
         [HttpGet]
         [Route("/confirmemail")]
+        [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string token, string id)
         {
             var user = await this.userManager.FindByIdAsync(id);
