@@ -1,7 +1,7 @@
 @model DnsWebApp.Models.UserCommand
 
 @{
-    ViewBag.Title = "New User";
+    ViewBag.Title = "Edit User";
     Layout = "_Layout";
 }
 
@@ -13,6 +13,9 @@
         </a>
         <a href="@Url.Action("SendEmailConfirmation", "User", new {item = Model.Id})" class="btn btn-sm btn-secondary ml-2">
             <i class="fas fa-envelope"></i>&nbsp;Send E-mail confirmation
+        </a>
+        <a href="@Url.Action("EditRoles", "User", new {item = Model.Id})" class="btn btn-sm btn-warning ml-2">
+            <i class="fas fa-shield-alt"></i>&nbsp;Edit Roles
         </a>
     </div>
 </div>

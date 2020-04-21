@@ -9,12 +9,6 @@ namespace DnsWebApp.Models.Database
         {
             if(!userManager.Users.Any())
             {
-                if (!roleManager.RoleExistsAsync("Administrator").Result)
-                {
-                    var role = new IdentityRole {Name = "Administrator"};
-                    roleManager.CreateAsync(role).Wait();
-                }
-                
                 var user = new IdentityUser {UserName = "Administrator"};
                 var result = userManager.CreateAsync(user, "Adm1nistrator!").Result;
 

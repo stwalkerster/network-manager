@@ -58,6 +58,47 @@ namespace DnsWebApp.Controllers
 
             return this.View(dataset);
         }
+        
+        [Route("/users/roles/{item}")]
+        [HttpGet]
+        public async Task<IActionResult> EditRoles(string item)
+        {
+            var identityUser = await this.userManager.FindByIdAsync(item);
+            
+            if (identityUser == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            var roles = await this.userManager.GetRolesAsync(identityUser);
+            var command = new UserRoleCommand(roles);
+            
+            return this.View(command);
+        }
+        
+        [Route("/users/roles/{item}")]
+        [HttpPost]
+        public async Task<IActionResult> EditRoles(string item, UserRoleCommand command)
+        {
+            var identityUser = await this.userManager.FindByIdAsync(item);
+            
+            if (identityUser == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            var currentRoles = await this.userManager.GetRolesAsync(identityUser);
+            var newRoles = command.ToList();
+
+            var toRemove = currentRoles.Except(newRoles).ToList();
+            var toAdd = newRoles.Except(currentRoles).ToList();
+
+            await this.userManager.AddToRolesAsync(identityUser, toAdd);
+            await this.userManager.RemoveFromRolesAsync(identityUser, toRemove);
+
+            return this.RedirectToAction("Index");
+        }
+        
 
         [Route("/users/edit/{item}")]
         [HttpGet]

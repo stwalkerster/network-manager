@@ -1,5 +1,6 @@
 namespace DnsWebApp.Models.Database
 {
+    using DnsWebApp.Models.Config;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Hosting;
@@ -32,6 +33,8 @@ namespace DnsWebApp.Models.Database
             modelBuilder.Entity<Record>().Property(x => x.Type).HasConversion<string>();
 
             modelBuilder.Entity<Currency>().HasIndex(x => x.Code).IsUnique();
+
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
 
         public DbSet<Zone> Zones { get; set; }

@@ -1,0 +1,54 @@
+@model DnsWebApp.Models.UserRoleCommand
+
+@{
+    ViewBag.Title = "Edit Roles";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Edit User Roles</h1>
+</div>
+
+<form asp-controller="User" asp-action="EditRoles">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="RoleAdministrator"/>
+                    <label class="custom-control-label" asp-for="RoleAdministrator"></label>
+                    <small class="form-text text-muted">Allows management of users and roles</small>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="RoleDnsManager"/>
+                    <label class="custom-control-label" asp-for="RoleDnsManager"></label>
+                    <small class="form-text text-muted">Allows management of all DNS zones</small>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="RoleDnsUser"/>
+                    <label class="custom-control-label" asp-for="RoleDnsUser"></label>
+                    <small class="form-text text-muted">Allows management of DNS zones owned by this user</small>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="RoleStaticData"/>
+                    <label class="custom-control-label" asp-for="RoleStaticData"></label>
+                    <small class="form-text text-muted">Allows configuration of system-wide static data</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp;Save</button>
+        </div>
+    </div>
+</form>
