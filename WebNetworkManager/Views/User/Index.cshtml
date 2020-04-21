@@ -30,18 +30,18 @@
                 @user.Email
                 @if (user.EmailConfirmed)
                 {
-                    <span class="badge badge-success"><i class="fas fa-check"></i> Confirmed</span>
+                    <span class="badge badge-success"><i class="fas fa-check"></i>&nbsp;Confirmed</span>
                 }
                 else
                 {
-                    <span class="badge badge-danger"><i class="fas fa-times"></i> Not Confirmed</span>
+                    <span class="badge badge-danger"><i class="fas fa-times"></i>&nbsp;Not Confirmed</span>
                 }
             </td>
             <td>
                 @user.LockoutEnd
                 @if (!user.LockoutEnabled)
                 {
-                    <span class="badge badge-warning"><i class="fas fa-lock-open"></i> Lockout disabled</span>
+                    <span class="badge badge-warning"><i class="fas fa-lock-open"></i>&nbsp;Lockout disabled</span>
                 }
             </td>
             <td class="table-button-cell">
