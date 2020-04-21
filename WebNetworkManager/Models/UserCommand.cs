@@ -21,5 +21,8 @@ namespace DnsWebApp.Models
         
         [Display(Name = "Enable Account Lockout")]
         public bool LockoutEnabled { get; set; }
+        
+        [Display(Name= "User is locked out")]
+        public bool LockedOut { get; set; }
     }
 }

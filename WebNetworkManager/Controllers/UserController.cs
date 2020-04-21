@@ -1,5 +1,6 @@
 namespace DnsWebApp.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
@@ -74,6 +75,7 @@ namespace DnsWebApp.Controllers
             command.Email = identityUser.Email;
             command.Username = identityUser.UserName;
             command.LockoutEnabled = identityUser.LockoutEnabled;
+            command.LockedOut = identityUser.LockoutEnd.HasValue;
 
             var claims = await this.userManager.GetClaimsAsync(identityUser);
             command.RealName = claims.FirstOrDefault(x => x.Type == ClaimRealName)?.Value;
@@ -97,10 +99,17 @@ namespace DnsWebApp.Controllers
                 return this.RedirectToAction("Index");
             }
 
-            bool overallSuccess = true;
+            var overallSuccess = true;
 
             if (identityUser.LockoutEnabled != command.LockoutEnabled)
             {
+                if (!command.LockoutEnabled)
+                {
+                    await this.userManager.SetLockoutEndDateAsync(identityUser, null);
+                    command.LockedOut = false;
+                    identityUser.LockoutEnd = null;
+                }
+                
                 var lockoutResult = await this.userManager.SetLockoutEnabledAsync(identityUser, command.LockoutEnabled);
                 if (!lockoutResult.Succeeded)
                 {
@@ -111,7 +120,22 @@ namespace DnsWebApp.Controllers
                     }
                 }
             }
-
+            
+            if (identityUser.LockoutEnd.HasValue != (command.LockedOut && command.LockoutEnabled))
+            {
+                var lockoutEnd = command.LockedOut && command.LockoutEnabled ? DateTime.MaxValue : (DateTimeOffset?)null;
+                
+                var lockoutResult = await this.userManager.SetLockoutEndDateAsync(identityUser, lockoutEnd);
+                if (!lockoutResult.Succeeded)
+                {
+                    overallSuccess = false;
+                    foreach (var errorMessage in lockoutResult.Errors.Select(x => x.Description))
+                    {
+                        this.ModelState.AddModelError(nameof(command.LockedOut), errorMessage);
+                    }
+                }
+            }
+            
             if (identityUser.Email != command.Email)
             {
                 var resultEmail = await this.userManager.SetEmailAsync(identityUser, command.Email);
@@ -183,7 +207,10 @@ namespace DnsWebApp.Controllers
         [HttpGet]
         public IActionResult NewUser()
         {
-            return this.View(new RegisterCommand());
+            return this.View(new RegisterCommand
+            {
+                LockoutEnabled = true
+            });
         }
 
         [Route("/users/new")]
@@ -199,7 +226,8 @@ namespace DnsWebApp.Controllers
             {
                 UserName = command.Username,
                 Email = command.Email,
-                LockoutEnabled = command.LockoutEnabled
+                LockoutEnabled = command.LockoutEnabled,
+                LockoutEnd = command.LockedOut && command.LockoutEnabled ? DateTimeOffset.MaxValue : (DateTimeOffset?) null
             };
 
             var result = await this.userManager.CreateAsync(newUser, command.Password);
@@ -213,8 +241,10 @@ namespace DnsWebApp.Controllers
 
                 return this.View(command);
             }
+
+            await this.userManager.SetLockoutEnabledAsync(newUser, command.LockoutEnabled);
             
-            await this.userManager.AddClaimAsync(newUser, new Claim(ClaimRealName, command.RealName));
+            result = await this.userManager.AddClaimAsync(newUser, new Claim(ClaimRealName, command.RealName));
             
             if (!result.Succeeded)
             {

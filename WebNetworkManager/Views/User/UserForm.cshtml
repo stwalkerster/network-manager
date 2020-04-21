@@ -22,11 +22,25 @@
         <small class="form-text text-muted">The user's email address.</small>
     </div>
     
-    <div class="form-group">
-        <div class="custom-control custom-switch">
-            <input class="custom-control-input" asp-for="LockoutEnabled"/>
-            <label class="custom-control-label" asp-for="LockoutEnabled"></label>
-            <small class="form-text text-muted">Enables or disables account lockout for this user</small>
+    <div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="custom-control custom-switch">
+                <input class="custom-control-input" asp-for="LockoutEnabled"/>
+                <label class="custom-control-label" asp-for="LockoutEnabled"></label>
+                <small class="form-text text-muted">Enables or disables account lockout for this user</small>
+            </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="custom-control custom-switch">
+                <input class="custom-control-input" asp-for="LockedOut"/>
+                <label class="custom-control-label" asp-for="LockedOut"></label>
+                <small class="form-text text-muted">Lockout this user</small>
+            </div>
+        </div>
+    </div>
+    </div>
+    
 </fieldset>
