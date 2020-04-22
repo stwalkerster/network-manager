@@ -192,6 +192,7 @@ namespace DnsWebApp.Controllers
                 .ToList();
             var zoneGroupCommand = new ZoneGroupCommand
             {
+                Id = zoneGroupObject.Id,
                 Name = zoneGroupObject.Name,
                 ZoneGroupMembers = zoneGroupMembers,
                 NewZoneGroupMembers = string.Join(",", zoneGroupMembers),
@@ -252,6 +253,46 @@ namespace DnsWebApp.Controllers
 
             zoneGroupObject.TouchSerialNumber();
             
+            this.db.SaveChanges();
+            
+            return this.RedirectToAction("Index");
+        }
+        
+        [HttpGet]
+        [Route("/zones/group/delete/{item:int}")]
+        public IActionResult DeleteZoneGroup(int item)
+        {
+            var obj = this.db.ZoneGroups
+                .Include(x => x.ZoneGroupMembers)
+                .FirstOrDefault(x => x.Id == item);
+            
+            if (obj == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+            
+            return this.View(obj);
+        }
+        
+        [HttpPost]
+        [Route("/zones/group/delete/{item:int}")]
+        public IActionResult DeleteZoneGroup(int item, ZoneGroup record)
+        {
+            var obj = this.db.ZoneGroups
+                .Include(x => x.ZoneGroupMembers)
+                .FirstOrDefault(x => x.Id == item);
+            
+            if (obj == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            if (obj.ZoneGroupMembers.Any())
+            {
+                return this.RedirectToAction("Index");  
+            }
+          
+            this.db.ZoneGroups.Remove(obj);
             this.db.SaveChanges();
             
             return this.RedirectToAction("Index");

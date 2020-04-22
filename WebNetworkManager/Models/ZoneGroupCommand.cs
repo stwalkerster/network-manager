@@ -6,6 +6,8 @@ namespace DnsWebApp.Models
 
     public class ZoneGroupCommand
     {
+        public long Id { get; set; }
+        
         [Required]
         public string Name { get; set; }
         
