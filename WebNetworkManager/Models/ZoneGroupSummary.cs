@@ -9,5 +9,6 @@ namespace DnsWebApp.Models
         public int DisabledZones { get; set; }
         public int DisabledRecords { get; set; }
         public int GroupRecords { get; set; }
+        public string Owner { get; set; }
     }
 }

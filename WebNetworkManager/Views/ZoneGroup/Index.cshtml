@@ -15,11 +15,38 @@
     </div>
 </div>
 
-<div class="row row-cols-1 row-cols-xl-3 row-cols-lg-2">
-    @foreach (var reg in Model)
-    {
-        <div class="col mb-4">
-            <partial name="ZoneGroupSummary" model="@reg.Value"/>
-        </div>
-    }
-</div>
+<table class="table table-striped table-hover sortable">
+    <thead><tr>
+        <th data-defaultsort="disabled"></th>
+        <th>Name</th>
+        <th>Enabled zones</th>
+        <th>Disabled zones</th>
+        <th>Group records</th>
+        <th>Owner</th>
+        <th data-defaultsort="disabled"></th>
+    </tr></thead>
+    <tbody>
+        @foreach (var reg in Model)
+        {
+            <tr>
+                <td></td>
+                <th>@reg.Value.GroupName</th>
+                <td>@reg.Value.EnabledZones</td>
+                <td>@reg.Value.DisabledZones</td>
+                <td>@reg.Value.GroupRecords</td>
+                <td>@reg.Value.Owner</td>
+                <td>
+                    <a class="btn btn-secondary btn-sm float-right mr-1" href="@Url.Action("ShowZoneGroup", new {item = reg.Value.GroupKey})">
+                        <i class="fas fa-bars"></i>&nbsp;Records
+                    </a>
+                    <a class="btn btn-secondary btn-sm float-right mr-1" href="@Url.Action("EditZoneGroup", new {item = reg.Value.GroupKey})">
+                        <i class="fas fa-pencil-alt"></i>&nbsp;Edit
+                    </a>
+                    <a class="btn btn-secondary btn-sm float-right mr-1" href="@Url.Action("Zones", new {item = reg.Value.GroupKey})">
+                        <i class="fas fa-cubes"></i>&nbsp;View zones
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

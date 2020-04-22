@@ -100,6 +100,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.ZoneGroupMembers)
                 .ThenInclude(x => x.Zone)
                 .ThenInclude(x => x.Records)
+                .Include(x => x.Owner)
                 .Include(x => x.Records)
                 .ToList();
 
@@ -113,7 +114,8 @@ namespace DnsWebApp.Controllers
                     DisabledRecords = x.ZoneGroupMembers.Where(y => !y.Zone.Enabled).Aggregate(0, (agg, cur) => agg + cur.Zone.Records.Count),
                     GroupRecords = x.Records.Count,
                     GroupKey = x.Id.ToString(),
-                    GroupName = x.Name
+                    GroupName = x.Name,
+                    Owner = x.Owner?.UserName
                 });
 
             return this.View(groupedZoneSummaries.ToDictionary(x => x.GroupKey));
