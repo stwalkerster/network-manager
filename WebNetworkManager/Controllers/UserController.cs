@@ -75,7 +75,7 @@ namespace DnsWebApp.Controllers
             command.Email = identityUser.Email;
             command.Username = identityUser.UserName;
             command.LockoutEnabled = identityUser.LockoutEnabled;
-            command.LockedOut = identityUser.LockoutEnd.HasValue;
+            command.LockedOut = identityUser.LockoutEnd.HasValue && identityUser.LockoutEnd.Value > DateTimeOffset.Now;
 
             var claims = await this.userManager.GetClaimsAsync(identityUser);
             command.RealName = claims.FirstOrDefault(x => x.Type == ClaimRealName)?.Value;
@@ -121,7 +121,7 @@ namespace DnsWebApp.Controllers
                 }
             }
             
-            if (identityUser.LockoutEnd.HasValue != (command.LockedOut && command.LockoutEnabled))
+            if ((identityUser.LockoutEnd.HasValue && identityUser.LockoutEnd.Value > DateTimeOffset.Now) != (command.LockedOut && command.LockoutEnabled))
             {
                 var lockoutEnd = command.LockedOut && command.LockoutEnabled ? DateTime.MaxValue : (DateTimeOffset?)null;
                 
