@@ -11,6 +11,7 @@ namespace DnsWebApp.Controllers
     using DnsWebApp.Models.Dns;
     using DnsWebApp.Models.ViewModels;
     using DnsWebApp.Services;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.EntityFrameworkCore;
 
     public class ZoneGroupController : Controller
@@ -125,7 +126,8 @@ namespace DnsWebApp.Controllers
             return this.View(new ZoneGroupCommand
             {
                 ZoneGroupMembers = new List<dynamic>(),
-                AllZones = this.GetAllZones()
+                AllZones = this.GetAllZones(),
+                Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList(),
             });
         }
 
@@ -136,13 +138,15 @@ namespace DnsWebApp.Controllers
             if (!this.ModelState.IsValid)
             {
                 zoneGroupCommand.AllZones = this.GetAllZones();
+                zoneGroupCommand.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
                 return this.View(zoneGroupCommand);
             }
 
             var zoneGroup = new ZoneGroup
             {
                 Name = zoneGroupCommand.Name,
-                ZoneGroupMembers = new List<ZoneGroupMember>()
+                ZoneGroupMembers = new List<ZoneGroupMember>(),
+                OwnerId = zoneGroupCommand.Owner
             };
 
             if (zoneGroupCommand.NewZoneGroupMembers != null)
@@ -173,6 +177,7 @@ namespace DnsWebApp.Controllers
         {
             var zoneGroupObject = this.db.ZoneGroups
                 .Include(x => x.ZoneGroupMembers)
+                .Include(x => x.Owner)
                 .FirstOrDefault(x => x.Id == item);
 
             if (zoneGroupObject == null)
@@ -188,7 +193,9 @@ namespace DnsWebApp.Controllers
                 Name = zoneGroupObject.Name,
                 ZoneGroupMembers = zoneGroupMembers,
                 NewZoneGroupMembers = string.Join(",", zoneGroupMembers),
-                AllZones = this.GetAllZones()
+                AllZones = this.GetAllZones(),
+                Owner = zoneGroupObject.OwnerId,
+                Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList()
             };
             
             return this.View(zoneGroupCommand);
@@ -211,11 +218,17 @@ namespace DnsWebApp.Controllers
             if (!this.ModelState.IsValid)
             {
                 command.AllZones = this.GetAllZones();
+                command.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
+
                 return this.View(command);
             }
 
             zoneGroupObject.Name = command.Name;
+            zoneGroupObject.OwnerId = command.Owner;
 
+            // needs to be done pre- and post-update of members, otherwise removed members don't get touched.
+            zoneGroupObject.TouchSerialNumber();
+            
             if (command.NewZoneGroupMembers != null)
             {
                 var zoneIds = command.NewZoneGroupMembers.Split(",").Select(x => int.Parse(x)).ToList();
@@ -252,7 +265,7 @@ namespace DnsWebApp.Controllers
             return allZones;
         }
         
-                #region Records
+        #region Records
         
         private IActionResult AddRecord(int id, RecordViewModelBase recordViewModel)
         {
@@ -563,9 +576,6 @@ namespace DnsWebApp.Controllers
             return this.EditRecord(item, recordViewModel);
         }
 
-        
         #endregion
-
-        
     }
 }
