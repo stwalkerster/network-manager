@@ -17,12 +17,12 @@
 }
 else
 {
-    <p class="lead text-danger">You are about to delete the <code>@Model.ViewName</code> registrar</p>
+    <p class="lead text-danger">You are about to delete the <code>@Model.ViewName</code> view</p>
 
     <p>Are you sure you want to do this?</p>
 
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id"/>
-        <button class="btn btn-danger" type="submit">Yes, delete this registrar</button>
+        <button class="btn btn-danger" type="submit">Yes, delete this view</button>
     </form>
 }
