@@ -1,14 +1,14 @@
-FROM mcr.microsoft.com/dotnet/sdk:3.1-alpine as build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine as build
 WORKDIR /opt
 COPY . ./
 RUN ["dotnet", "publish", "WebNetworkManager.csproj"]
 
-FROM mcr.microsoft.com/dotnet/aspnet:3.1-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine
 WORKDIR /opt
 EXPOSE 8080
 ENV ASPNETCORE_ENVIRONMENT=Production \
     ASPNETCORE_URLS="http://+:8080" \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
-COPY --from=build /opt/bin/Debug/netcoreapp3.1/publish/ ./
+COPY --from=build /opt/bin/Debug/net5.0/publish/ ./
 RUN chmod +x docker-entrypoint.sh
 ENTRYPOINT ["/opt/docker-entrypoint.sh"]
