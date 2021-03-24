@@ -65,7 +65,7 @@ docker.scimonshouse.net/webnetworkmanager:%build.number%]]></param>
     <build-extensions>
       <extension id="DockerSupport" type="DockerSupport">
         <parameters>
-          <param name="login2registry" value="PROJECT_EXT_18" />
+          <param name="login2registry" value="PROJECT_EXT_18,PROJECT_EXT_10" />
           <param name="loginCheckbox" value="on" />
         </parameters>
       </extension>
