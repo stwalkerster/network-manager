@@ -78,8 +78,16 @@ namespace DnsWebApp.Controllers
                 var renewalObject = tldData[zone.RegistrarId + "|" + zone.TopLevelDomainId];
                 if (!zone.Registrar.AllowRenewals)
                 {
-                    rowData[4] = "Prohibited";
-                    renewalPrice = renewalObject.RenewalPriceInBaseCurrency.Value;
+                    if (renewalObject.RenewalPriceInBaseCurrency.HasValue)
+                    {
+                        renewalPrice = renewalObject.RenewalPriceInBaseCurrency.Value;
+                        rowDataValues[4] = renewalPrice.ToString(CultureInfo.InvariantCulture);
+                        rowData[4] = "Prohibited (" + renewalObject.RealRenewalPrice + ")";
+                    }
+                    else
+                    {
+                        rowData[4] = "Prohibited";
+                    }
                 }
                 else
                 {
