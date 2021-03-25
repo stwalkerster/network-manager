@@ -60,7 +60,13 @@ namespace DnsWebApp.Services
             var expiry = data.Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries)
                 .Where(x => x.ToLower(CultureInfo.InvariantCulture).Contains("expiry date:"))
                 .Select(x => x.Split(':', 2)[1].Trim())
-                .Select(DateTime.Parse)
+                .Select(
+                    d => zone.TopLevelDomain.WhoisExpiryDateFormat != null
+                        ? DateTime.ParseExact(
+                            d,
+                            zone.TopLevelDomain.WhoisExpiryDateFormat,
+                            CultureInfo.InvariantCulture)
+                        : DateTime.Parse(d))
                 .FirstOrDefault();
 
             return new WhoisResult {Expiry = expiry};

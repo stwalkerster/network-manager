@@ -12,6 +12,9 @@ namespace DnsWebApp.Models.Database
         [Display(Name = "TLD Whois Server")]
         public string WhoisServer { get; set; }
         
+        [Display(Name = "Expiry Date Format")]
+        public string WhoisExpiryDateFormat { get; set; }
+        
         [Display(Name = "Registry")]
         public string Registry { get; set; }
         

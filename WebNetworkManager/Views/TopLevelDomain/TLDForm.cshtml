@@ -17,6 +17,12 @@
                 <small class="form-text text-muted">WHOIS server for this registry</small>
             </div>
             <div class="form-group">
+                <label asp-for="WhoisExpiryDateFormat"></label>
+                <input asp-for="WhoisExpiryDateFormat" class="form-control"/>
+                <span asp-validation-for="WhoisExpiryDateFormat" class="text-danger"></span>
+                <small class="form-text text-muted">Date format for the WHOIS expiry date</small>
+            </div>
+            <div class="form-group">
                 <label asp-for="Registry"></label>
                 <input asp-for="Registry" class="form-control"/>
                 <span asp-validation-for="Registry" class="text-danger"></span>
