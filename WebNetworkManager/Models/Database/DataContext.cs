@@ -9,7 +9,7 @@ namespace DnsWebApp.Models.Database
     {
         public DataContext(DbContextOptions<DataContext> options, IHostEnvironment env) : base(options)
         {
-            if (env.IsProduction())
+            if (env.IsProduction() || env.IsStaging())
             {
                 this.Database.Migrate();
             }
