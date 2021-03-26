@@ -5,16 +5,19 @@ namespace DnsWebApp.Controllers
     using System.Linq;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
+    using DnsWebApp.Services;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.EntityFrameworkCore;
 
     public class TopLevelDomainController : Controller
     {
         private readonly DataContext db;
+        private readonly WhoisService whoisService;
 
-        public TopLevelDomainController(DataContext db)
+        public TopLevelDomainController(DataContext db, WhoisService whoisService)
         {
             this.db = db;
+            this.whoisService = whoisService;
         }
         
         [Route("/tld")]
@@ -60,6 +63,8 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Records)
                 .Where(x => x.TopLevelDomainId == item)
                 .ToList();
+            
+            this.whoisService.UpdateExpiryAttributes(zones);
 
             this.ViewData["TLD"] = this.db.TopLevelDomains.FirstOrDefault(x => x.Id == item)?.Domain;
             return this.View(zones);

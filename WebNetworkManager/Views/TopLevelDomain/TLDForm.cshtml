@@ -1,38 +1,52 @@
 @model DnsWebApp.Models.Database.TopLevelDomain
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-12">
         <fieldset>
             <legend>Top Level Domain</legend>
-            <div class="form-group">
-                <label asp-for="Domain"></label>
-                <input asp-for="Domain" class="form-control"/>
-                <span asp-validation-for="Domain" class="text-danger"></span>
-                <small class="form-text text-muted">Enter the name of the TLD</small>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="Domain"></label>
+                        <input asp-for="Domain" class="form-control"/>
+                        <span asp-validation-for="Domain" class="text-danger"></span>
+                        <small class="form-text text-muted">Enter the name of the TLD</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Registry"></label>
+                        <input asp-for="Registry" class="form-control"/>
+                        <span asp-validation-for="Registry" class="text-danger"></span>
+                        <small class="form-text text-muted">The name of the registry for this TLD</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="RegistryUrl"></label>
+                        <input asp-for="RegistryUrl" class="form-control"/>
+                        <span asp-validation-for="RegistryUrl" class="text-danger"></span>
+                        <small class="form-text text-muted">The URL of the registry for this TLD</small>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="WhoisServer"></label>
-                <input asp-for="WhoisServer" class="form-control"/>
-                <span asp-validation-for="WhoisServer" class="text-danger"></span>
-                <small class="form-text text-muted">WHOIS server for this registry</small>
-            </div>
-            <div class="form-group">
-                <label asp-for="WhoisExpiryDateFormat"></label>
-                <input asp-for="WhoisExpiryDateFormat" class="form-control"/>
-                <span asp-validation-for="WhoisExpiryDateFormat" class="text-danger"></span>
-                <small class="form-text text-muted">Date format for the WHOIS expiry date</small>
-            </div>
-            <div class="form-group">
-                <label asp-for="Registry"></label>
-                <input asp-for="Registry" class="form-control"/>
-                <span asp-validation-for="Registry" class="text-danger"></span>
-                <small class="form-text text-muted">The name of the registry for this TLD</small>
-            </div>
-            <div class="form-group">
-                <label asp-for="RegistryUrl"></label>
-                <input asp-for="RegistryUrl" class="form-control"/>
-                <span asp-validation-for="RegistryUrl" class="text-danger"></span>
-                <small class="form-text text-muted">The URL of the registry for this TLD</small>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="WhoisServer"></label>
+                        <input asp-for="WhoisServer" class="form-control"/>
+                        <span asp-validation-for="WhoisServer" class="text-danger"></span>
+                        <small class="form-text text-muted">WHOIS server for this registry</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="WhoisExpiryDateFormat"></label>
+                        <input asp-for="WhoisExpiryDateFormat" class="form-control"/>
+                        <span asp-validation-for="WhoisExpiryDateFormat" class="text-danger"></span>
+                        <small class="form-text text-muted">Date format for the WHOIS expiry date. See <a href="https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings">format documentation</a> for more details.</small>
+                    </div>
+                </div>
             </div>
         </fieldset>
     </div>

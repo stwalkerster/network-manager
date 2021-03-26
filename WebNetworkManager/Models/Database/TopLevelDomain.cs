@@ -9,10 +9,10 @@ namespace DnsWebApp.Models.Database
         [Required]
         public string Domain { get; set; }
 
-        [Display(Name = "TLD Whois Server")]
+        [Display(Name = "WHOIS Server")]
         public string WhoisServer { get; set; }
         
-        [Display(Name = "Expiry Date Format")]
+        [Display(Name = "WHOIS expiry date format")]
         public string WhoisExpiryDateFormat { get; set; }
         
         [Display(Name = "Registry")]
