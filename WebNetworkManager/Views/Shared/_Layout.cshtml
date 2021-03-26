@@ -9,7 +9,10 @@
 
 <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow navbar-expand">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Cluster Manager</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" asp-controller="Home" asp-action="Index">
+            <div class="d-inline-block">Cluster Manager</div>
+            <div class="d-inline-block float-right text-muted font-small"><small>v0 (devel)</small></div>
+        </a>
         <ul class="navbar-nav col-sm-9 col-md-10">
             <li class="w-100 d-none d-sm-inline">@*<input class="form-control form-control-dark" type="text" placeholder="Search" aria-label="Search">*@</li>
             <li class="nav-item dropdown">
