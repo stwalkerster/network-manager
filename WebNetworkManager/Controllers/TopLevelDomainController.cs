@@ -105,6 +105,7 @@ namespace DnsWebApp.Controllers
             obj.Registry = editedTld.Registry;
             obj.RegistryUrl = editedTld.RegistryUrl;
             obj.WhoisServer = editedTld.WhoisServer;
+            obj.WhoisExpiryDateFormat = editedTld.WhoisExpiryDateFormat;
 
             this.db.SaveChanges();
             
