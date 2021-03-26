@@ -7,9 +7,15 @@ namespace DnsWebApp.Models.Database
     {
         public static void SeedData(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if(!userManager.Users.Any())
+            if (!userManager.Users.Any())
             {
-                var user = new IdentityUser {UserName = "Administrator"};
+                var user = new IdentityUser
+                {
+                    UserName = "Administrator",
+                    Email = "root@localhost",
+                    EmailConfirmed = true
+                };
+                
                 var result = userManager.CreateAsync(user, "Adm1nistrator!").Result;
 
                 if (result.Succeeded)
