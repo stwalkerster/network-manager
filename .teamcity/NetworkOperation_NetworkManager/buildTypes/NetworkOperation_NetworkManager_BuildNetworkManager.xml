@@ -24,6 +24,8 @@ fi]]></param>
         <parameters>
           <param name="command.args"><![CDATA[--pull
 --no-cache
+--build-arg BuildId=%build.number%
+--build-arg GitRev=%build.vcs.number%
 --label "teamcity.build=%build.number%"
 --label "teamcity.git=%build.vcs.number%"
 --label "teamcity.trigger=%teamcity.build.triggeredBy%"]]></param>
