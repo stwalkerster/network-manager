@@ -3,7 +3,7 @@ ARG BuildId=0
 ARG GitRev=devel
 WORKDIR /opt
 COPY . ./
-RUN ["sed", "-i", "-re", "s/v0 (devel)/v${BuildId} (${GitRev})/", "Views/Shared/_Layout.cshtml"]
+RUN sed -i -re "s/v0 \\(devel\\)/v${BuildId} (${GitRev})/" "Views/Shared/_Layout.cshtml"
 RUN ["dotnet", "publish", "WebNetworkManager.csproj"]
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine
