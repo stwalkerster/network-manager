@@ -154,12 +154,12 @@ namespace DnsWebApp.Controllers
                     rowData[6] = $"{transferObject.RealRenewalPrice} {renewalChangeIcon}";
                 }
 
-                if (renewalPrice <= transferPrice && renewalPrice != decimal.MaxValue && rowData[4] != "Prohibited")
+                if (renewalPrice <= transferPrice && renewalPrice != decimal.MaxValue && !rowData[4].Contains("Prohibited"))
                 {
                     rowData[7] = "Renew";
 
                 } 
-                else if ((renewalPrice == decimal.MaxValue || rowData[4] == "Prohibited") && transferPrice != decimal.MaxValue)
+                else if ((renewalPrice == decimal.MaxValue || rowData[4].Contains("Prohibited")) && transferPrice != decimal.MaxValue)
                 {
                     rowData[7] = "Transfer to " + transferObject.Registrar.Name;
                     if (renewalPrice != decimal.MaxValue)
