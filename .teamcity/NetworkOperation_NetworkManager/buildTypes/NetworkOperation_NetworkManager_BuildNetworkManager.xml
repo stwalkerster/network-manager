@@ -4,6 +4,7 @@
   <description />
   <settings>
     <parameters>
+      <param name="gitrev" value="" />
       <param name="imagetag" value="unknown" />
     </parameters>
     <build-runners>
