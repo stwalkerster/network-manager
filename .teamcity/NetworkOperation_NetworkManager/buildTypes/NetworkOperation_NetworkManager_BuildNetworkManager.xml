@@ -15,7 +15,9 @@ if [[ "%teamcity.build.branch.is_default%" == "true" ]]; then
 	echo "##teamcity[setParameter name='imagetag' value='latest']"
 else
 	echo "##teamcity[setParameter name='imagetag' value='%teamcity.build.branch%']"
-fi]]></param>
+fi
+
+echo "##teamcity[setParameter name='gitrev' value='"$(git describe --always)"']"]]></param>
           <param name="teamcity.step.mode" value="default" />
           <param name="use.custom.script" value="true" />
         </parameters>
