@@ -250,6 +250,11 @@ namespace DnsWebApp.Controllers
                             ZoneId = x,
                             ZoneGroup = zoneGroupObject
                         }));
+
+                foreach (var zoneGroupMember in zoneGroupObject.ZoneGroupMembers.Where(zoneGroupMember => zoneGroupMember.Zone == null))
+                {
+                    zoneGroupMember.Zone = this.db.Zones.FirstOrDefault(x => x.Id == zoneGroupMember.ZoneId);
+                }
             }
             else
             {
