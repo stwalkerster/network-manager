@@ -14,4 +14,8 @@ ENV ASPNETCORE_ENVIRONMENT=Production \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
 COPY --from=build /opt/bin/Debug/net5.0/publish/ ./
 RUN chmod +x docker-entrypoint.sh
+
+RUN apk add curl
+HEALTHCHECK CMD curl --insecure -Lfs http://localhost:8080/api/healthcheck || exit 1
+
 ENTRYPOINT ["/opt/docker-entrypoint.sh"]
