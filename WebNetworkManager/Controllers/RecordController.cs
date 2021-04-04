@@ -41,6 +41,8 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.Zone)
                 .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.ZoneGroup)
+                .ThenInclude(x => x.ZoneGroupMembers)
+                .ThenInclude(x => x.Zone)
                 .FirstOrDefault(x => x.Id == item);
 
             if (record == null)

@@ -12,17 +12,26 @@
 @if (Model.ZoneGroupMembers.Any())
 {
     <div class="alert alert-danger" role="alert">
-        This view has zones underneath it. As such, you cannot delete this group until you have removed all child zones.
+        This zone group has zones underneath it. As such, you cannot delete this group until you have removed all child zones.
     </div>
 }
 else
 {
-    <p class="lead text-danger">You are about to delete the <code>@Model.Name</code> zone group</p>
+    @if (Model.Records.Any())
+    {
+        <div class="alert alert-danger" role="alert">
+            This zone group has records underneath it. As such, you cannot delete this group until you have removed all records.
+        </div>
+    }
+    else
+    {
+        <p class="lead text-danger">You are about to delete the <code>@Model.Name</code> zone group</p>
 
-    <p>Are you sure you want to do this?</p>
+        <p>Are you sure you want to do this?</p>
 
-    <form asp-action="DeleteZoneGroup">
-        <input type="hidden" asp-for="Id"/>
-        <button class="btn btn-danger" type="submit">Yes, delete this zone group</button>
-    </form>
+        <form asp-action="DeleteZoneGroup">
+            <input type="hidden" asp-for="Id"/>
+            <button class="btn btn-danger" type="submit">Yes, delete this zone group</button>
+        </form>
+    }
 }

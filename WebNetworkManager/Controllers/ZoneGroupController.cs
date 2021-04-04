@@ -275,6 +275,7 @@ namespace DnsWebApp.Controllers
         {
             var obj = this.db.ZoneGroups
                 .Include(x => x.ZoneGroupMembers)
+                .Include(x => x.Records)
                 .FirstOrDefault(x => x.Id == item);
             
             if (obj == null)
