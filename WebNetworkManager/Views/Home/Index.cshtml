@@ -13,13 +13,17 @@
 
 <h2>DNS Zones</h2>
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <h3>TLD stats</h3>
         <canvas id="tldChart"></canvas>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <h3>Record type stats</h3>
         <canvas id="typeChart"></canvas>
+    </div>
+    <div class="col-lg-4">
+        <h3>Owner stats</h3>
+        <canvas id="ownerChart"></canvas>
     </div>
 </div>
 
@@ -71,6 +75,18 @@ var typeChart = new Chart(document.getElementById('typeChart').getContext('2d'),
             backgroundColor: colours
         }],
         labels: @Html.Raw(JsonSerializer.Serialize(ViewBag.RecordStats.Item1))
+    },
+    options: chartOptions
+});
+
+var ownerChart = new Chart(document.getElementById('ownerChart').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: @Html.Raw(JsonSerializer.Serialize(ViewBag.OwnerStats.Item2)),
+            backgroundColor: colours
+        }],
+        labels: @Html.Raw(JsonSerializer.Serialize(ViewBag.OwnerStats.Item1))
     },
     options: chartOptions
 });
