@@ -25,6 +25,7 @@ namespace DnsWebApp.Controllers
         {
             var record = this.db.Record
                 .Include(x => x.Zone)
+                .ThenInclude(x => x.Domain)
                 .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.ZoneGroup)
                 .FirstOrDefault(x => x.Id == item);
@@ -39,6 +40,7 @@ namespace DnsWebApp.Controllers
         {
             var record = this.db.Record
                 .Include(x => x.Zone)
+                .ThenInclude(x => x.Domain)
                 .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.ZoneGroup)
                 .ThenInclude(x => x.ZoneGroupMembers)

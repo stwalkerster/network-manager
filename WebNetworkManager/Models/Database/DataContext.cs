@@ -19,7 +19,9 @@ namespace DnsWebApp.Models.Database
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Zone>().HasIndex(x => new {x.TopLevelDomainId, x.Name, x.HorizonViewId}).IsUnique();
+            modelBuilder.Entity<Domain>().HasIndex(x => new {x.Name, x.TopLevelDomainId}).IsUnique();
+            
+            modelBuilder.Entity<Zone>().HasIndex(x => new {x.DomainId, x.HorizonViewId}).IsUnique();
             
             modelBuilder.Entity<Registrar>().HasIndex(x => x.Name).IsUnique();
             
@@ -37,6 +39,7 @@ namespace DnsWebApp.Models.Database
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
 
+        public DbSet<Domain> Domains { get; set; }
         public DbSet<Zone> Zones { get; set; }
         public DbSet<ZoneGroup> ZoneGroups { get; set; }
         public DbSet<Registrar> Registrar { get; set; }

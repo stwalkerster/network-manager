@@ -1,0 +1,37 @@
+@model DnsWebApp.Models.ViewModels.DomainCommand
+
+@{
+    ViewBag.Title = "New domain";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">New domain</h1>
+</div>
+
+<form asp-controller="Domain" asp-action="New">
+    <div class="row">
+        <div class="col-12">
+            <fieldset>
+                <legend>Domain</legend>
+                <div class="row">
+                    <div class="form-group col-lg-8">
+                        <label asp-for="BaseName"></label>
+                        <input asp-for="BaseName" class="form-control"/>
+                        <span asp-validation-for="BaseName" class="text-danger"></span>
+                        <small class="form-text text-muted">Enter your domain name here, without the suffix</small>
+                    </div>
+                    
+                    <div class="form-group col-lg-4">
+                        <label asp-for="TopLevelDomain"></label>
+                        <select asp-for="TopLevelDomain" asp-items="Model.TopLevelDomains" class="form-control"></select>
+                        <span asp-validation-for="TopLevelDomain" class="text-danger"></span>
+                        <small class="form-text text-muted">The suffix which is appended to your domain</small>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    
+    <partial name="DomainForm"/>
+</form>

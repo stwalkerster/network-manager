@@ -21,7 +21,7 @@ namespace DnsWebApp.Models.Database
         [Display(Name = "Registry URL")]
         public string RegistryUrl { get; set; }
         
-        public List<Zone> Zones { get; set; }
+        public List<Domain> Domains { get; set; }
         public List<RegistrarTldSupport> RegistrarTldSupports { get; set; }
     }
 }

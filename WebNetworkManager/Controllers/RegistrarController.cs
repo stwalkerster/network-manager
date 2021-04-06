@@ -1,6 +1,7 @@
 namespace DnsWebApp.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using DnsWebApp.Models;
     using DnsWebApp.Models.Database;
@@ -29,26 +30,23 @@ namespace DnsWebApp.Controllers
         public IActionResult Item(long item)
         {
             var registrar = this.db.Registrar
-                .Include(x => x.Zones).ThenInclude(x => x.TopLevelDomain)
-                .Include(x => x.Zones).ThenInclude(x => x.Owner)
-                .Include(x => x.Zones).ThenInclude(x => x.HorizonView)
-                .Include(x => x.Zones).ThenInclude(x => x.FavouriteDomains).ThenInclude(x => x.User)
-                .Include(x => x.Zones).ThenInclude(x => x.Records)
+                .Include(x => x.Domains).ThenInclude(x => x.TopLevelDomain)
+                .Include(x => x.Domains).ThenInclude(x => x.Owner)
+                .Include(x => x.Domains).ThenInclude(x => x.Registrar)
+                .Include(x => x.Domains).ThenInclude(x => x.Zones)
                 .FirstOrDefault(x => x.Id == item);
 
             if (registrar == null)
             {
                 return this.RedirectToAction("Index");
             }
-            
-            var zoneSummaries = registrar.Zones.ToList();
 
-            this.whoisService.UpdateExpiryAttributes(zoneSummaries);
+            this.whoisService.UpdateExpiryAttributes(registrar.Domains);
             
             this.ViewData["Registrar"] = registrar.Name;
             this.ViewData["RegistrarId"] = registrar.Id;
             
-            return this.View(zoneSummaries);
+            return this.View(registrar.Domains);
         }
 
         [Route("/registrar")]
@@ -57,7 +55,8 @@ namespace DnsWebApp.Controllers
             var baseCurrency = this.db.Currencies.FirstOrDefault(x => x.Code == this.configuration.GetValue<string>("BaseCurrency"));
             
             var includableQueryable = this.db.Registrar
-                .Include(x => x.Zones)
+                .Include(x => x.Domains)
+                .ThenInclude(x => x.Zones)
                 .ThenInclude(x => x.Records)
                 .Include(x => x.RegistrarTldSupports)
                 .Include(x => x.Currency)
@@ -149,7 +148,7 @@ namespace DnsWebApp.Controllers
         public IActionResult Delete(int item)
         {
             var obj = this.db.Registrar
-                .Include(x => x.Zones)
+                .Include(x => x.Domains)
                 .FirstOrDefault(x => x.Id == item);
             
             if (obj == null)
@@ -166,7 +165,7 @@ namespace DnsWebApp.Controllers
         public IActionResult Delete(int item, Registrar record)
         {
             var obj = this.db.Registrar
-                .Include(x => x.Zones)
+                .Include(x => x.Domains)
                 .FirstOrDefault(x => x.Id == item);
             
             if (obj == null)
@@ -174,7 +173,7 @@ namespace DnsWebApp.Controllers
                 return this.RedirectToAction("Index");
             }
 
-            if (obj.Zones.Any())
+            if (obj.Domains.Any())
             {
                 return this.RedirectToAction("Index");  
             }
@@ -200,7 +199,7 @@ namespace DnsWebApp.Controllers
 
             var supports = this.db.RegistrarTldSupport
                 .Include(x => x.TopLevelDomain)
-                .ThenInclude(x => x.Zones)
+                .ThenInclude(x => x.Domains)
                 .Include(x => x.Registrar)
                 .ThenInclude(x => x.Currency)
                 .Where(x => x.RegistrarId == item)

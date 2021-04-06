@@ -33,7 +33,7 @@ namespace DnsWebApp.Models.Database
         [Display(Name="Currency")]
         public long? CurrencyId { get; set; }
 
-        public List<Zone> Zones { get; set; }
+        public List<Domain> Domains { get; set; }
         public List<RegistrarTldSupport> RegistrarTldSupports { get; set; }
     }
 }

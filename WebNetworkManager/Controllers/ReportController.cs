@@ -32,11 +32,12 @@ namespace DnsWebApp.Controllers
 
         public IActionResult RenewalCosts()
         {
-            var results = new List<ReportResult> {this.GetRenewalAnalysis()};
+            var results = new List<ReportResult> {this.GetSqlResult("SELECT * FROM \"Zones\";", "zones")};
 
             return this.View(results);
         }
 
+        /*
         private ReportResult GetRenewalAnalysis()
         {
             var baseCurrency = this.db.Currencies.FirstOrDefault(
@@ -186,6 +187,7 @@ namespace DnsWebApp.Controllers
 
             return new ReportResult("Transfer/Renewal Recommendations", columnHeaders, rows, rowsDataValues);
         }
+        */
 
         private ReportResult GetSqlResult(string query, string title)
         {

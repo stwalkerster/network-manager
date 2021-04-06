@@ -23,7 +23,7 @@ namespace DnsWebApp.Controllers
         [Route("/tld")]
         public IActionResult Index()
         {
-            return View(this.db.TopLevelDomains.Include(x => x.Zones).ToList());
+            return View(this.db.TopLevelDomains.Include(x => x.Domains).ToList());
         }
 
         [HttpGet]
@@ -51,23 +51,20 @@ namespace DnsWebApp.Controllers
         }
         
         [Route("/tld/{item:int}")]
-        public IActionResult ShowZones(int item)
+        public IActionResult ShowDomains(int item)
         {
-            var zones = this.db.Zones
-                .Include(x => x.TopLevelDomain)
+            var domains = this.db.Domains
                 .Include(x => x.Owner)
                 .Include(x => x.Registrar)
-                .Include(x => x.HorizonView)
-                .Include(x => x.FavouriteDomains)
-                .ThenInclude(x => x.User)
-                .Include(x => x.Records)
+                .Include(x => x.Zones)
+                .Include(x => x.TopLevelDomain)
                 .Where(x => x.TopLevelDomainId == item)
                 .ToList();
             
-            this.whoisService.UpdateExpiryAttributes(zones);
+            this.whoisService.UpdateExpiryAttributes(domains);
 
             this.ViewData["TLD"] = this.db.TopLevelDomains.FirstOrDefault(x => x.Id == item)?.Domain;
-            return this.View(zones);
+            return this.View(domains);
         }
         
         [HttpGet]
@@ -118,7 +115,7 @@ namespace DnsWebApp.Controllers
         public IActionResult Delete(int item)
         {
             var obj = this.db.TopLevelDomains
-                .Include(x => x.Zones)
+                .Include(x => x.Domains)
                 .FirstOrDefault(x => x.Id == item);
             
             if (obj == null)
@@ -135,7 +132,7 @@ namespace DnsWebApp.Controllers
         public IActionResult Delete(int item, TopLevelDomain record)
         {
             var obj = this.db.TopLevelDomains
-                .Include(x => x.Zones)
+                .Include(x => x.Domains)
                 .FirstOrDefault(x => x.Id == item);
             
             if (obj == null)
@@ -143,7 +140,7 @@ namespace DnsWebApp.Controllers
                 return this.RedirectToAction("Index");
             }
 
-            if (obj.Zones.Any())
+            if (obj.Domains.Any())
             {
                 return this.RedirectToAction("Index");  
             }

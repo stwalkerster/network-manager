@@ -22,7 +22,7 @@ namespace DnsWebApp.Controllers
             this.whoisService = whoisService;
         }
         
-        [Route("/owner/{item}")]
+        [Route("/owner/zones/{item}")]
         public IActionResult Item(string item)
         {
             Expression<Func<Zone,bool>> whereClause = x => x.Owner.UserName == item;
@@ -32,20 +32,45 @@ namespace DnsWebApp.Controllers
             }
             
             var zones = this.db.Zones
-                .Include(x => x.TopLevelDomain)
+                .Include(x=>x.Domain)
+                .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.Owner)
-                .Include(x => x.Registrar)
+                .Include(x=>x.Domain)
+                .ThenInclude(x => x.Owner)
+                .Include(x=>x.Domain)
+                .ThenInclude(x => x.Registrar)
                 .Include(x => x.FavouriteDomains)
                 .ThenInclude(x => x.User)
                 .Include(x => x.Records)
                 .Include(x => x.HorizonView)
                 .Where(whereClause)
                 .ToList();
-
-            this.whoisService.UpdateExpiryAttributes(zones);
     
             this.ViewData["Owner"] = item;
             return this.View(zones);
+        }
+        
+        [Route("/owner/domains/{item}")]
+        public IActionResult Domains(string item)
+        {
+            Expression<Func<Domain,bool>> whereClause = x => x.Owner.UserName == item;
+            if (item == NoneSpecifier)
+            {
+                whereClause = x => x.Owner == null;
+            }
+            
+            var domains = this.db.Domains
+                .Include(x => x.Owner)
+                .Include(x => x.Registrar)
+                .Include(x => x.Zones)
+                .Include(x => x.TopLevelDomain)
+                .Where(whereClause)
+                .ToList();
+
+            this.whoisService.UpdateExpiryAttributes(domains);
+    
+            this.ViewData["Owner"] = item;
+            return this.View(domains);
         }
         
         [Route("/owner")]
@@ -53,12 +78,13 @@ namespace DnsWebApp.Controllers
         {
             var zones = this.db.Zones
                 .Include(x => x.Owner)
-                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.Records)
                 .ToList();
 
             var groupedZones = zones.Aggregate(
-                new Dictionary<string, GroupedZoneSummary>(),
+                new Dictionary<string, GroupedDomainZoneSummary>(),
                 (cur, next) =>
                 {
                     var ownerUserName = next.Owner?.UserName ?? NoneSpecifier;
@@ -66,7 +92,7 @@ namespace DnsWebApp.Controllers
                     {
                         cur.Add(
                             ownerUserName,
-                            new GroupedZoneSummary {GroupName = ownerUserName, GroupKey = ownerUserName});
+                            new GroupedDomainZoneSummary {GroupName = ownerUserName, GroupKey = ownerUserName});
                     }
 
                     cur[ownerUserName].DisabledZones += !next.Enabled ? 1 : 0;
@@ -76,6 +102,14 @@ namespace DnsWebApp.Controllers
 
                     return cur;
                 });
+
+            foreach (var summary in groupedZones)
+            {
+                summary.Value.Domains =
+                    this.db.Domains
+                        .Include(x => x.Owner)
+                        .Count(x => x.Owner.UserName == summary.Key);
+            }
 
             return this.View(groupedZones);
         }

@@ -22,14 +22,6 @@
 
 <div class="row">
     <div class="form-group col-lg-6">
-        <label asp-for="Registrar"></label>
-        <select asp-for="Registrar" asp-items="Model.Registrars" class="form-control">
-            <option value="">(none)</option>
-        </select>
-        <span asp-validation-for="Registrar" class="text-danger"></span>
-    </div>
-
-    <div class="form-group col-lg-6">
         <label asp-for="Owner"></label>
         <select asp-for="Owner" asp-items="Model.Owners" class="form-control">
             <option value="">(none)</option>
@@ -37,13 +29,6 @@
         <span asp-validation-for="Owner" class="text-danger"></span>
         <small class="form-text text-muted">The user to whom the domain belongs.</small>
     </div>
-</div>
-
-<div class="form-group">
-    <label asp-for="RegistrationExpiry"></label>
-    <input asp-for="RegistrationExpiry" class="form-control"/>
-    <span asp-validation-for="RegistrationExpiry" class="text-danger"></span>
-    <small class="form-text text-muted">The date the domain registration expires with the registrar.</small>
 </div>
 
 

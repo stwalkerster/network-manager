@@ -8,7 +8,18 @@ namespace DnsWebApp.Services
         {
             return date.ToString("yyyy-MM-dd HH:mm:ss");
         }
+
+        public string AsReadableDateTime(DateTime? date)
+        {
+            if (date.HasValue)
+            {
+                return this.AsReadableDateTime(date.Value);
+            }
+            
+            return ("(unknown date)");
+        }
         
+        // ReSharper disable once MemberCanBePrivate.Global
         public string AsReadableDate(DateTime date)
         {
             return date.ToString("yyyy-MM-dd");
@@ -18,7 +29,7 @@ namespace DnsWebApp.Services
         {
             if (date.HasValue)
             {
-                return date.Value.ToString("yyyy-MM-dd");
+                return AsReadableDate(date.Value);
             }
 
             return ("(unknown date)");

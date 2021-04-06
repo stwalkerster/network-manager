@@ -21,7 +21,7 @@
 
 <table class="table table-striped table-hover sortable">
     <thead><tr>
-        <th>Top Level Domain</th><th>Registrar</th><th>Whois Server</th><th>Zones</th><th data-defaultsort="disabled"></th>
+        <th>Top Level Domain</th><th>Registrar</th><th>Whois Server</th><th>Domains</th><th data-defaultsort="disabled"></th>
     </tr></thead>
     <tbody>
     @foreach (var tld in Model)
@@ -30,10 +30,10 @@
             <td class="font-weight-bold">@(tld.Domain)</td>
             <td><a href="@tld.RegistryUrl">@tld.Registry</a></td>
             <td>@tld.WhoisServer</td>
-            <td>@(tld.Zones?.Count ?? 0)</td>
+            <td>@(tld.Domains?.Count ?? 0)</td>
             <td class="table-button-cell">
-                <a href="@Url.Action("ShowZones", "TopLevelDomain", new {item = tld.Id})" class="btn btn-sm btn-secondary">
-                    <i class="fas fa-cubes"></i>&nbsp;View Zones
+                <a href="@Url.Action("ShowDomains", "TopLevelDomain", new {item = tld.Id})" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-globe"></i>&nbsp;Domains
                 </a>
                 @if (User.IsInRole(RoleDefinition.StaticData))
                 {

@@ -14,19 +14,19 @@
             <fieldset>
                 <legend>Zone</legend>
                 <div class="row">
-                    <div class="form-group col-lg-8">
-                        <label asp-for="BaseName"></label>
-                        <input asp-for="BaseName" class="form-control"/>
-                        <span asp-validation-for="BaseName" class="text-danger"></span>
-                        <small class="form-text text-muted">Enter your domain name here, without the suffix</small>
-                    </div>
-                    
-                    <div class="form-group col-lg-4">
-                        <label asp-for="TopLevelDomain"></label>
-                        <select asp-for="TopLevelDomain" asp-items="Model.TopLevelDomains" class="form-control"></select>
-                        <span asp-validation-for="TopLevelDomain" class="text-danger"></span>
-                        <small class="form-text text-muted">The suffix which is appended to your domain</small>
-                    </div>
+                    @* <div class="form-group col-lg-8"> *@
+                    @*     <label asp-for="BaseName"></label> *@
+                    @*     <input asp-for="BaseName" class="form-control"/> *@
+                    @*     <span asp-validation-for="BaseName" class="text-danger"></span> *@
+                    @*     <small class="form-text text-muted">Enter your domain name here, without the suffix</small> *@
+                    @* </div> *@
+                    @* *@
+                    @* <div class="form-group col-lg-4"> *@
+                    @*     <label asp-for="TopLevelDomain"></label> *@
+                    @*     <select asp-for="TopLevelDomain" asp-items="Model.TopLevelDomains" class="form-control"></select> *@
+                    @*     <span asp-validation-for="TopLevelDomain" class="text-danger"></span> *@
+                    @*     <small class="form-text text-muted">The suffix which is appended to your domain</small> *@
+                    @* </div> *@
                 </div>
             </fieldset>
             

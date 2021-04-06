@@ -31,6 +31,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a class="nav-link @(ViewBag.Active == "Domain" ? "active" : "")" href="@Url.Action("Index", "Domain")">
+                <i class="fas fa-globe"></i>&nbsp;All domains
+                @Html.Raw(ViewBag.Active == "Domain" ? "<span class=\"sr-only\">(current)</span>" : "")
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link @(ViewBag.Active == "TopLevelDomain" ? "active" : "")" href="@Url.Action("Index", "TopLevelDomain")">
                 <i class="fas fa-server"></i>&nbsp;Top Level Domains
                 @Html.Raw(ViewBag.Active == "TopLevelDomain" ? "<span class=\"sr-only\">(current)</span>" : "")
@@ -72,7 +78,7 @@
             {
                 <li class="nav-item">
                     <a class="nav-link" href="@Url.Action("ShowZone", "Zone", new {zone = z.Zone.Id})">
-                        <i class="fas fa-cube"></i>&nbsp;@z.Zone.Name.@z.Zone.TopLevelDomain.Domain <partial name="SplitHorizonTag" model="z.Zone.HorizonView"/>
+                        <i class="fas fa-cube"></i>&nbsp;@z.Zone.Domain.Name.@z.Zone.Domain.TopLevelDomain.Domain <partial name="SplitHorizonTag" model="z.Zone.HorizonView"/>
                     </a>
                 </li>
             }

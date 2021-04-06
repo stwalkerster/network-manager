@@ -9,10 +9,10 @@
     <h1 class="h2">Deleting registrar @Model.Name</h1>
 </div>
 
-@if (Model.Zones.Any())
+@if (Model.Domains.Any())
 {
     <div class="alert alert-danger" role="alert">
-        This registrar has zones underneath it. As such, you cannot delete this registrar until you have removed all child zones.
+        This registrar has zones underneath it. As such, you cannot delete this registrar until you have removed all child domains.
     </div>
 }
 else

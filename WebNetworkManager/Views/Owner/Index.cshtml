@@ -1,4 +1,4 @@
-@model Dictionary<string, DnsWebApp.Models.GroupedZoneSummary>
+@model Dictionary<string, DnsWebApp.Models.GroupedDomainZoneSummary>
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Owners";
@@ -13,7 +13,43 @@
     @foreach (var reg in Model)
     {
         <div class="col mb-4">
-            <partial name="GroupedZoneSummary" model="@reg.Value"/>
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">@reg.Value.GroupName</h3>
+                    @if (reg.Value.Domains > 0)
+                    {
+                        <p class="card-text lead"><span class="badge badge-info">@reg.Value.Domains</span>&nbsp;domains</p>
+                    }
+                    else
+                    {
+                        <p class="card-text lead"><span class="badge badge-secondary">0</span>&nbsp;domains</p>
+                    }
+                    
+                    @if (reg.Value.EnabledZones > 0)
+                    {
+                        <p class="card-text float-right mt-1 mb-0 text-right">(@reg.Value.EnabledRecords records)</p>
+                        <p class="card-text lead"><span class="badge badge-success">@reg.Value.EnabledZones</span>&nbsp;enabled zones</p>
+                    }
+                    else
+                    {
+                        <p class="card-text lead"><span class="badge badge-secondary">0</span>&nbsp;enabled zones</p>
+                    }
+                            
+                    @if (reg.Value.DisabledZones > 0)
+                    {
+                        <p class="card-text float-right mt-1 mb-0 text-right">(@reg.Value.DisabledRecords records)</p>
+                        <p class="card-text lead"><span class="badge badge-danger">@reg.Value.DisabledZones</span>&nbsp;disabled zones</p>
+                    }
+                    else
+                    {
+                        <p class="card-text lead"><span class="badge badge-secondary">0</span>&nbsp;disabled zones</p>
+                    }
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-secondary btn-sm float-right ml-1" href="@Url.Action("Item", (string) ViewBag.Active, new {item = @reg.Value.GroupKey})"><i class="fas fa-cubes"></i>&nbsp;View zones</a>
+                    <a class="btn btn-secondary btn-sm float-right ml-1" href="@Url.Action("Domains", (string) ViewBag.Active, new {item = @reg.Value.GroupKey})"><i class="fas fa-globe"></i>&nbsp;View domains</a>
+                </div>
+            </div>
         </div>
     }
 </div>

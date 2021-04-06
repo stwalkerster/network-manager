@@ -3,6 +3,7 @@ namespace DnsWebApp.Models.ViewModels
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using DnsWebApp.Models.Database;
     using DnsWebApp.Validation;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,8 +14,8 @@ namespace DnsWebApp.Models.ViewModels
         public string Name { get; set; }
         
         [Required]
-        [Display(Name = "Domain base name")]
-        public string BaseName { get; set; }
+        [Display(Name = "Domain")]
+        public long Domain { get; set; }
         
         [Required]
         [Display(Name = "Primary Name Server")]
@@ -44,11 +45,6 @@ namespace DnsWebApp.Models.ViewModels
         [Required]
         public bool Enabled { get; set; }
         
-        [Display(Name = "Registration Expiry")]
-        public DateTime? RegistrationExpiry { get; set; }
-
-        public long? Registrar { get; set; }
-        
         [Required]
         [Display(Name = "Top level domain")]
         [NotEqual(0)]
@@ -59,9 +55,7 @@ namespace DnsWebApp.Models.ViewModels
         [Display(Name = "Split-horizon view")]
         public long? HorizonView { get; set; }
 
-        public List<SelectListItem> Registrars { get; set; }
         public List<SelectListItem> HorizonViews { get; set; }
-        public List<SelectListItem> TopLevelDomains { get; set; }
         public List<SelectListItem> Owners { get; set; }
         
     }

@@ -20,10 +20,10 @@ namespace DnsWebApp.Controllers
         // GET
         public IActionResult Index()
         {
-            var tldStatsQuery = "WITH uqZone AS (SELECT DISTINCT \"Name\", \"TopLevelDomainId\" FROM \"Zones\")\nSELECT t.\"Domain\", COUNT(1)\nFROM \"TopLevelDomains\" t\nINNER JOIN uqZone z ON t.\"Id\" = z.\"TopLevelDomainId\"\nGROUP BY t.\"Domain\" ORDER BY t.\"Domain\";";
+            var tldStatsQuery = "WITH uqDomain AS (SELECT DISTINCT \"Name\", \"TopLevelDomainId\" FROM \"Domains\")\nSELECT t.\"Domain\", COUNT(1)\nFROM \"TopLevelDomains\" t\nINNER JOIN uqDomain z ON t.\"Id\" = z.\"TopLevelDomainId\"\nGROUP BY t.\"Domain\" ORDER BY t.\"Domain\";";
             var recordStatsQuery = "select r.\"Type\", count(*) from \"Record\" r group by r.\"Type\" order by r.\"Type\"";
             var ownerStatsQuery =
-                "SELECT COALESCE(u.\"UserName\", '(unowned)'), COUNT(1) FROM (\nSELECT DISTINCT ON(\"Name\", \"TopLevelDomainId\") \"OwnerId\"\nFROM \"Zones\"\nORDER BY \"Name\", \"TopLevelDomainId\") d\nLEFT JOIN \"AspNetUsers\" u ON d.\"OwnerId\" = u.\"Id\"\nGROUP BY u.\"UserName\";";
+                "SELECT COALESCE(u.\"UserName\", '(unowned)'), COUNT(1) FROM (\nSELECT DISTINCT ON(\"Name\", \"TopLevelDomainId\") \"OwnerId\"\nFROM \"Domains\"\nORDER BY \"Name\", \"TopLevelDomainId\") d\nLEFT JOIN \"AspNetUsers\" u ON d.\"OwnerId\" = u.\"Id\"\nGROUP BY u.\"UserName\";";
 
             this.ViewBag.TldStats = this.GetDataset(tldStatsQuery);
             this.ViewBag.RecordStats = this.GetDataset(recordStatsQuery);

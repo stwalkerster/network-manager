@@ -77,9 +77,11 @@ namespace DnsWebApp.Controllers
         public IActionResult Zones(int item)
         {
             var zones = this.db.Zones
-                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.Owner)
-                .Include(x => x.Registrar)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.Registrar)
                 .Include(x => x.HorizonView)
                 .Include(x => x.FavouriteDomains).ThenInclude(x => x.User)
                 .Include(x => x.ZoneGroupMembers).ThenInclude(x => x.ZoneGroup)
@@ -314,9 +316,10 @@ namespace DnsWebApp.Controllers
         private dynamic GetAllZones()
         {
             var allZones = this.db.Zones
-                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.HorizonView)
-                .Select(x => new {label = x.Name + "." + x.TopLevelDomain.Domain + (x.HorizonViewId.HasValue ? $" ({x.HorizonView.ViewTag})" : String.Empty), value = x.Id.ToString(CultureInfo.InvariantCulture)})
+                .Select(x => new {label = x.Domain.Name + "." + x.Domain.TopLevelDomain.Domain + (x.HorizonViewId.HasValue ? $" ({x.HorizonView.ViewTag})" : String.Empty), value = x.Id.ToString(CultureInfo.InvariantCulture)})
                 .ToList();
             return allZones;
         }

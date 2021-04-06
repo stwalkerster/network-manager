@@ -19,15 +19,16 @@ namespace DnsWebApp.ViewComponents
 
         public IViewComponentResult Invoke()
         {
-            var favouriteDomains = this.db.FavouriteDomains
+            var favouriteZones = this.db.FavouriteDomains
                 .Include(x => x.Zone)
+                .ThenInclude(x => x.Domain)
                 .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.Zone)
                 .ThenInclude(x => x.HorizonView)
                 .Where(x => x.UserId == this.userManager.GetUserId(this.HttpContext.User))
                 .ToList();
             
-            return this.View(favouriteDomains);
+            return this.View(favouriteZones);
         }
     }
 }

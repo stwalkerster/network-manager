@@ -8,7 +8,7 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     @if (Model.Zone != null)
     {
-        <h1 class="h2">Deleting @Model.Type record from zone @(Model.Zone.Name).@Model.Zone.TopLevelDomain.Domain</h1>
+        <h1 class="h2">Deleting @Model.Type record from zone @(Model.Zone.Domain.Name).@Model.Zone.Domain.TopLevelDomain.Domain</h1>
     }
     else
     {

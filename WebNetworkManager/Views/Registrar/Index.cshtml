@@ -22,8 +22,8 @@
 <table class="table table-striped table-hover sortable">
     <thead><tr>
         <th>Registrar</th>
-        <th>Enabled zones</th>
-        <th>Disabled zones</th>
+        <th>Domains</th>
+        <th>Zones</th>
         <th>TLDs supported</th>
         <th>Allow Renewal</th>
         <th>Allow Transfer</th>
@@ -36,8 +36,8 @@
     {
         <tr>
             <th>@item.Registrar.Name</th>
-            <td>@item.Registrar.Zones.Count(x => x.Enabled)</td>
-            <td>@item.Registrar.Zones.Count(x => !x.Enabled)</td>
+            <td>@item.Registrar.Domains.Count()</td>
+            <td>@item.Registrar.Domains.Aggregate(0, (i, domain) => i + domain.Zones.Count)</td>
             <td>@item.Registrar.RegistrarTldSupports.Count()</td>
             <td>@item.Registrar.AllowRenewals</td>
             <td>@item.Registrar.AllowTransfers</td>
@@ -52,7 +52,7 @@
                     </a>
                 }
                 <a href="@Url.Action("Item", "Registrar", new {item = item.Registrar.Id})" class="btn btn-sm btn-secondary">
-                    <i class="fas fa-cubes"></i>&nbsp;View Zones
+                    <i class="fas fa-globe"></i>&nbsp;Domains
                 </a>
                 <a href="@Url.Action("TldList", "Registrar", new {item = item.Registrar.Id})" class="btn btn-sm btn-secondary">
                     <i class="fas fa-server"></i>&nbsp;TLD Support

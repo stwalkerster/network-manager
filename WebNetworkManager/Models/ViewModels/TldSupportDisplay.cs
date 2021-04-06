@@ -29,8 +29,8 @@ namespace DnsWebApp.Models.ViewModels
         public long TopLevelDomainId => this.tldSupport.TopLevelDomainId;
 
         public string Domain => this.tldSupport.TopLevelDomain.Domain;
-        public int EnabledZones => this.tldSupport.TopLevelDomain.Zones.Where(x => x.RegistrarId == this.tldSupport.RegistrarId && x.Enabled).Select(x => x.Name).Distinct().Count();
-        public int DisabledZones => this.tldSupport.TopLevelDomain.Zones.Where(x => x.RegistrarId == this.tldSupport.RegistrarId && !x.Enabled).Select(x => x.Name).Distinct().Count();
+        public int EnabledZones => -1; // FIXME: this.tldSupport.TopLevelDomain.Domains.Zones.Where(x => x.RegistrarId == this.tldSupport.RegistrarId && x.Enabled).Select(x => x.Name).Distinct().Count();
+        public int DisabledZones => -1; // FIXME: this.tldSupport.TopLevelDomain.Domains.Zones.Where(x => x.RegistrarId == this.tldSupport.RegistrarId && !x.Enabled).Select(x => x.Name).Distinct().Count();
         
         public string RenewalPrice
         {

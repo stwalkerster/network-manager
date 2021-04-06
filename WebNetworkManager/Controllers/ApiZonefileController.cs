@@ -21,9 +21,10 @@ namespace DnsWebApp.Controllers
         public IActionResult Zones(long horizon)
         {
             var zones = this.db.Zones
-                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.TopLevelDomain)
                 .Where(x => x.Enabled && x.HorizonViewId.GetValueOrDefault() == horizon)
-                .Select(x => x.Name + "." + x.TopLevelDomain.Domain + "|" +  x.Id)
+                .Select(x => x.Domain.Name + "." + x.Domain.TopLevelDomain.Domain + "|" +  x.Id)
                 .ToList();
 
             this.Response.ContentType = "text/plain";
@@ -33,9 +34,13 @@ namespace DnsWebApp.Controllers
         public IActionResult ZoneFile(int id)
         {
             var zoneObject = this.db.Zones
-                .Include(x => x.TopLevelDomain)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.Owner)
-                .Include(x => x.Registrar)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.Owner)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.Registrar)
                 .Include(x => x.Records)
                 .Include(x => x.ZoneGroupMembers)
                 .ThenInclude(x => x.ZoneGroup)
@@ -50,7 +55,7 @@ namespace DnsWebApp.Controllers
             var display = new ZoneFileDisplay
             {
                 Zone = zoneObject,
-                Fqdn = zoneObject.Name + "." + zoneObject.TopLevelDomain.Domain
+                Fqdn = zoneObject.Domain.Name + "." + zoneObject.Domain.TopLevelDomain.Domain
             };
             
             foreach (var zoneRecord in zoneObject.Records)

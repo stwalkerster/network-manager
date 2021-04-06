@@ -13,15 +13,15 @@
     <div class="btn-toolbar mb-2 mb-md-0">
         @if (User.IsInRole(RoleDefinition.StaticData))
         {
-            <a href="@Url.Action("Edit", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-secondary ml-2">
-                <i class="fas fa-pencil-alt"></i>&nbsp;Edit Registrar
-            </a>
             <a href="@Url.Action("TldAdd", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-success ml-2">
                 <i class="fas fa-plus"></i>&nbsp;Add TLD
             </a>
+            <a href="@Url.Action("Edit", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-secondary ml-2">
+                <i class="fas fa-pencil-alt"></i>&nbsp;Edit Registrar
+            </a>
         }
         <a href="@Url.Action("Item", "Registrar", new {item = ViewData["RegistrarId"]})" class="btn btn-sm btn-outline-secondary ml-2">
-            <i class="fas fa-cubes"></i>&nbsp;Zone list
+            <i class="fas fa-globe"></i>&nbsp;Domain list
         </a>
     </div>
 </div>
