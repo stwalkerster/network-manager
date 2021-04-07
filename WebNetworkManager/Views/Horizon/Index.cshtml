@@ -20,7 +20,6 @@
 
 <table class="table table-striped table-hover sortable">
     <thead><tr>
-        <th data-defaultsort="disabled"></th>
         <th>View Name</th>
         <th>View Tag</th>
         <th>Zones</th>
@@ -30,7 +29,6 @@
         @foreach (var view in Model)
         {
             <tr>
-                <td></td>
                 <td>@view.ViewName</td>
                 <td><partial name="SplitHorizonTag" model="view"/></td>
                 <td>@view.Zones.Count</td>

@@ -21,7 +21,6 @@
 
 <table class="table table-striped table-hover sortable">
     <thead><tr>
-        <th data-defaultsort="disabled"></th>
         <th>Registrar</th>
         <th>Enabled zones</th>
         <th>Disabled zones</th>
@@ -36,7 +35,6 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td></td>
             <th>@item.Registrar.Name</th>
             <td>@item.Registrar.Zones.Count(x => x.Enabled)</td>
             <td>@item.Registrar.Zones.Count(x => !x.Enabled)</td>
