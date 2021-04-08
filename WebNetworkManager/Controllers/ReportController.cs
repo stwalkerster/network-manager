@@ -32,12 +32,12 @@ namespace DnsWebApp.Controllers
 
         public IActionResult RenewalCosts()
         {
-            var results = new List<ReportResult> {this.GetSqlResult("SELECT * FROM \"Zones\";", "zones")};
+            var results = new List<ReportResult> {this.GetRenewalAnalysis()};
 
             return this.View(results);
         }
 
-        /*
+        
         private ReportResult GetRenewalAnalysis()
         {
             var baseCurrency = this.db.Currencies.FirstOrDefault(
@@ -50,7 +50,7 @@ namespace DnsWebApp.Controllers
                 .Select(x => new TldSupportDisplay(x, baseCurrency, this.configuration.GetValue<decimal>("Vat")))
                 .ToDictionary(x => x.RegistrarId + "|" + x.TopLevelDomainId);
 
-            var zones = this.db.Zones
+            var domains = this.db.Domains
                 .Include(x => x.Owner)
                 .Include(x => x.TopLevelDomain)
                 .Include(x => x.Registrar)
@@ -65,7 +65,7 @@ namespace DnsWebApp.Controllers
             var rows = new List<string[]>();
             var rowsDataValues = new List<string[]>();
             
-            foreach (var zone in zones)
+            foreach (var zone in domains)
             {
                 var rowData = new string[columnHeaders.Count];
                 var rowDataValues = new string[columnHeaders.Count];
@@ -187,8 +187,7 @@ namespace DnsWebApp.Controllers
 
             return new ReportResult("Transfer/Renewal Recommendations", columnHeaders, rows, rowsDataValues);
         }
-        */
-
+        
         private ReportResult GetSqlResult(string query, string title)
         {
             using (var command = this.db.Database.GetDbConnection().CreateCommand())
