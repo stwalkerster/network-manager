@@ -70,7 +70,7 @@ namespace DnsWebApp.Controllers
                 var rowData = new string[columnHeaders.Count];
                 var rowDataValues = new string[columnHeaders.Count];
 
-                rowData[0] = zone.Owner.UserName;
+                rowData[0] = zone.Owner?.UserName;
                 rowData[1] = zone.TopLevelDomain.Domain;
                 rowData[2] = $"{zone.Name}.{zone.TopLevelDomain.Domain}";
                 rowData[3] = zone.Registrar.Name;
