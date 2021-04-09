@@ -68,7 +68,7 @@ namespace DnsWebApp
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if (env.IsDevelopment()) 
+            if (env.IsDevelopment() || env.IsStaging()) 
             {
                 app.UseDeveloperExceptionPage();
             }
