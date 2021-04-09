@@ -9,7 +9,18 @@
       <option name="maximumNumberOfBuilds" value="1" />
     </options>
     <parameters />
-    <build-runners />
+    <build-runners>
+      <runner id="RUNNER_5" name="" type="DockerCommand">
+        <parameters>
+          <param name="command.args" value="docker.scimonshouse.net/webnetworkmanager:%dep.NetworkOperation_NetworkManager_BuildNetworkManager.build.number% docker.scimonshouse.net/webnetworkmanager:production" />
+          <param name="docker.command.type" value="other" />
+          <param name="docker.push.remove.image" value="true" />
+          <param name="docker.sub.command" value="tag" />
+          <param name="dockerfile.source" value="PATH" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
     <vcs-settings />
     <requirements />
     <build-triggers />
