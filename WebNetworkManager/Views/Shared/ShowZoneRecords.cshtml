@@ -19,7 +19,7 @@
     <table class="table table-striped table-hover sortable">
         <thead>
         <tr>
-            <th data-defaultsort="disabled"></th><th>Name</th><th>Nameserver</th><th>TTL</th><th data-defaultsort="disabled"></th>
+            <th data-defaultsort="disabled"></th><th data-defaultsort="asc">Name</th><th>Nameserver</th><th>TTL</th><th data-defaultsort="disabled"></th>
         </tr>
         </thead>
         <tbody>
@@ -27,7 +27,7 @@
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Nameserver</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
@@ -41,7 +41,7 @@
         {
             <tr>
                 <td></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Nameserver</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
@@ -78,7 +78,7 @@ else
     <table class="table table-striped table-hover sortable">
         <thead>
         <tr>
-            <th data-defaultsort="disabled"></th><th>Name</th><th>Flags</th><th>Tag</th><th>Value</th><th>TTL</th><th data-defaultsort="disabled"></th>
+            <th data-defaultsort="disabled"></th><th data-defaultsort="asc">Name</th><th>Flags</th><th>Tag</th><th>Value</th><th>TTL</th><th data-defaultsort="disabled"></th>
         </tr>
         </thead>
         <tbody>
@@ -86,7 +86,7 @@ else
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Flag</td>
                 <td>@r.Tag</td>
                 <td>@r.Value</td>
@@ -102,7 +102,7 @@ else
         {
             <tr>
                 <td></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Flag</td>
                 <td>@r.Tag</td>
                 <td>@r.Value</td>
@@ -141,7 +141,7 @@ else
     <table class="table table-striped table-hover sortable">
         <thead>
         <tr>
-            <th data-defaultsort="disabled"></th><th>Name</th><th>Preference</th><th>Mail Server</th><th>TTL</th><th data-defaultsort="disabled"></th>
+            <th data-defaultsort="disabled"></th><th data-defaultsort="asc">Name</th><th>Preference</th><th>Mail Server</th><th>TTL</th><th data-defaultsort="disabled"></th>
         </tr>
         </thead>
         <tbody>
@@ -149,7 +149,7 @@ else
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Preference</td>
                 <td>@r.MailServer</td>
                 <partial model="r" name="TTLColumn"/>
@@ -164,7 +164,7 @@ else
         {
             <tr>
                 <td class="table-button-cell"></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Preference</td>
                 <td>@r.MailServer</td>
                 <partial model="r" name="TTLColumn"/>
@@ -202,7 +202,7 @@ else
     <table class="table table-striped table-hover sortable">
         <thead>
         <tr>
-            <th data-defaultsort="disabled"></th><th>Name</th><th>Type</th><th>Target</th><th>TTL</th><th data-defaultsort="disabled"></th>
+            <th data-defaultsort="disabled"></th><th data-defaultsort="asc">Name</th><th>Type</th><th>Target</th><th>TTL</th><th data-defaultsort="disabled"></th>
         </tr>
         </thead>
         <tbody>
@@ -210,7 +210,7 @@ else
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Type</td>
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
@@ -225,7 +225,7 @@ else
         {
             <tr>
                 <td></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Type</td>
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
@@ -263,7 +263,7 @@ else
     <table class="table table-striped table-hover sortable">
         <thead>
         <tr>
-            <th data-defaultsort="disabled"></th><th>Name</th><th>Value</th><th>TTL</th><th data-defaultsort="disabled"></th>
+            <th data-defaultsort="disabled"></th><th data-defaultsort="asc">Name</th><th>Value</th><th>TTL</th><th data-defaultsort="disabled"></th>
         </tr>
         </thead>
         <tbody>
@@ -271,7 +271,7 @@ else
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
@@ -285,7 +285,7 @@ else
         {
             <tr>
                 <td></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Value</td>
                 <partial model="r" name="TTLColumn"/>
                 <td class="table-button-cell">
@@ -322,7 +322,7 @@ else
     <table class="table table-striped table-hover sortable">
         <thead>
         <tr>
-            <th data-defaultsort="disabled"></th><th>Name</th><th>Protocol</th><th>Service</th><th>Priority</th><th>Weight</th><th>Port</th><th>Target</th><th>TTL</th><th data-defaultsort="disabled"></th>
+            <th data-defaultsort="disabled"></th><th data-defaultsort="asc">Name</th><th>Protocol</th><th>Service</th><th>Priority</th><th>Weight</th><th>Port</th><th>Target</th><th>TTL</th><th data-defaultsort="disabled"></th>
         </tr>
         </thead>
         <tbody>
@@ -330,7 +330,7 @@ else
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Protocol</td>
                 <td>@r.Service</td>
                 <td>@r.Priority</td>
@@ -349,7 +349,7 @@ else
         {
             <tr>
                 <td></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Protocol</td>
                 <td>@r.Service</td>
                 <td>@r.Priority</td>
@@ -391,7 +391,7 @@ else
     <table class="table table-striped table-hover sortable">
         <thead>
         <tr>
-            <th data-defaultsort="disabled"></th><th>Name</th><th>Algorithm</th><th>Type</th><th>Fingerprint</th><th>TTL</th><th data-defaultsort="disabled"></th>
+            <th data-defaultsort="disabled"></th><th data-defaultsort="asc">Name</th><th>Algorithm</th><th>Type</th><th>Fingerprint</th><th>TTL</th><th data-defaultsort="disabled"></th>
         </tr>
         </thead>
         <tbody>
@@ -399,7 +399,7 @@ else
         {
             <tr class="text-muted">
                 <td class="table-min-width"><i class="text-info fas fa-info"></i></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Algorithm</td>
                 <td>@r.FingerprintType</td>
                 <td>@r.Fingerprint</td>
@@ -415,7 +415,7 @@ else
         {
             <tr>
                 <td></td>
-                <td>@r.Name</td>
+                <td data-value="@Format.AsSortableDomain(r.Name)">@r.Name</td>
                 <td>@r.Algorithm</td>
                 <td>@r.FingerprintType</td>
                 <td>@r.Fingerprint</td>

@@ -1,6 +1,7 @@
 namespace DnsWebApp.Services
 {
     using System;
+    using System.Linq;
 
     public class FormattingService
     {
@@ -60,6 +61,16 @@ namespace DnsWebApp.Services
             }
 
             return seconds + "s";
+        }
+
+        public string AsSortableDomain(string domain)
+        {
+            if (string.IsNullOrWhiteSpace(domain))
+            {
+                return string.Empty;
+            }
+            
+            return string.Join('.', domain.Split('.').Reverse());
         }
     }
 }
