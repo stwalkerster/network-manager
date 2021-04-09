@@ -47,7 +47,6 @@ docker.scimonshouse.net/webnetworkmanager:%build.number%]]></param>
           <param name="docker.command.type" value="push" />
           <param name="docker.image.namesAndTags"><![CDATA[docker.scimonshouse.net/webnetworkmanager:%imagetag%
 docker.scimonshouse.net/webnetworkmanager:%build.number%]]></param>
-          <param name="docker.push.remove.image" value="true" />
           <param name="dockerfile.source" value="PATH" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
