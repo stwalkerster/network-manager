@@ -55,7 +55,7 @@ namespace DnsWebApp.Controllers
                 .Include(x => x.TopLevelDomain)
                 .Include(x => x.Registrar)
                 .DistinctBy(x => new {x.TopLevelDomainId, x.Name})
-                .Where(x => x.TopLevelDomain.Domain != "arpa")
+                .Where(x => x.TopLevelDomain.Domain != "arpa" && !x.Placeholder)
                 .ToList();
 
             var columnHeaders = new List<string>
@@ -73,42 +73,56 @@ namespace DnsWebApp.Controllers
                 rowData[0] = zone.Owner?.UserName;
                 rowData[1] = zone.TopLevelDomain.Domain;
                 rowData[2] = $"{zone.Name}.{zone.TopLevelDomain.Domain}";
-                rowData[3] = zone.Registrar.Name;
+                rowData[3] = zone.Registrar?.Name;
 
                 var renewalPrice = decimal.MaxValue;
-                var renewalObject = tldData[zone.RegistrarId + "|" + zone.TopLevelDomainId];
-                if (!zone.Registrar.AllowRenewals)
+                TldSupportDisplay renewalObject;
+                
+                if (zone.Registrar != null)
                 {
-                    if (renewalObject.RenewalPriceInBaseCurrency.HasValue)
+                    renewalObject = tldData[zone.RegistrarId + "|" + zone.TopLevelDomainId];
+
+                    if (!zone.Registrar.AllowRenewals)
                     {
-                        renewalPrice = renewalObject.RenewalPriceInBaseCurrency.Value;
-                        rowDataValues[4] = renewalPrice.ToString(CultureInfo.InvariantCulture);
-                        rowData[4] = "Prohibited (" + renewalObject.RealRenewalPrice + ")";
+                        if (renewalObject.RenewalPriceInBaseCurrency.HasValue)
+                        {
+                            renewalPrice = renewalObject.RenewalPriceInBaseCurrency.Value;
+                            rowDataValues[4] = renewalPrice.ToString(CultureInfo.InvariantCulture);
+                            rowData[4] = "Prohibited (" + renewalObject.RealRenewalPrice + ")";
+                        }
+                        else
+                        {
+                            rowData[4] = "Prohibited";
+                        }
                     }
                     else
                     {
-                        rowData[4] = "Prohibited";
+                        if (renewalObject.RenewalPriceInBaseCurrency.HasValue)
+                        {
+                            renewalPrice = renewalObject.RenewalPriceInBaseCurrency.Value;
+                            rowDataValues[4] = renewalPrice.ToString(CultureInfo.InvariantCulture);
+                            rowData[4] = renewalObject.RealRenewalPrice;
+                        }
+                        else
+                        {
+                            rowData[4] = "Unavailable";
+                        }
                     }
                 }
                 else
                 {
-                    if (renewalObject.RenewalPriceInBaseCurrency.HasValue)
-                    {
-                        renewalPrice = renewalObject.RenewalPriceInBaseCurrency.Value;
-                        rowDataValues[4] = renewalPrice.ToString(CultureInfo.InvariantCulture);
-                        rowData[4] = renewalObject.RealRenewalPrice;
-                    }
-                    else
-                    {
-                        rowData[4] = "Unavailable";
-                    }
+                    rowData[3] = "Unknown";
+                    rowData[7] = "Configure domain registrar";
+                    rows.Add(rowData);
+                    rowsDataValues.Add(rowDataValues);
+                    continue;
                 }
-                
+
                 var transferPrice = decimal.MaxValue;
                 var tldSupportList = tldData.Values
                     .Where(x => x.TopLevelDomainId == zone.TopLevelDomainId)
                     .Where(x => x.RegistrarId != zone.RegistrarId)
-                    .Where(x => x.Registrar.AllowTransfers)
+                    .Where(x => x.Registrar?.AllowTransfers == true)
                     .Where(x => x.TransferPriceInBaseCurrency.HasValue)
                     .ToList();
                 
