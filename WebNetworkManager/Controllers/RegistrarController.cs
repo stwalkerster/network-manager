@@ -200,6 +200,7 @@ namespace DnsWebApp.Controllers
             var supports = this.db.RegistrarTldSupport
                 .Include(x => x.TopLevelDomain)
                 .ThenInclude(x => x.Domains)
+                .ThenInclude(x => x.Zones)
                 .Include(x => x.Registrar)
                 .ThenInclude(x => x.Currency)
                 .Where(x => x.RegistrarId == item)

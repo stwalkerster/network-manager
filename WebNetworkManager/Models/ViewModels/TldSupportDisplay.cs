@@ -1,6 +1,7 @@
 namespace DnsWebApp.Models.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using DnsWebApp.Models.Database;
@@ -29,8 +30,29 @@ namespace DnsWebApp.Models.ViewModels
         public long TopLevelDomainId => this.tldSupport.TopLevelDomainId;
 
         public string Domain => this.tldSupport.TopLevelDomain.Domain;
-        public int EnabledZones => -1; // FIXME: this.tldSupport.TopLevelDomain.Domains.Zones.Where(x => x.RegistrarId == this.tldSupport.RegistrarId && x.Enabled).Select(x => x.Name).Distinct().Count();
-        public int DisabledZones => -1; // FIXME: this.tldSupport.TopLevelDomain.Domains.Zones.Where(x => x.RegistrarId == this.tldSupport.RegistrarId && !x.Enabled).Select(x => x.Name).Distinct().Count();
+        public int EnabledZones => this.tldSupport.TopLevelDomain.Domains
+            .Where(x => x.RegistrarId == this.tldSupport.RegistrarId)
+            .Aggregate(new List<Zone>(), (zones, domain) =>
+            {
+                zones.AddRange(domain.Zones);
+                return zones;
+            })
+            .Where(x=> x.Enabled)
+            .Select(x => x.Domain.Name).Count();
+        
+        public int DisabledZones => this.tldSupport.TopLevelDomain.Domains
+            .Where(x => x.RegistrarId == this.tldSupport.RegistrarId)
+            .Aggregate(new List<Zone>(), (zones, domain) =>
+            {
+                zones.AddRange(domain.Zones);
+                return zones;
+            })
+            .Where(x=> !x.Enabled)
+            .Select(x => x.Domain.Name).Count();     
+        
+        public int Domains => this.tldSupport.TopLevelDomain.Domains
+            .Where(x => x.RegistrarId == this.tldSupport.RegistrarId)
+            .Distinct().Count();
         
         public string RenewalPrice
         {
