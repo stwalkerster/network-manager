@@ -32,6 +32,14 @@
     <vcs-settings />
     <requirements />
     <build-triggers />
+    <build-extensions>
+      <extension id="DockerSupport" type="DockerSupport">
+        <parameters>
+          <param name="login2registry" value="PROJECT_EXT_18" />
+          <param name="loginCheckbox" value="on" />
+        </parameters>
+      </extension>
+    </build-extensions>
     <dependencies>
       <depend-on sourceBuildTypeId="NetworkOperation_NetworkManager_BuildNetworkManager">
         <options>
