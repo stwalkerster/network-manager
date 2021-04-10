@@ -15,13 +15,11 @@ namespace DnsWebApp.Controllers
 
     public class ZoneController : Controller
     {
-        private readonly WhoisService whoisService;
         private readonly DataContext db;
         private readonly UserManager<IdentityUser> userManager;
 
-        public ZoneController(WhoisService whoisService, DataContext db, UserManager<IdentityUser> userManager)
+        public ZoneController(DataContext db, UserManager<IdentityUser> userManager)
         {
-            this.whoisService = whoisService;
             this.db = db;
             this.userManager = userManager;
         }
@@ -189,6 +187,10 @@ namespace DnsWebApp.Controllers
             var zoneCommand = new ZoneCommand();
             zoneCommand.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
             zoneCommand.HorizonViews = this.db.HorizonViews.Select(x => new SelectListItem(x.ViewName, x.Id.ToString())).ToList();
+            zoneCommand.Domains = this.db.Domains
+                .Include(x => x.TopLevelDomain)
+                .Select(x => new SelectListItem(x.Name + "." + x.TopLevelDomain.Domain, x.Id.ToString()))
+                .ToList();
 
             zoneCommand.Refresh = zoneCommand.Retry = zoneCommand.TimeToLive = zoneCommand.DefaultTimeToLive = 300;
             zoneCommand.Expire = 7*86400;
@@ -205,7 +207,10 @@ namespace DnsWebApp.Controllers
             {
                 editedZone.Owners = this.db.Users.Select(x => new SelectListItem(x.UserName, x.Id.ToString())).ToList();
                 editedZone.HorizonViews = this.db.HorizonViews.Select(x => new SelectListItem(x.ViewName, x.Id.ToString())).ToList();
-
+                editedZone.Domains = this.db.Domains
+                    .Include(x => x.TopLevelDomain)
+                    .Select(x => new SelectListItem(x.Name + "." + x.TopLevelDomain.Domain, x.Id.ToString()))
+                    .ToList();
                 return this.View(editedZone);
             }
 

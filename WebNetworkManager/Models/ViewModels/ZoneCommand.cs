@@ -15,6 +15,7 @@ namespace DnsWebApp.Models.ViewModels
         
         [Required]
         [Display(Name = "Domain")]
+        [NotEqual(0)]
         public long Domain { get; set; }
         
         [Required]
@@ -45,11 +46,6 @@ namespace DnsWebApp.Models.ViewModels
         [Required]
         public bool Enabled { get; set; }
         
-        [Required]
-        [Display(Name = "Top level domain")]
-        [NotEqual(0)]
-        public long TopLevelDomain { get; set; }
-
         public string Owner { get; set; }
         
         [Display(Name = "Split-horizon view")]
@@ -57,6 +53,6 @@ namespace DnsWebApp.Models.ViewModels
 
         public List<SelectListItem> HorizonViews { get; set; }
         public List<SelectListItem> Owners { get; set; }
-        
+        public List<SelectListItem> Domains { get; set; }
     }
 }
