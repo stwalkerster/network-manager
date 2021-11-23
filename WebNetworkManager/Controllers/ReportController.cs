@@ -123,6 +123,7 @@ namespace DnsWebApp.Controllers
                     .Where(x => x.TopLevelDomainId == domain.TopLevelDomainId)
                     .Where(x => x.RegistrarId != domain.RegistrarId)
                     .Where(x => x.Registrar?.AllowTransfers == true)
+                    .Where(x => x.AllowInboundTransfer)
                     .Where(x => x.TransferPriceInBaseCurrency.HasValue)
                     .ToList();
                 

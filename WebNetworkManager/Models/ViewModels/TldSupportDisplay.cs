@@ -29,6 +29,8 @@ namespace DnsWebApp.Models.ViewModels
         public long Id => this.tldSupport.Id;
         public long TopLevelDomainId => this.tldSupport.TopLevelDomainId;
 
+        public bool AllowInboundTransfer => this.tldSupport.AllowInboundTransfer;
+
         public string Domain => this.tldSupport.TopLevelDomain.Domain;
         public int EnabledZones => this.tldSupport.TopLevelDomain.Domains
             .Where(x => x.RegistrarId == this.tldSupport.RegistrarId)

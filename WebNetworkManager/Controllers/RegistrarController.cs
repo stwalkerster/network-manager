@@ -298,6 +298,7 @@ namespace DnsWebApp.Controllers
             obj.RenewalPriceUpdated = DateTime.Now;
             obj.TransferIncludesRenewal = command.TransferIncludesRenewal;
             obj.PrivacyIncluded = command.PrivacyIncluded;
+            obj.AllowInboundTransfer = command.AllowInboundTransfer;
 
             this.db.SaveChanges();
             

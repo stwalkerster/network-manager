@@ -37,5 +37,9 @@ namespace DnsWebApp.Models.Database
         
         [Display(Name = "Last price update")]
         public DateTime? RenewalPriceUpdated { get; set; }
+        
+        [Required]
+        [Display(Name = "Allow inbound transfer?")]
+        public bool AllowInboundTransfer { get; set; }
     }
 }
