@@ -65,24 +65,24 @@ namespace DnsWebApp.Controllers
             var rows = new List<string[]>();
             var rowsDataValues = new List<string[]>();
             
-            foreach (var zone in domains)
+            foreach (var domain in domains)
             {
                 var rowData = new string[columnHeaders.Count];
                 var rowDataValues = new string[columnHeaders.Count];
 
-                rowData[0] = zone.Owner?.UserName;
-                rowData[1] = zone.TopLevelDomain.Domain;
-                rowData[2] = $"{zone.Name}.{zone.TopLevelDomain.Domain}";
-                rowData[3] = zone.Registrar?.Name;
+                rowData[0] = domain.Owner?.UserName;
+                rowData[1] = domain.TopLevelDomain.Domain;
+                rowData[2] = $"{domain.Name}.{domain.TopLevelDomain.Domain}";
+                rowData[3] = domain.Registrar?.Name;
 
                 var renewalPrice = decimal.MaxValue;
                 TldSupportDisplay renewalObject;
                 
-                if (zone.Registrar != null)
+                if (domain.Registrar != null)
                 {
-                    renewalObject = tldData[zone.RegistrarId + "|" + zone.TopLevelDomainId];
+                    renewalObject = tldData[domain.RegistrarId + "|" + domain.TopLevelDomainId];
 
-                    if (!zone.Registrar.AllowRenewals)
+                    if (!domain.Registrar.AllowRenewals)
                     {
                         if (renewalObject.RenewalPriceInBaseCurrency.HasValue)
                         {
@@ -120,8 +120,8 @@ namespace DnsWebApp.Controllers
 
                 var transferPrice = decimal.MaxValue;
                 var tldSupportList = tldData.Values
-                    .Where(x => x.TopLevelDomainId == zone.TopLevelDomainId)
-                    .Where(x => x.RegistrarId != zone.RegistrarId)
+                    .Where(x => x.TopLevelDomainId == domain.TopLevelDomainId)
+                    .Where(x => x.RegistrarId != domain.RegistrarId)
                     .Where(x => x.Registrar?.AllowTransfers == true)
                     .Where(x => x.TransferPriceInBaseCurrency.HasValue)
                     .ToList();
