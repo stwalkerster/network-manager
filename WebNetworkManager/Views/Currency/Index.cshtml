@@ -34,7 +34,7 @@
                 <td></td>
                 <td>@view.Name</td>
                 <td>@view.Code</td>
-                <td>@view.ExchangeRate</td>
+                <td>@(string.Format(view.Symbol, view.ExchangeRate.ToString()))</td>
                 <td>@view.ExchangeRateUpdated</td>
                 <td class="table-button-cell">
                     @if (User.IsInRole(RoleDefinition.StaticData))
