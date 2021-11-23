@@ -73,6 +73,16 @@ docker.scimonshouse.net/webnetworkmanager:%build.number%]]></param>
           <param name="loginCheckbox" value="on" />
         </parameters>
       </extension>
+      <extension id="BUILD_EXT_23" type="commit-status-publisher">
+        <parameters>
+          <param name="github_authentication_type" value="token" />
+          <param name="github_host" value="https://api.github.com" />
+          <param name="github_oauth_user" value="stwalkerster" />
+          <param name="publisherId" value="githubStatusPublisher" />
+          <param name="secure:github_access_token" value="7cfaf42f-9506-4507-a647-21f95820acce" />
+          <param name="vcsRootId" value="NetworkOperation_LdapDnsManager" />
+        </parameters>
+      </extension>
     </build-extensions>
     <cleanup />
   </settings>
