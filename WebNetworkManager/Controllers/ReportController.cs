@@ -60,7 +60,7 @@ namespace DnsWebApp.Controllers
 
             var columnHeaders = new List<string>
             {
-                "Owner", "TLD", "Domain", "Current registrar", "Renewal price", "Transfer price", "Renewal post transfer", "Recommendation", "Saving"
+                "Owner", "TLD", "Domain", "Current registrar", "Renewal price", "Transfer price", "Renewal post transfer", "Recommendation", "Saving", "Expiry date"
             };
             var rows = new List<string[]>();
             var rowsDataValues = new List<string[]>();
@@ -193,7 +193,9 @@ namespace DnsWebApp.Controllers
                 {
                     rowData[6] = "Unknown"; 
                 }
-                
+
+                rowData[9] = domain.RegistrationExpiry?.ToString("u");
+                rowDataValues[9] = domain.RegistrationExpiry?.ToString("u");
                 
                 rows.Add(rowData);
                 rowsDataValues.Add(rowDataValues);
