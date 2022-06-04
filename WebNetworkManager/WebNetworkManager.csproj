@@ -4,7 +4,7 @@
         <Company>Simon Walker</Company>
         <AssemblyName>WebNetworkManager</AssemblyName>
         <RootNamespace>DnsWebApp</RootNamespace>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -60,17 +60,17 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2">
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.1.0" />
       <PackageReference Include="morelinq" Version="3.3.2" />
-      <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2" />
+      <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4" />
     </ItemGroup>
 
     <ItemGroup>

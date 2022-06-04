@@ -24,7 +24,7 @@ namespace DnsWebApp.Services
         private MimeMessage CreateMimeMessage(EmailMessage emailMessage)
         {
             var mimeMessage = new MimeMessage();
-            mimeMessage.From.Add(new MailboxAddress(config.From));
+            mimeMessage.From.Add(new MailboxAddress("Network Manager", config.From));
             mimeMessage.To.AddRange(emailMessage.To);
             mimeMessage.Subject = emailMessage.Subject;
             mimeMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = emailMessage.Content };

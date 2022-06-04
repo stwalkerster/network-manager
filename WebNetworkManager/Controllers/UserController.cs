@@ -368,7 +368,7 @@ namespace DnsWebApp.Controllers
                 new {token, id = user.Id},
                 this.Request.Scheme);
 
-            this.emailSender.Send(new EmailMessage(new[] {user.Email}, "Email address confirmation", confirmationLink));
+            this.emailSender.Send(new EmailMessage(user.Email, user.UserName, "Email address confirmation", confirmationLink));
 
             return this.RedirectToAction("Index");
         }
