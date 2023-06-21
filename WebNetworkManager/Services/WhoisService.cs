@@ -96,7 +96,7 @@ namespace DnsWebApp.Services
 
                         if (whoisResult.Expiry.HasValue)
                         {
-                            domain.RegistrationExpiry = whoisResult.Expiry;
+                            domain.RegistrationExpiry = whoisResult.Expiry.Value.ToUniversalTime();
                             domain.WhoisLastUpdated = DateTime.UtcNow;
                             changed = true;
                         }
