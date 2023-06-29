@@ -7,6 +7,7 @@ namespace DnsWebApp.Models
         AAAA = 28,
         CAA = 257,
         CNAME = 5,
+        DHCID = 49,
         MX = 15,
         NS = 2,
         PTR = 12,
