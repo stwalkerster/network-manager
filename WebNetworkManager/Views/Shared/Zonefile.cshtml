@@ -15,7 +15,7 @@ $TTL    @Model.Zone.DefaultTimeToLive
 ; Remaining records
 @foreach (var r in Model.Records.OrderBy(x => string.Join('.', (x.Name ?? "@").Split('.').Reverse())).ThenBy(x => x.Type.ToString()))
 {
-    @(r.Name != null ? r.Name.PadRight(Model.NameMinWidth) : "@".PadRight(Model.NameMinWidth)) @(r.TimeToLive != null ? r.TimeToLive.ToString().PadRight(Model.TtlMinWidth) : string.Empty.PadRight(Model.TtlMinWidth)) @r.Class.ToString().PadRight(3) @r.Type.ToString().PadRight(8) @Html.Raw(r.Value)
+    @(r.Name != null ? r.Name.PadRight(Model.NameMinWidth) : "@".PadRight(Model.NameMinWidth)) @(r.TimeToLive != null ? r.TimeToLive.ToString().PadRight(Model.TtlMinWidth) : string.Empty.PadRight(Model.TtlMinWidth)) @r.Class.ToString().PadRight(Model.ClassMinWidth) @r.Type.ToString().PadRight(Model.TypeMinWidth) @Html.Raw(Model.FormatValue(r))
 @:
 }
 ; End of zone file
