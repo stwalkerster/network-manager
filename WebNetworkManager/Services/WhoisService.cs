@@ -75,13 +75,19 @@ namespace DnsWebApp.Services
         public void UpdateExpiryAttributes(IEnumerable<Domain> domains)
         {
             bool changed = false;
+
+            int queriesDone = 0;
             
-            foreach (var domain in domains)
+            foreach (var domain in domains.Where(x => !x.Placeholder)
+                         .OrderBy(x => !x.RegistrationExpiry.HasValue || !x.WhoisLastUpdated.HasValue ? 1 : 2)
+                         .ThenBy(x => (DateTime.UtcNow - x.RegistrationExpiry.Value).TotalDays < 14 ? 1 : 2 )
+                         .ThenBy(x => x.WhoisLastUpdated.GetValueOrDefault(DateTime.MinValue))
+                     )
             {
                 try
                 {
                     // update if:
-                    //   * no exiry date set
+                    //   * no expiry date set
                     //   * not refreshed
                     //   * < 14 days to expiry, refresh every 6 hours
                     //   * every 7 days.
@@ -93,6 +99,7 @@ namespace DnsWebApp.Services
                     )
                     {
                         var whoisResult = this.GetWhoisData(domain);
+                        queriesDone++;
 
                         if (whoisResult.Expiry.HasValue)
                         {
@@ -107,6 +114,11 @@ namespace DnsWebApp.Services
                     this.logger.LogError(
                         ex,
                         "Exception encountered updating whois data for domain {Id}:{Name}", domain.Id, domain.Name);
+                }
+
+                if (queriesDone >= 5)
+                {
+                    break;
                 }
             }
 
