@@ -701,5 +701,62 @@ namespace DnsWebApp.Controllers
 
         
         #endregion
+
+        [HttpGet]
+        [Route("/zone/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
+        public IActionResult Delete(long item)
+        {
+            var obj = this.db.Zones
+                .Include(x => x.Records)
+                .Include(x => x.ZoneGroupMembers)
+                .ThenInclude(x => x.ZoneGroup)
+                .Include(x => x.Domain)
+                .ThenInclude(x => x.TopLevelDomain)
+                .Include(x => x.HorizonView)
+                .FirstOrDefault(x => x.Id == item);
+            
+            if (obj == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+            
+            return this.View(obj);
+        }
+        
+        [HttpPost]
+        [Route("/zone/{item:int}/delete")]
+        [Authorize(Roles = RoleDefinition.DnsManager)]
+        public IActionResult Delete(int item, TopLevelDomain record)
+        {
+            var obj = this.db.Zones
+                .Include(x => x.Records)
+                .FirstOrDefault(x => x.Id == item);
+
+            var zgm = this.db.ZoneGroups
+                .Include(x => x.ZoneGroupMembers)
+                .Where(x => x.ZoneGroupMembers.Any(y => y.ZoneId == obj.Id));
+            
+            if (obj == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            if (obj.Records.Any())
+            {
+                return this.RedirectToAction("Index");  
+            }
+            
+            if (zgm.Any())
+            {
+                return this.RedirectToAction("Index");  
+            }
+          
+            this.db.Zones.Remove(obj);
+            this.db.SaveChanges();
+            
+            return this.RedirectToAction("Index");
+        }
+
     }
 }

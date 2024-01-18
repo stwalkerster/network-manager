@@ -1,0 +1,40 @@
+@model DnsWebApp.Models.Database.Zone
+
+@{
+    ViewBag.Title = "Delete zone";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Deleting @(Model.Domain.Name).@Model.Domain.TopLevelDomain.Domain zone</h1>
+</div>
+
+@if (Model.Records.Any())
+{
+    <div class="alert alert-danger" role="alert">
+        This zone has records underneath it. As such, you cannot delete this zone until you have removed all records.
+    </div>
+}
+else if (Model.ZoneGroupMembers.Any())
+{
+    <div class="alert alert-danger" role="alert">
+        This zone is a member of the following zone groups. You cannot delete this zone until it is removed from all zone groups.
+        <ul>
+            @foreach (var zg in Model.ZoneGroupMembers)
+            {
+                <li><a asp-controller="ZoneGroup" asp-action="EditZoneGroup" asp-route-id="@zg.ZoneGroupId">@zg.ZoneGroup.Name</a></li>
+            }
+        </ul>
+    </div>
+}
+else
+{
+    <p class="lead text-danger">You are about to delete the <code>@(Model.Domain.Name).@Model.Domain.TopLevelDomain.Domain</code> <partial name="SplitHorizonTag" model="Model.HorizonView"/> zone</p>
+    
+    <p>Are you sure you want to do this?</p>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id"/>
+        <button class="btn btn-danger" type="submit">Yes, delete this zone</button>
+    </form>
+}
