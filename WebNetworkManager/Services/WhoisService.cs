@@ -80,7 +80,7 @@ namespace DnsWebApp.Services
             
             foreach (var domain in domains.Where(x => !x.Placeholder)
                          .OrderBy(x => !x.RegistrationExpiry.HasValue || !x.WhoisLastUpdated.HasValue ? 1 : 2)
-                         .ThenBy(x => (DateTime.UtcNow - x.RegistrationExpiry.Value).TotalDays < 14 ? 1 : 2 )
+                         .ThenBy(x => (DateTime.UtcNow - x.RegistrationExpiry.GetValueOrDefault(DateTime.MinValue)).TotalDays < 14 ? 1 : 2 )
                          .ThenBy(x => x.WhoisLastUpdated.GetValueOrDefault(DateTime.MinValue))
                      )
             {
