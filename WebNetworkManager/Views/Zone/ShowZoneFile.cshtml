@@ -7,7 +7,7 @@
 
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-    <h1 class="h2">Zone file for @Model.Fqdn</h1>
+    <h1 class="h2">Zone file for @Model.Fqdn<small><partial name="ReverseDnsCidr" model="@Model.Fqdn"/></small></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         @if (User.IsInRole(RoleDefinition.DnsManager))
         {

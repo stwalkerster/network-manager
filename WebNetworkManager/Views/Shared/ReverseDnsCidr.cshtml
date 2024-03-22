@@ -1,0 +1,5 @@
+@model string
+@if (Model != null && Model.EndsWith(".arpa"))
+{
+    <span>(reverse DNS)</span>
+}
