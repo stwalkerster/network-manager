@@ -12,7 +12,7 @@ EXPOSE 8080
 ENV ASPNETCORE_ENVIRONMENT=Production \
     ASPNETCORE_URLS="http://+:8080" \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
-COPY --from=build /opt/bin/Debug/net8.0/publish/ ./
+COPY --from=build /opt/bin/Release/net8.0/publish/ ./
 RUN apk add curl && chmod +x docker-entrypoint.sh
 
 HEALTHCHECK CMD curl --insecure -Lfs http://localhost:8080/api/healthcheck || exit 1
