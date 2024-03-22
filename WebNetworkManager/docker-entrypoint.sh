@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-set -x
 set -e 
 
 if [ -d /run/secrets ]; then
