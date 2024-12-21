@@ -68,7 +68,7 @@ namespace DnsWebApp.Controllers
             domain.OwnerId = command.Owner;
             domain.RegistrarId = command.Registrar;
             domain.LastUpdated = DateTime.UtcNow;
-            domain.RegistrationExpiry = command.RegistrationExpiry;
+            domain.RegistrationExpiry = command.RegistrationExpiry?.ToUniversalTime();
             domain.WhoisLastUpdated = null;
 
             if (domain.Placeholder)
@@ -131,7 +131,7 @@ namespace DnsWebApp.Controllers
             domainCommand.Name = obj.Name + "." + obj.TopLevelDomain.Domain;
             domainCommand.BaseName = obj.Name;
             domainCommand.TopLevelDomain = obj.TopLevelDomainId;
-            domainCommand.RegistrationExpiry = obj.RegistrationExpiry;
+            domainCommand.RegistrationExpiry = obj.RegistrationExpiry?.ToUniversalTime();
             domainCommand.Owner = obj.OwnerId;
             domainCommand.Registrar = obj.RegistrarId;
             domainCommand.Placeholder = obj.Placeholder;
@@ -162,7 +162,7 @@ namespace DnsWebApp.Controllers
             domain.OwnerId = command.Owner;
             domain.RegistrarId = command.Registrar;
             domain.LastUpdated = DateTime.UtcNow;
-            domain.RegistrationExpiry = command.RegistrationExpiry;
+            domain.RegistrationExpiry = command.RegistrationExpiry?.ToUniversalTime();
             domain.WhoisLastUpdated = null;
 
             if (domain.Placeholder)

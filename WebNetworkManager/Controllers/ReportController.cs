@@ -1,17 +1,14 @@
 namespace DnsWebApp.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Globalization;
     using System.Linq;
-    using System.Reflection.Metadata;
     using DnsWebApp.Models.Database;
     using DnsWebApp.Models.ViewModels;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-    using MoreLinq.Extensions;
 
     [Route("/report/{action=Index}")]
     public class ReportController : Controller
@@ -51,11 +48,12 @@ namespace DnsWebApp.Controllers
                 .ToDictionary(x => x.RegistrarId + "|" + x.TopLevelDomainId);
 
             var domains = this.db.Domains
-                .Include(x => x.Owner)
                 .Include(x => x.TopLevelDomain)
                 .Include(x => x.Registrar)
-                .DistinctBy(x => new {x.TopLevelDomainId, x.Name})
+                .Include(x => x.Owner)
                 .Where(x => x.TopLevelDomain.Domain != "arpa" && !x.Placeholder)
+                .ToList()
+                .DistinctBy(x => new {x.TopLevelDomainId, x.Name})
                 .ToList();
 
             var columnHeaders = new List<string>

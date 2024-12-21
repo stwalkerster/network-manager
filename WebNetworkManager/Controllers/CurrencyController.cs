@@ -84,7 +84,7 @@ namespace DnsWebApp.Controllers
             obj.Name = editedView.Name;
             obj.Symbol = editedView.Symbol;
             obj.ExchangeRate = editedView.ExchangeRate;
-            obj.ExchangeRateUpdated = editedView.ExchangeRateUpdated;
+            obj.ExchangeRateUpdated = editedView.ExchangeRateUpdated?.ToUniversalTime();
 
             this.db.SaveChanges();
             

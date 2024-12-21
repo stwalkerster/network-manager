@@ -32,7 +32,6 @@ namespace DnsWebApp.Controllers
             var registrar = this.db.Registrar
                 .Include(x => x.Domains).ThenInclude(x => x.TopLevelDomain)
                 .Include(x => x.Domains).ThenInclude(x => x.Owner)
-                .Include(x => x.Domains).ThenInclude(x => x.Registrar)
                 .Include(x => x.Domains).ThenInclude(x => x.Zones)
                 .FirstOrDefault(x => x.Id == item);
 
@@ -253,7 +252,7 @@ namespace DnsWebApp.Controllers
             }
 
 
-            command.RenewalPriceUpdated = DateTime.Now;
+            command.RenewalPriceUpdated = DateTime.UtcNow;
             
             this.db.RegistrarTldSupport.Add(command);
             this.db.SaveChanges();
@@ -295,7 +294,7 @@ namespace DnsWebApp.Controllers
 
             obj.RenewalPrice = command.RenewalPrice;
             obj.TransferPrice = command.TransferPrice;
-            obj.RenewalPriceUpdated = DateTime.Now;
+            obj.RenewalPriceUpdated = DateTime.UtcNow;
             obj.TransferIncludesRenewal = command.TransferIncludesRenewal;
             obj.PrivacyIncluded = command.PrivacyIncluded;
             obj.AllowInboundTransfer = command.AllowInboundTransfer;
